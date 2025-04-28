@@ -2,7 +2,7 @@ from fastapi import FastAPI, status, HTTPException
 from pydantic import BaseModel
 from openai import OpenAI
 from environs import Env
-from ..prompt.prompt import load_prompt
+from app.problem_generator.prompt import load_prompt
 import json
 import logging
 
