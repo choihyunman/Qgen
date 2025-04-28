@@ -8,8 +8,13 @@ services:
     env_file:
       - .env
     environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${SPRING_DATASOURCE_USERNAME}
+      MYSQL_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       TZ: Asia/Seoul
       MYSQL_INIT_COMMAND: "SET GLOBAL host_cache_size=0"
+
     volumes:
       - shared_mysql_data:/var/lib/mysql
     networks:
