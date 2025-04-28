@@ -8,6 +8,7 @@ RUN npm cache clean --force && \
     rm -rf node_modules package-lock.json && \
     npm install
 
+
 COPY . .
 
 EXPOSE 5173
