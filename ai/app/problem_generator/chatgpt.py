@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status, HTTPException
+from fastapi import APIRouter, status, HTTPException
 from pydantic import BaseModel
 from openai import OpenAI
 from environs import Env
@@ -6,7 +6,7 @@ from app.problem_generator.prompt import load_prompt
 import json
 import logging
 
-app = FastAPI()
+router = APIRouter()  # <-- 바뀐 부분
 env = Env()
 env.read_env()
 
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class Request(BaseModel):
     quantity: int
 
-@app.post("/api/ai/chatgpt/{testPaperId}/", status_code=status.HTTP_200_OK)
+@router.post("/chatgpt/{testPaperId}/", status_code=status.HTTP_200_OK)
 async def chatgpt_api(testPaperId: int, request: Request):
     client = OpenAI(api_key=env.str("OPENAI_API_KEY"))
 
