@@ -1,0 +1,31 @@
+services:
+  mysql:
+    build: 
+      context: ./mysql
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_INIT_COMMAND: "SET GLOBAL host_cache_size=0"
+    volumes:
+      - shared_mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+volumes:
+  shared_mysql_data:
+    external: true
+  
+networks:
+  app_network:
+    external: true

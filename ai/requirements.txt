@@ -1,5 +1,0 @@
-environs
-openai
-uvicorn
-fastapi
-pydantic
