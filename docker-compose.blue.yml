@@ -1,12 +1,12 @@
 services:
   frontend:
-    build: ./frontend
+    image: frontend:blue
     container_name: frontend_blue
     ports:
       - "5174:5173"
-    volumes:
-      - ./frontend:/frontend
-      - /frontend/node_modules
+    # volumes:
+    #   - ./frontend:/frontend
+    #   - /frontend/node_modules
     networks:
       - app_network
     restart: always
@@ -14,13 +14,10 @@ services:
       - TZ=Asia/Seoul
 
   backend:
-    build: ./backend
+    image: backend:blue
     container_name: backend_blue
     ports:
       - "8081:8080"
-    depends_on:
-      mysql:
-        condition: service_started
     environment:
       TZ: Asia/Seoul
       JAVA_SECURITY_PROPERTIES: |
@@ -43,12 +40,12 @@ services:
           memory: 512M
 
   ai:
-    build: ./ai
+    image: ai:blue
     container_name: ai_blue
     ports:
       - "8001:8000"
-    volumes:
-      - ./ai:/ai
+    # volumes:
+    #   - ./ai:/ai
     environment:
       - PYTHONPATH=/ai
       - TZ=Asia/Seoul

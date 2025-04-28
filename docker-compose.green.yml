@@ -1,6 +1,6 @@
 services:
   frontend:
-    build: ./frontend
+    image: frontend:green
     container_name: frontend_green
     ports:
       - "5175:5173"
@@ -14,7 +14,7 @@ services:
       - TZ=Asia/Seoul
 
   backend:
-    build: ./backend
+    image: backend:green
     container_name: backend_green
     ports:
       - "8082:8080"
@@ -43,7 +43,7 @@ services:
           memory: 512M
 
   ai:
-    build: ./ai
+    image: ai:green
     container_name: ai_green
     ports:
       - "8002:8000"
