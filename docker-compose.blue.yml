@@ -8,7 +8,7 @@ services:
       - ./frontend:/frontend
       - /frontend/node_modules
     networks:
-      - app_network  # 👈 여기 맞춰줌
+      - app_network
     restart: always
     environment:
       - TZ=Asia/Seoul

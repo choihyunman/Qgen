@@ -1,6 +1,6 @@
 services:
   frontend:
-    build: ./frontend     # ✅ 수정 (build로!)
+    build: ./frontend
     container_name: frontend_green
     ports:
       - "5175:5173"
@@ -14,7 +14,7 @@ services:
       - TZ=Asia/Seoul
 
   backend:
-    build: ./backend       # ✅ ./backend로 명확히
+    build: ./backend
     container_name: backend_green
     ports:
       - "8082:8080"
