@@ -1,6 +1,6 @@
 def notifyMattermost(message, success = true) {
-    def commitInfo = "[\ud83e\uddd1 ${params.COMMIT_AUTHOR}] - \"${params.COMMIT_MESSAGE}\""
-    def statusEmoji = success ? "\u2705" : "\u274c"
+    def commitInfo = "[🧑 ${params.COMMIT_AUTHOR}] - \"${params.COMMIT_MESSAGE}\""
+    def statusEmoji = success ? "✅" : "❌"
     def finalMessage = "${statusEmoji} ${message}\n${commitInfo}"
 
     withCredentials([string(credentialsId: 'webhook-url', variable: 'WEBHOOK_URL')]) {
@@ -30,7 +30,7 @@ pipeline {
     stages {
         stage('Inject Secrets') {
             steps {
-                echo "\ud83d\udd10 \uc124\uc815 \ud30c\uc77c \uc8fc\uc785 \uc911.."
+                echo "🔐 설정 파일 주입 중..."
                 withCredentials([
                     file(credentialsId: 'env-file', variable: 'ENV_FILE'),
                     file(credentialsId: 'app-yml', variable: 'APP_YML')
@@ -46,7 +46,7 @@ pipeline {
 
         stage('Clean Up EXISTING NEW Containers') {
             steps {
-                echo "\ud83e\uddf9 \uae30\uc874 ${params.DEPLOY_COLOR} \ucee4\ud14c\uc774\ub108 \uc815\ub9ac \uc911..."
+                echo "🧹 기존 ${params.DEPLOY_COLOR} 컨테이너 정리 중..."
                 script {
                     def services = ["frontend_${params.DEPLOY_COLOR}", "backend_${params.DEPLOY_COLOR}", "ai_${params.DEPLOY_COLOR}"]
                     for (svc in services) {
@@ -62,7 +62,7 @@ pipeline {
 
         stage('Deploy NEW Containers') {
             steps {
-                echo "\ud83d\ude80 \uc0c8\ub85c\uc6b4 ${params.DEPLOY_COLOR} \ucee4\ud14c\uc774\ub108 \eb9c9\uc774\ub294 \uc911..."
+                echo "🚀 새로운 ${params.DEPLOY_COLOR} 컨테이너 띄우는 중..."
                 sh """
                 docker compose -f docker-compose.${params.DEPLOY_COLOR}.yml up -d --build
                 """
@@ -71,13 +71,13 @@ pipeline {
 
         stage('Health Check NEW Containers') {
             steps {
-                echo "\ud83e\ude7a \uc0c8\ub85c \eb9c9\uc778 \ucee4\ud14c\uc774\ub108 \ud5e4\uc77c\uc2a4\uccb4\ud06c \uc911..."
+                echo "🩺 새로 띄운 컨테이너 헬스체크 중..."
                 script {
                     def services = ["frontend_${params.DEPLOY_COLOR}", "backend_${params.DEPLOY_COLOR}", "ai_${params.DEPLOY_COLOR}"]
                     for (svc in services) {
                         retry(3) {
                             sh """
-                            echo "\ud83d\udd0e Checking health of ${svc}..."
+                            echo "🔎 Checking health of ${svc}..."
                             docker inspect --format='{{.State.Health.Status}}' ${svc} | grep healthy
                             """
                         }
@@ -88,7 +88,7 @@ pipeline {
 
         stage('Update Nginx Configuration') {
             steps {
-                echo "\ud83d\udce6 NGINX \uc124\uc815 \ud30c\uc77c \uc0dd\uc131 \uc911..."
+                echo "📦 NGINX 설정 파일 생성 중..."
                 script {
                     sh """
                     export FRONTEND_UPSTREAM=frontend_${params.DEPLOY_COLOR}
@@ -103,7 +103,7 @@ pipeline {
 
         stage('Reload Nginx') {
             steps {
-                echo "\ud83d\ude80 NGINX \uc124\uc815 \ubc18\uc601 (reload) \uc911..."
+                echo "🚀 NGINX 설정 반영 (reload) 중..."
                 script {
                     try {
                         sh """
@@ -111,7 +111,7 @@ pipeline {
                         docker exec nginx nginx -s reload
                         """
                     } catch (Exception e) {
-                        error("\u274c nginx reload \uc2e4\ud328! \ub864\ubc15 \ud544\uc694")
+                        error("❌ nginx reload 실패! 롤백 필요")
                     }
                 }
             }
@@ -119,7 +119,7 @@ pipeline {
 
         stage('Clean Up OLD Containers') {
             steps {
-                echo "\ud83e\uddf9 \uc774\uc804 (${params.OLD_COLOR}) \ucee4\ud14c\uc774\ub108 \uc815\ub9ac \uc911..."
+                echo "🧹 이전 (${params.OLD_COLOR}) 컨테이너 정리 중..."
                 sh """
                 docker compose -f docker-compose.${params.OLD_COLOR}.yml down || true
                 docker image prune -f || true
@@ -131,12 +131,12 @@ pipeline {
     post {
         success {
             script {
-                notifyMattermost("*\ubc30\ud3ec \uc131\uacf5!* ${params.OLD_COLOR} \u2192 ${params.DEPLOY_COLOR} \uc804\ud658 \uc644\ub8cc \ud83c\udf89", true)
+                notifyMattermost("*배포 성공!* ${params.OLD_COLOR} → ${params.DEPLOY_COLOR} 전환 완료 🎉", true)
             }
         }
         failure {
             script {
-                notifyMattermost("*\ubc30\ud3ec \uc2e4\ud328!* \ub864\ubc15 \ud544\uc694 \ud83d\udd25", false)
+                notifyMattermost("*배포 실패!* 롤백 필요 🔥", false)
             }
         }
     }
