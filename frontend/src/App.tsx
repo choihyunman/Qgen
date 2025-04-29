@@ -1,14 +1,7 @@
-import './App.css'
-import SmallBtn from './components/SmallBtn/SmallBtn'
+import './App.css';
 
 function App() {
-
-  return (
-    <div className="">
-      메인 화면 입니다.
-      <SmallBtn text="로그인" />
-    </div>
-  )
+  return <div className=''>메인 화면 입니다.</div>;
 }
 
-export default App
+export default App;
