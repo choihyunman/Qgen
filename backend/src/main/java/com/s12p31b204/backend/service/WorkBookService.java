@@ -49,4 +49,11 @@ public class WorkBookService {
         workBook.updateTitle(newTitle);
     }
 
+    @Transactional
+    public void deleteWorkBook(Long workBookId) {
+        WorkBook workBook = workBookRepository.findById(workBookId)
+                .orElseThrow(() -> new IllegalArgumentException("워크북을 찾을 수 없습니다."));
+        workBookRepository.delete(workBook);
+    }
+
 }

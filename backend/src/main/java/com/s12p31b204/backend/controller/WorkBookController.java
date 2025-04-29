@@ -2,6 +2,7 @@ package com.s12p31b204.backend.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.s12p31b204.backend.dto.WorkBookRequestDto;
@@ -34,4 +35,10 @@ public class WorkBookController {
         workBookService.updateWorkBookTitle(workBookId, requestDto.getTitle());
     }
     
+    @DeleteMapping("/{workBookId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteWorkBook(@PathVariable Long workBookId) {
+        workBookService.deleteWorkBook(workBookId);
+    }
+
 }
