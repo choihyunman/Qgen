@@ -78,8 +78,12 @@ pipeline {
                         retry(5) {
                             sh """
                             echo "🔎 Checking health of ${svc}..."
-                            docker inspect --format='{{.State.Health.Status}}' ${svc} | grep healthy
-                            sleep 5
+                            STATUS=\$(docker inspect --format='{{.State.Health.Status}}' ${svc} | tr -d '\\n')
+                            if [ "\$STATUS" != "healthy" ]; then
+                            echo "❌ Health check failed: \$STATUS"
+                            exit 1
+                            fi
+                            echo "✅ ${svc} is healthy!"
                             """
                         }
                     }
