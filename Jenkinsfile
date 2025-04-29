@@ -1,5 +1,5 @@
 def notifyMattermost(message, success = true) {
-    def safeCommitMessage = params.COMMIT_MESSAGE.replace("\"", "\\\"") // 쌍따옴표 이스케이프
+    def safeCommitMessage = params.COMMIT_MESSAGE.replace("\"", "\\\"")
     def commitInfo = "[🧑 ${params.COMMIT_AUTHOR}] - \"${safeCommitMessage}\""
     def statusEmoji = success ? "✅" : "❌"
     def finalMessage = "${statusEmoji} ${message}\n${commitInfo}"
@@ -12,6 +12,20 @@ def notifyMattermost(message, success = true) {
         """
         sh 'curl -X POST -H "Content-Type: application/json" -d @mattermost_payload.json "$WEBHOOK_URL"'
     }
+}
+
+// 롤백 함수 추가
+def rollbackToOld() {
+    echo "🛑 롤백 시작 (Old Color: ${params.OLD_COLOR})"
+    sh """
+    export FRONTEND_UPSTREAM=frontend_${params.OLD_COLOR}
+    export BACKEND_UPSTREAM=backend_${params.OLD_COLOR}
+    export AI_UPSTREAM=ai_${params.OLD_COLOR}
+    envsubst '\$FRONTEND_UPSTREAM \$BACKEND_UPSTREAM \$AI_UPSTREAM' < ./nginx-template/nginx.template.conf > ./nginx/conf.d/active.conf
+    docker cp ./nginx/conf.d/active.conf nginx:/etc/nginx/conf.d/active.conf
+    docker exec nginx nginx -t
+    docker exec nginx nginx -s reload
+    """
 }
 
 pipeline {
@@ -121,7 +135,9 @@ pipeline {
                         docker exec nginx nginx -s reload
                         """
                     } catch (Exception e) {
-                        error("❌ nginx reload 실패! 롤백 필요")
+                        echo "❌ Nginx reload 실패. 롤백 시작..."
+                        rollbackToOld()
+                        error("❌ 롤백 후 실패 처리")
                     }
                 }
             }
@@ -157,7 +173,7 @@ pipeline {
         }
         failure {
             script {
-                notifyMattermost("*배포 실패!* 롤백 필요 🔥", false)
+                notifyMattermost("*배포 실패!* 롤백 수행됨 🔥", false)
             }
         }
     }
