@@ -46,6 +46,8 @@ services:
       - "8001:8000"
     # volumes:
     #   - ./ai:/ai
+    env_file:
+      - .env
     environment:
       - PYTHONPATH=/ai
       - TZ=Asia/Seoul
