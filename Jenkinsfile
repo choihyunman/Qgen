@@ -75,10 +75,11 @@ pipeline {
                 script {
                     def services = ["frontend_${params.DEPLOY_COLOR}", "backend_${params.DEPLOY_COLOR}", "ai_${params.DEPLOY_COLOR}"]
                     for (svc in services) {
-                        retry(3) {
+                        retry(5) {
                             sh """
                             echo "🔎 Checking health of ${svc}..."
                             docker inspect --format='{{.State.Health.Status}}' ${svc} | grep healthy
+                            sleep 5
                             """
                         }
                     }
