@@ -1,15 +1,15 @@
 services:
   jenkins:
-    image: jenkins/jenkins:lts-jdk17
+    build:
+      context: ./jenkins-custom
     user: root
     container_name: jenkins
-    expose:
-      - "8080"
+    ports:
+      - "8080:8080"
     volumes:
       - ./jenkins_home:/var/jenkins_home:rw
       - /usr/bin/docker:/usr/bin/docker         
       - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
     networks:
       - app_network
     restart: unless-stopped
