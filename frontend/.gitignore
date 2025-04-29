@@ -29,7 +29,7 @@ dist-ssr
 .yarn/cache
 !.yarn/patches
 !.yarn/plugins
-!.yarn/releases                     
+!.yarn/releases
 !.yarn/sdks
 !.yarn/versions
 *storybook.log
