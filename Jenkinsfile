@@ -1,17 +1,12 @@
 def notifyMattermost(message, success = true) {
-    def color = success ? "#00c853" : "#d50000"
     def commitInfo = "[🧑 ${params.COMMIT_AUTHOR}] - \"${params.COMMIT_MESSAGE}\""
+    def statusEmoji = success ? "✅" : "❌"
+    def finalMessage = "${statusEmoji} ${message}\n${commitInfo}"
 
     withCredentials([string(credentialsId: 'webhook-url', variable: 'WEBHOOK_URL')]) {
         writeFile file: 'mattermost_payload.json', text: """
         {
-            "username": "Jenkins Infra Bot",
-            "icon_emoji": ":rocket:",
-            "attachments": [{
-                "fallback": "${message}",
-                "color": "${color}",
-                "text": "${message}\\n${commitInfo}"
-            }]
+            "text": "${finalMessage}"
         }
         """
         sh 'curl -X POST -H "Content-Type: application/json" -d @mattermost_payload.json "$WEBHOOK_URL"'
@@ -24,7 +19,7 @@ pipeline {
     parameters {
         string(name: 'COMMIT_AUTHOR', defaultValue: '', description: '커밋 작성자')
         string(name: 'COMMIT_MESSAGE', defaultValue: '', description: '커밋 메시지')
-        string(name: 'DEPLOY_COLOR', defaultValue: 'green', description: '이번에 띄울 색상')
+        string(name: 'DEPLOY_COLOR', defaultValue: 'green', description: '배포할 색상')
         string(name: 'OLD_COLOR', defaultValue: 'blue', description: '현재 운영 중인 색상')
     }
 
@@ -108,7 +103,7 @@ pipeline {
 
         stage('Clean Up OLD Containers') {
             steps {
-                echo "🧹 이전 (${params.OLD_COLOR}) 컨테이너 정리..."
+                echo "🧹 이전 (${params.OLD_COLOR}) 컨테이너 정리 중..."
                 sh """
                 docker compose -f docker-compose.${params.OLD_COLOR}.yml down || true
                 docker image prune -f || true
@@ -120,12 +115,12 @@ pipeline {
     post {
         success {
             script {
-                notifyMattermost("✅ *배포 성공!* ${params.OLD_COLOR} → ${params.DEPLOY_COLOR} 전환 완료 🎉", true)
+                notifyMattermost("*배포 성공!* ${params.OLD_COLOR} → ${params.DEPLOY_COLOR} 전환 완료 🎉", true)
             }
         }
         failure {
             script {
-                notifyMattermost("❌ *배포 실패!* 롤백 필요 🔥", false)
+                notifyMattermost("*배포 실패!* 롤백 필요 🔥", false)
             }
         }
     }
