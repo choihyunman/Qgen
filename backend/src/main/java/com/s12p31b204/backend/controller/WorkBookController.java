@@ -20,5 +20,10 @@ public class WorkBookController {
     @PostMapping("/{userId}")
     public WorkBookResponseDto createWorkBook(@PathVariable Long userId, @RequestBody WorkBookRequestDto requestDto) {
         return workBookService.createWorkBook(userId, requestDto);
-    }    
+    }
+    
+    @GetMapping("/{userId}")
+    public List<WorkBookResponseDto> getAllWorkBooks(@PathVariable Long userId) {
+        return workBookService.getAllWorkBooksByUser(userId);
+    }
 }

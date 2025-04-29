@@ -32,4 +32,12 @@ public class WorkBookService {
     
         return new WorkBookResponseDto(workBook);
     }
+
+
+    @Transactional(readOnly = true)
+    public List<WorkBookResponseDto> getAllWorkBooksByUser(Long userId) {
+        return workBookRepository.findByUserUserId(userId).stream()
+                .map(WorkBookResponseDto::new)
+                .collect(Collectors.toList());
+    }
 }
