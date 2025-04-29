@@ -32,7 +32,7 @@ public class WorkBook {
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long workBookId;
+    private Long workBookId;
 
     @Column(length = 100, nullable = false)
     private String title;
@@ -43,6 +43,9 @@ public class WorkBook {
 
     @OneToMany(mappedBy = "workBook", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TestPaper> testPapers;
+
+    @OneToMany(mappedBy = "workBook", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Document> documents;
 
     @CreatedDate
     private LocalDateTime createAt;

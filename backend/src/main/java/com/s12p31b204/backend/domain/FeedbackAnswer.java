@@ -27,7 +27,7 @@ public class FeedbackAnswer {
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long feedbackAnswerId;
+    private Long feedbackAnswerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feedbackId", nullable = false)

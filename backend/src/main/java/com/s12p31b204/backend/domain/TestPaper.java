@@ -33,7 +33,7 @@ public class TestPaper {
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long testPaperId;
+    private Long testPaperId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workBookId", nullable = false)

@@ -28,7 +28,7 @@ public class TestHistory {
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long testHistoryId;
+    private Long testHistoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "testId", nullable = false)

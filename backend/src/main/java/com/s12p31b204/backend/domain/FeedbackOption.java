@@ -22,7 +22,7 @@ public class FeedbackOption {
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int optionId;
+    private Integer optionId;
 
     @Column(nullable = false)
     private String optionContent;
