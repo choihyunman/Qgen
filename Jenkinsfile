@@ -103,7 +103,7 @@ pipeline {
                     export FRONTEND_UPSTREAM=frontend_${params.DEPLOY_COLOR}
                     export BACKEND_UPSTREAM=backend_${params.DEPLOY_COLOR}
                     export AI_UPSTREAM=ai_${params.DEPLOY_COLOR}
-                    envsubst < ./nginx-template/nginx.template.conf > ./nginx/conf.d/active.conf
+                    envsubst '\$FRONTEND_UPSTREAM \$BACKEND_UPSTREAM \$AI_UPSTREAM' < ./nginx-template/nginx.template.conf > ./nginx/conf.d/active.conf
                     docker cp ./nginx/conf.d/active.conf nginx:/etc/nginx/conf.d/active.conf
                     """
                 }
