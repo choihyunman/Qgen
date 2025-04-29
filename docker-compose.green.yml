@@ -4,9 +4,9 @@ services:
     container_name: frontend_green
     ports:
       - "5175:5173"
-    volumes:
-      - ./frontend:/frontend
-      - /frontend/node_modules
+    # volumes:
+    #   - ./frontend:/frontend
+    #   - /frontend/node_modules
     networks:
       - app_network
     restart: always
@@ -55,8 +55,8 @@ services:
     container_name: ai_green
     ports:
       - "8002:8000"
-    volumes:
-      - ./ai:/ai
+    # volumes:
+    #   - ./ai:/ai
     environment:
       - PYTHONPATH=/ai
       - TZ=Asia/Seoul
