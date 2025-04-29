@@ -1,11 +1,7 @@
-import FileUploader from '@/components/fileUpload/FileUploader';
+import './App.css';
 
 function App() {
-  return (
-    <div className='min-h-screen bg-white py-6 flex flex-col justify-center items-center'>
-      <FileUploader />
-    </div>
-  );
+  return <div className=''>메인 화면 입니다.</div>;
 }
 
 export default App;
