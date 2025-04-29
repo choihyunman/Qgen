@@ -30,7 +30,7 @@ pipeline {
     stages {
         stage('Inject Secrets') {
             steps {
-                echo "🔐 설정 파일 주입 중..."
+                echo "🔐 설정 파일 주입 중.."
                 withCredentials([
                     file(credentialsId: 'env-file', variable: 'ENV_FILE'),
                     file(credentialsId: 'app-yml', variable: 'APP_YML')
