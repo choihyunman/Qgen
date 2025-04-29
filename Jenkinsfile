@@ -10,7 +10,7 @@ def notifyMattermost(message, success = true) {
             "attachments": [{
                 "fallback": "${message}",
                 "color": "${color}",
-                "text": "${message}\\\\n${commitInfo}"
+                "text": "${message}\\n${commitInfo}"
             }]
         }
         """
@@ -24,8 +24,8 @@ pipeline {
     parameters {
         string(name: 'COMMIT_AUTHOR', defaultValue: '', description: '커밋 작성자')
         string(name: 'COMMIT_MESSAGE', defaultValue: '', description: '커밋 메시지')
-        string(name: 'DEPLOY_COLOR', defaultValue: 'blue', description: '배포할 색상')
-        string(name: 'OLD_COLOR', defaultValue: 'green', description: '현재 운영 중인 색상')
+        string(name: 'DEPLOY_COLOR', defaultValue: 'green', description: '이번에 띄울 색상')
+        string(name: 'OLD_COLOR', defaultValue: 'blue', description: '현재 운영 중인 색상')
     }
 
     environment {
@@ -46,6 +46,15 @@ pipeline {
                     cp \$APP_YML backend/src/main/resources/application.yml
                     """
                 }
+            }
+        }
+
+        stage('Deploy NEW Containers') {
+            steps {
+                echo "🚀 새로운 ${params.DEPLOY_COLOR} 컨테이너 띄우는 중..."
+                sh """
+                docker compose -f docker-compose.${params.DEPLOY_COLOR}.yml up -d --build
+                """
             }
         }
 
