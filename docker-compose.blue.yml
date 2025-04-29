@@ -12,6 +12,11 @@ services:
     restart: always
     environment:
       - TZ=Asia/Seoul
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   backend:
     image: backend:blue
@@ -38,6 +43,11 @@ services:
           memory: 1G
         reservations:
           memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   ai:
     image: ai:blue
@@ -54,6 +64,11 @@ services:
     networks:
       - app_network
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   app_network:
