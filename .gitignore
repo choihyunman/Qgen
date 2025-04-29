@@ -1,1 +1,18 @@
+# VSCode
+.vscode/
+.history/
+
+# Java
+*.class
+*.jar
+*.war
+
+# Env
 .env
+**/.env
+
+# Properties
+**/application.properties
+
+# Node
+node_modules/
