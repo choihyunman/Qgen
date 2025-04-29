@@ -1,15 +1,15 @@
+import groovy.json.JsonOutput
+
 def notifyMattermost(message, success = true) {
-    def safeCommitMessage = params.COMMIT_MESSAGE.replace("\"", "\\\"")
+    def safeCommitMessage = params.COMMIT_MESSAGE
     def commitInfo = "[🧑 ${params.COMMIT_AUTHOR}] - \"${safeCommitMessage}\""
     def statusEmoji = success ? "✅" : "❌"
     def finalMessage = "${statusEmoji} ${message}\n${commitInfo}"
 
+    def payload = JsonOutput.toJson([text: finalMessage]) // <-- 이걸로 escape 안전하게!
+
     withCredentials([string(credentialsId: 'webhook-url', variable: 'WEBHOOK_URL')]) {
-        writeFile file: 'mattermost_payload.json', text: """
-        {
-            "text": "${finalMessage}"
-        }
-        """
+        writeFile file: 'mattermost_payload.json', text: payload
         sh 'curl -X POST -H "Content-Type: application/json" -d @mattermost_payload.json "$WEBHOOK_URL"'
     }
 }
