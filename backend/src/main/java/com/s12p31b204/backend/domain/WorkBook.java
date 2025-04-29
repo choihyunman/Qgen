@@ -49,4 +49,13 @@ public class WorkBook {
 
     @CreatedDate
     private LocalDateTime createAt;
+
+    public WorkBook(String title, User user) {
+        this.title = title;
+        this.user = user;
+    }
+    
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 }
