@@ -52,7 +52,7 @@ pipeline {
                     for (svc in services) {
                         sh """
                         if docker ps -a --format '{{.Names}}' | grep -w ${svc}; then
-                            echo "🛑 Removing old ${svc}..."
+                            echo "🛑 Removing existing ${svc}..."
                             docker rm -f ${svc}
                         else
                             echo "✅ No existing ${svc} to remove."
@@ -66,9 +66,7 @@ pipeline {
         stage('Deploy NEW Containers') {
             steps {
                 echo "🚀 새로운 ${params.DEPLOY_COLOR} 컨테이너 띄우는 중..."
-                sh """
-                docker compose -f docker-compose.${params.DEPLOY_COLOR}.yml up -d --build
-                """
+                sh "docker compose -f docker-compose.${params.DEPLOY_COLOR}.yml up -d --build"
             }
         }
 
@@ -105,7 +103,6 @@ pipeline {
                     export FRONTEND_UPSTREAM=frontend_${params.DEPLOY_COLOR}
                     export BACKEND_UPSTREAM=backend_${params.DEPLOY_COLOR}
                     export AI_UPSTREAM=ai_${params.DEPLOY_COLOR}
-
                     envsubst < ./nginx-template/nginx.template.conf > ./nginx/conf.d/active.conf
                     """
                 }
@@ -131,10 +128,21 @@ pipeline {
         stage('Clean Up OLD Containers') {
             steps {
                 echo "🧹 이전 (${params.OLD_COLOR}) 컨테이너 정리 중..."
-                sh """
-                docker compose -f docker-compose.${params.OLD_COLOR}.yml down || true
-                docker image prune -f || true
-                """
+                script {
+                    def oldServices = ["frontend_${params.OLD_COLOR}", "backend_${params.OLD_COLOR}", "ai_${params.OLD_COLOR}"]
+                    for (svc in oldServices) {
+                        sh """
+                        if docker ps -a --format '{{.Names}}' | grep -w ${svc}; then
+                            echo "🛑 Stopping and removing ${svc}..."
+                            docker stop ${svc} || true
+                            docker rm -f ${svc} || true
+                        else
+                            echo "✅ No old ${svc} to remove."
+                        fi
+                        """
+                    }
+                    sh "docker image prune -f || true"
+                }
             }
         }
     }
