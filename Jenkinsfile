@@ -52,7 +52,10 @@ pipeline {
                     for (svc in services) {
                         sh """
                         if docker ps -a --format '{{.Names}}' | grep -w ${svc}; then
+                            echo "🛑 Removing old ${svc}..."
                             docker rm -f ${svc}
+                        else
+                            echo "✅ No existing ${svc} to remove."
                         fi
                         """
                     }
@@ -71,17 +74,20 @@ pipeline {
 
         stage('Health Check NEW Containers') {
             steps {
+                sleep(time: 5, unit: 'SECONDS')
                 echo "🩺 새로 띄운 컨테이너 헬스체크 중..."
                 script {
                     def services = ["frontend_${params.DEPLOY_COLOR}", "backend_${params.DEPLOY_COLOR}", "ai_${params.DEPLOY_COLOR}"]
                     for (svc in services) {
-                        retry(5) {
+                        retry(10) {
                             sh """
                             echo "🔎 Checking health of ${svc}..."
                             STATUS=\$(docker inspect --format='{{.State.Health.Status}}' ${svc} | tr -d '\\n')
+                            echo "Current STATUS: \$STATUS"
                             if [ "\$STATUS" != "healthy" ]; then
-                            echo "❌ Health check failed: \$STATUS"
-                            exit 1
+                                echo "❌ Still not healthy (\$STATUS). Waiting 5s..."
+                                sleep 5
+                                exit 1
                             fi
                             echo "✅ ${svc} is healthy!"
                             """
