@@ -1,12 +1,10 @@
 package com.s12p31b204.backend.domain;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -14,31 +12,40 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class Document {
 
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long documentId;
 
-    @NonNull
-    @Column(nullable = false, length = 30, unique = true)
-    private String googleEmail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workBookId", nullable = false)
+    private WorkBook workBook;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WorkBook> workBooks;
+    @Column(nullable = false)
+    private String documentName;
+
+    @Column(nullable = false)
+    private long documentSize;
+
+    @Column(nullable = false)
+    private String documentType;
+
+    @Column(nullable = false)
+    private String documentURL;
 
     @CreatedDate
     private LocalDateTime createAt;

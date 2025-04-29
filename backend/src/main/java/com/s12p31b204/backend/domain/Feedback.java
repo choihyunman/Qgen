@@ -30,7 +30,7 @@ public class Feedback {
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long feedbackId;
+    private Long feedbackId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "testPaperId", nullable = false)

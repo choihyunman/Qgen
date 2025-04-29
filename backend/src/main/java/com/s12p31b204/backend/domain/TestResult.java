@@ -29,7 +29,7 @@ public class TestResult {
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long testResultId;
+    private Long testResultId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "testPaperId", nullable = false)
