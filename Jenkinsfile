@@ -1,5 +1,6 @@
 def notifyMattermost(message, success = true) {
-    def commitInfo = "[🧑 ${params.COMMIT_AUTHOR}] - \"${params.COMMIT_MESSAGE}\""
+    def safeCommitMessage = params.COMMIT_MESSAGE.replace("\"", "\\\"") // 쌍따옴표 이스케이프
+    def commitInfo = "[🧑 ${params.COMMIT_AUTHOR}] - \"${safeCommitMessage}\""
     def statusEmoji = success ? "✅" : "❌"
     def finalMessage = "${statusEmoji} ${message}\n${commitInfo}"
 
