@@ -40,4 +40,13 @@ public class WorkBookService {
                 .map(WorkBookResponseDto::new)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void updateWorkBookTitle(Long workBookId, String newTitle) {
+        WorkBook workBook = workBookRepository.findById(workBookId)
+                .orElseThrow(() -> new IllegalArgumentException("워크북을 찾을 수 없습니다."));
+
+        workBook.updateTitle(newTitle);
+    }
+
 }

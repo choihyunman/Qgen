@@ -26,4 +26,12 @@ public class WorkBookController {
     public List<WorkBookResponseDto> getAllWorkBooks(@PathVariable Long userId) {
         return workBookService.getAllWorkBooksByUser(userId);
     }
+
+    @PatchMapping("/{workBookId}")
+    public void updateWorkBookTitle(
+            @PathVariable Long workBookId,
+            @RequestBody WorkBookRequestDto requestDto) {
+        workBookService.updateWorkBookTitle(workBookId, requestDto.getTitle());
+    }
+    
 }
