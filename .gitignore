@@ -1,2 +1,49 @@
+# Gradle
+backend/.gradle/
+backend/build/
+!backend/gradle/wrapper/gradle-wrapper.jar
+!backend/gradle/wrapper/gradle-wrapper.properties
+
+# Java
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+.history/
+
+# Node / FE
+node_modules/
+
+# Env
+.env
 **/.env
+
+# Jenkins
+jenkins_home/
+
+# Logs
+*.log
+
+#yml
+**/application.yml
 **/application.properties
+
+#expo
+.expo/
+
+#python
+ai/__pycache__/
+ai/*.py[cod]
