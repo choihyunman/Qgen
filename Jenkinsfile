@@ -6,7 +6,7 @@ def notifyMattermost(message, success = true) {
     def statusEmoji = success ? "✅" : "❌"
     def finalMessage = "${statusEmoji} ${message}\n${commitInfo}"
 
-    def payload = JsonOutput.toJson([text: finalMessage]) // <-- 이걸로 escape 안전하게!
+    def payload = JsonOutput.toJson([text: finalMessage])
 
     withCredentials([string(credentialsId: 'webhook-url', variable: 'WEBHOOK_URL')]) {
         writeFile file: 'mattermost_payload.json', text: payload
@@ -14,7 +14,6 @@ def notifyMattermost(message, success = true) {
     }
 }
 
-// 롤백 함수 추가
 def rollbackToOld() {
     echo "🛑 롤백 시작 (Old Color: ${params.OLD_COLOR})"
     sh """
@@ -62,26 +61,18 @@ pipeline {
         stage('Clean Up EXISTING NEW Containers') {
             steps {
                 echo "🧹 기존 ${params.DEPLOY_COLOR} 컨테이너 정리 중..."
-                script {
-                    def services = ["frontend_${params.DEPLOY_COLOR}", "backend_${params.DEPLOY_COLOR}", "ai_${params.DEPLOY_COLOR}"]
-                    for (svc in services) {
-                        sh """
-                        if docker ps -a --format '{{.Names}}' | grep -w ${svc}; then
-                            echo "🛑 Removing existing ${svc}..."
-                            docker rm -f ${svc}
-                        else
-                            echo "✅ No existing ${svc} to remove."
-                        fi
-                        """
-                    }
-                }
+                sh """
+                docker compose --project-name=${params.DEPLOY_COLOR} -f docker-compose.${params.DEPLOY_COLOR}.yml down || true
+                """
             }
         }
 
         stage('Deploy NEW Containers') {
             steps {
                 echo "🚀 새로운 ${params.DEPLOY_COLOR} 컨테이너 띄우는 중..."
-                sh "docker compose -f docker-compose.${params.DEPLOY_COLOR}.yml up -d --build"
+                sh """
+                docker compose --project-name=${params.DEPLOY_COLOR} -f docker-compose.${params.DEPLOY_COLOR}.yml up -d --build
+                """
             }
         }
 
@@ -146,21 +137,10 @@ pipeline {
         stage('Clean Up OLD Containers') {
             steps {
                 echo "🧹 이전 (${params.OLD_COLOR}) 컨테이너 정리 중..."
-                script {
-                    def oldServices = ["frontend_${params.OLD_COLOR}", "backend_${params.OLD_COLOR}", "ai_${params.OLD_COLOR}"]
-                    for (svc in oldServices) {
-                        sh """
-                        if docker ps -a --format '{{.Names}}' | grep -w ${svc}; then
-                            echo "🛑 Stopping and removing ${svc}..."
-                            docker stop ${svc} || true
-                            docker rm -f ${svc} || true
-                        else
-                            echo "✅ No old ${svc} to remove."
-                        fi
-                        """
-                    }
-                    sh "docker image prune -f || true"
-                }
+                sh """
+                docker compose --project-name=${params.OLD_COLOR} -f docker-compose.${params.OLD_COLOR}.yml down || true
+                docker image prune -f || true
+                """
             }
         }
     }
