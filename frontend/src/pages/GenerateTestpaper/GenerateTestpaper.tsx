@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import BlurBackground from '../components/Background/BlurBackground';
-import Button from '../components/Button';
+import BlurBackground from '../../components/layout/Background/BlurBackground';
+import Button from '../../components/common/Button/Button';
 
 interface ProblemType {
   name: string;
