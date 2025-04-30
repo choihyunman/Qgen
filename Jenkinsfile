@@ -4,9 +4,11 @@ def notifyMattermost(message, success = true) {
     def safeCommitMessage = params.COMMIT_MESSAGE.replaceAll(/\r?\n/, ' ').trim()
     def commitAuthor = params.COMMIT_AUTHOR
     def statusEmoji = success ? "✅" : "❌"
-    def statusText = success ? "[배포 성공]" : "[배포 실패]"
+    def statusText = success ? "### ✅ 배포 성공" : "### ❌ 배포 실패"
+
     def finalMessage = """
-${statusEmoji} ${statusText} ${message}
+${statusText}
+${message}
 
 🧑‍💻 커밋자: ${commitAuthor}
 📝 메시지: ${safeCommitMessage}
@@ -23,13 +25,13 @@ ${statusEmoji} ${statusText} ${message}
 def rollbackToOld() {
     echo "🛑 롤백 시작 (Old Color: ${params.OLD_COLOR})"
     sh """
-    export FRONTEND_UPSTREAM=frontend_${params.OLD_COLOR}
-    export BACKEND_UPSTREAM=backend_${params.OLD_COLOR}
-    export AI_UPSTREAM=ai_${params.OLD_COLOR}
-    envsubst '\$FRONTEND_UPSTREAM \$BACKEND_UPSTREAM \$AI_UPSTREAM' < ./nginx-template/nginx.template.conf > ./nginx/conf.d/active.conf
-    docker cp ./nginx/conf.d/active.conf nginx:/etc/nginx/conf.d/active.conf
-    docker exec nginx nginx -t
-    docker exec nginx nginx -s reload
+        export FRONTEND_UPSTREAM=frontend_${params.OLD_COLOR}
+        export BACKEND_UPSTREAM=backend_${params.OLD_COLOR}
+        export AI_UPSTREAM=ai_${params.OLD_COLOR}
+        envsubst '\$FRONTEND_UPSTREAM \$BACKEND_UPSTREAM \$AI_UPSTREAM' < ./nginx-template/nginx.template.conf > ./nginx/conf.d/active.conf
+        docker cp ./nginx/conf.d/active.conf nginx:/etc/nginx/conf.d/active.conf
+        docker exec nginx nginx -t
+        docker exec nginx nginx -s reload
     """
 }
 
@@ -56,9 +58,9 @@ pipeline {
                     file(credentialsId: 'app-yml', variable: 'APP_YML')
                 ]) {
                     sh """
-                    mkdir -p backend/src/main/resources
-                    cp \$ENV_FILE .env
-                    cp \$APP_YML backend/src/main/resources/application.yml
+                        mkdir -p backend/src/main/resources
+                        cp \$ENV_FILE .env
+                        cp \$APP_YML backend/src/main/resources/application.yml
                     """
                 }
             }
@@ -68,7 +70,7 @@ pipeline {
             steps {
                 echo "🧹 기존 ${params.DEPLOY_COLOR} 컨테이너 정리 중..."
                 sh """
-                docker compose --project-name=${params.DEPLOY_COLOR} -f docker-compose.${params.DEPLOY_COLOR}.yml down || true
+                    docker compose --project-name=${params.DEPLOY_COLOR} -f docker-compose.${params.DEPLOY_COLOR}.yml down || true
                 """
             }
         }
@@ -77,7 +79,7 @@ pipeline {
             steps {
                 echo "🚀 새로운 ${params.DEPLOY_COLOR} 컨테이너 띄우는 중..."
                 sh """
-                docker compose --project-name=${params.DEPLOY_COLOR} -f docker-compose.${params.DEPLOY_COLOR}.yml up -d --build
+                    docker compose --project-name=${params.DEPLOY_COLOR} -f docker-compose.${params.DEPLOY_COLOR}.yml up -d --build
                 """
             }
         }
@@ -91,15 +93,15 @@ pipeline {
                     for (svc in services) {
                         retry(10) {
                             sh """
-                            echo "🔎 Checking health of ${svc}..."
-                            STATUS=\$(docker inspect --format='{{.State.Health.Status}}' ${svc} | tr -d '\\n')
-                            echo "Current STATUS: \$STATUS"
-                            if [ "\$STATUS" != "healthy" ]; then
-                                echo "❌ Still not healthy (\$STATUS). Waiting 5s..."
-                                sleep 5
-                                exit 1
-                            fi
-                            echo "✅ ${svc} is healthy!"
+                                echo "🔎 Checking health of ${svc}..."
+                                STATUS=\$(docker inspect --format='{{.State.Health.Status}}' ${svc} | tr -d '\\n')
+                                echo "Current STATUS: \$STATUS"
+                                if [ "\$STATUS" != "healthy" ]; then
+                                    echo "❌ Still not healthy (\$STATUS). Waiting 5s..."
+                                    sleep 5
+                                    exit 1
+                                fi
+                                echo "✅ ${svc} is healthy!"
                             """
                         }
                     }
@@ -110,15 +112,13 @@ pipeline {
         stage('Update Nginx Configuration') {
             steps {
                 echo "📦 NGINX 설정 파일 생성 중..."
-                script {
-                    sh """
+                sh """
                     export FRONTEND_UPSTREAM=frontend_${params.DEPLOY_COLOR}
                     export BACKEND_UPSTREAM=backend_${params.DEPLOY_COLOR}
                     export AI_UPSTREAM=ai_${params.DEPLOY_COLOR}
                     envsubst '\$FRONTEND_UPSTREAM \$BACKEND_UPSTREAM \$AI_UPSTREAM' < ./nginx-template/nginx.template.conf > ./nginx/conf.d/active.conf
                     docker cp ./nginx/conf.d/active.conf nginx:/etc/nginx/conf.d/active.conf
-                    """
-                }
+                """
             }
         }
 
@@ -128,8 +128,8 @@ pipeline {
                 script {
                     try {
                         sh """
-                        docker exec nginx nginx -t
-                        docker exec nginx nginx -s reload
+                            docker exec nginx nginx -t
+                            docker exec nginx nginx -s reload
                         """
                     } catch (Exception e) {
                         echo "❌ Nginx reload 실패. 롤백 시작..."
@@ -144,8 +144,8 @@ pipeline {
             steps {
                 echo "🧹 이전 (${params.OLD_COLOR}) 컨테이너 정리 중..."
                 sh """
-                docker compose --project-name=${params.OLD_COLOR} -f docker-compose.${params.OLD_COLOR}.yml down || true
-                docker image prune -f || true
+                    docker compose --project-name=${params.OLD_COLOR} -f docker-compose.${params.OLD_COLOR}.yml down || true
+                    docker image prune -f || true
                 """
             }
         }
@@ -154,12 +154,12 @@ pipeline {
     post {
         success {
             script {
-                notifyMattermost("*배포 성공!* ${params.OLD_COLOR} → ${params.DEPLOY_COLOR} 전환 완료 🎉", true)
+                notifyMattermost("${params.OLD_COLOR} → ${params.DEPLOY_COLOR} 전환 완료 🎉", true)
             }
         }
         failure {
             script {
-                notifyMattermost("*배포 실패!* 롤백 수행됨 🔥", false)
+                notifyMattermost("롤백 수행됨 🔥", false)
             }
         }
     }
