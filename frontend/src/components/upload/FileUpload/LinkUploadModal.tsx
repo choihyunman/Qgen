@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
-import Button from '@/components/Button';
+import Button from '@/components/common/Button/Button';
 import link from '@/assets/icons/link.svg';
 
 interface LinkUploadModalProps {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import Background from '../components/Background/ArcBackground';
-import QuestionFrame from '../components/QuestionFrame';
-import ExamSidebar from '../components/ExamSidebar';
+import Background from '../../components/layout/Background/ArcBackground';
+import QuestionFrame from '../../components/quiz/QuestionFrame/QuestionFrame';
+import ExamSidebar from './ExamSidebar';
 
 // 더미 데이터
 const QUIZ_DATA = Array.from({ length: 30 }, (_, i) => {

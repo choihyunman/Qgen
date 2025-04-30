@@ -1,5 +1,5 @@
-import QuestionList from './QuestionList';
-import ExamInfo from './ExamInfo';
+import QuestionList from '../../components/quiz/QuestionList/QuestionList';
+import ExamInfo from '../../components/ExamInfo/ExamInfo';
 
 interface ExamSidebarProps {
   currentNumber: number;

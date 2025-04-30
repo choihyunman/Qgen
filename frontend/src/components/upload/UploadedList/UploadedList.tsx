@@ -2,7 +2,7 @@
 'use client';
 
 import { twMerge } from 'tailwind-merge';
-import IconBox from '../IconBox/IconBox';
+import IconBox from '../../common/IconBox/IconBox';
 
 interface UploadedFile {
   id: string;

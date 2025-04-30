@@ -1,6 +1,5 @@
+import IconBox from '@/components/common/IconBox/IconBox';
 import React, { useState, ChangeEvent } from 'react';
-import Button from '@/components/Button';
-import text from '@/assets/icons/text.svg';
 
 interface LinkUploadModalProps {
   onClose: () => void;
@@ -37,7 +36,8 @@ const LinkUploadModal: React.FC<LinkUploadModalProps> = ({
           </p>
 
           <div className='flex items-center border border-gray-200 rounded-lg p-3 bg-gray-50'>
-            <img src={text} alt='text' className='mr-2 h-4 w-4' />
+            {/* <img src={text} alt='text' className='mr-2 h-4 w-4' /> */}
+            <IconBox name='text' size={24}></IconBox>
             <input
               type='text'
               placeholder='텍스트 추가하기'
@@ -50,12 +50,12 @@ const LinkUploadModal: React.FC<LinkUploadModalProps> = ({
           </div>
         </div>
 
-        <Button
+        <button
           onClick={handleSubmit}
           className='w-full font-semibold text-base'
         >
           삽입
-        </Button>
+        </button>
       </div>
     </div>
   );

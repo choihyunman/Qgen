@@ -19,6 +19,12 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
-    allowedHosts: ['q-generator.com', 'localhost', 'frontend'],
+    allowedHosts: [
+      'q-generator.com',
+      'localhost',
+      'frontend',
+      'frontend_green',
+      'frontend_blue',
+    ],
   },
 });
