@@ -52,7 +52,7 @@ export default function List() {
   };
 
   return (
-    <main className='max-w-6xl mx-auto py-8 px-4 flex flex-col gap-8'>
+    <main className='py-8 px-4 flex flex-col gap-8'>
       {/* 인사 및 알림 카드 */}
       <section>
         <h1 className='text-2xl font-bold mb-6'>

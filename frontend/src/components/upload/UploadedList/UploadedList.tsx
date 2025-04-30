@@ -28,7 +28,7 @@ function UploadedList({
   className,
 }: UploadedListProps) {
   return (
-    <div className='bg-white rounded-2xl p-6 shadow border border-gray-100'>
+    <div className='bg-white rounded-3xl p-6 shadow-sm'>
       <div className={twMerge('w-full space-y-4', className)}>
         <h2 className='text-xl font-bold'>자료 업로드</h2>
 
