@@ -32,4 +32,28 @@ public class WorkBookService {
     
         return new WorkBookResponseDto(workBook);
     }
+
+
+    @Transactional(readOnly = true)
+    public List<WorkBookResponseDto> getAllWorkBooksByUser(Long userId) {
+        return workBookRepository.findByUser_UserId(userId).stream()
+                .map(WorkBookResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateWorkBookTitle(Long workBookId, String newTitle) {
+        WorkBook workBook = workBookRepository.findById(workBookId)
+                .orElseThrow(() -> new IllegalArgumentException("워크북을 찾을 수 없습니다."));
+
+        workBook.updateTitle(newTitle);
+    }
+
+    @Transactional
+    public void deleteWorkBook(Long workBookId) {
+        WorkBook workBook = workBookRepository.findById(workBookId)
+                .orElseThrow(() -> new IllegalArgumentException("워크북을 찾을 수 없습니다."));
+        workBookRepository.delete(workBook);
+    }
+
 }

@@ -1,22 +1,22 @@
+# 빌드 스테이지
 FROM gradle:8.12.1-jdk17 AS build
 
 WORKDIR /home/gradle/src
 
 COPY --chown=gradle:gradle . .
 
-RUN gradle build -x test --no-daemon
+RUN gradle build -x test --no-daemon --refresh-dependencies
 
 # 실행 스테이지
 FROM openjdk:17-jdk
 
 WORKDIR /app
 
-# 빌드 스테이지에서 생성된 JAR 파일을 복사
-COPY --from=build /home/gradle/src/build/libs/*.jar app.jar
+# 빌드 스테이지에서 생성된 app.jar 파일을 명확하게 복사
+COPY --from=build /home/gradle/src/build/libs/app.jar ./app.jar
 
 EXPOSE 8080
 
-# 자바의 쓸데없이 강한 보안 해제
 ENV JAVA_OPTS="\
     --add-opens=java.base/sun.nio.ch=ALL-UNNAMED \
     --add-opens=java.base/java.lang=ALL-UNNAMED \
@@ -29,5 +29,4 @@ ENV JAVA_OPTS="\
     --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED \
     -Djava.security.egd=file:/dev/./urandom"
 
-# Java 17의 접근 제한 문제 해결을 위한 옵션 추가
-CMD java $JAVA_OPTS -jar app.jar
+CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
