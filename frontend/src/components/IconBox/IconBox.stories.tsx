@@ -30,10 +30,7 @@ const meta = {
       control: { type: 'number', min: 12, max: 64, step: 4 },
       description: '아이콘 크기 (px)',
     },
-    color: {
-      control: 'color',
-      description: '아이콘 색상',
-    },
+
     rotate: {
       control: { type: 'number', min: 0, max: 360, step: 45 },
       description: '회전 각도 (도)',
@@ -116,9 +113,9 @@ export const Colors: Story = {
   },
   render: (args) => (
     <div className='flex items-center gap-4'>
-      <IconBox {...args} color='#FF0000' />
-      <IconBox {...args} color='#00FF00' />
-      <IconBox {...args} color='#0000FF' />
+      <IconBox {...args} />
+      <IconBox {...args} />
+      <IconBox {...args} />
       <IconBox
         {...args}
         className='text-purple-500 hover:text-purple-700 transition-colors'
