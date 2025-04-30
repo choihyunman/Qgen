@@ -10,6 +10,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  assetsInclude: ['**/*.svg'], // SVG 파일을 에셋으로 처리
   server: {
     host: true,
     port: 5173,
