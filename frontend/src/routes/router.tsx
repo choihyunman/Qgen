@@ -1,5 +1,5 @@
 import App from '@/App';
-import GenerateTestpaper from '@/pages/GenerateTestpaper/GenerateTestpaper';
+import Generate from '@/pages/Generate/Generate';
 import { createBrowserRouter } from 'react-router-dom';
 
 export const router = createBrowserRouter([
@@ -8,8 +8,8 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/generateTestpaper',
-        element: <GenerateTestpaper />,
+        path: '/generate',
+        element: <Generate />,
       },
     ],
   },

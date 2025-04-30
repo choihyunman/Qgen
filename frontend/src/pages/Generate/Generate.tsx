@@ -1,19 +1,19 @@
 import { useState, useMemo } from 'react';
 import BlurBackground from '../../components/layout/Background/BlurBackground';
 import Button from '../../components/common/Button/Button';
-
-interface ProblemType {
-  name: string;
-  count: number;
-}
+import UploadedList from '@/components/upload/UploadedList/UploadedList';
+import FileUploader from '@/components/upload/FileUpload/FileUploader';
+import { TestType } from '@/types/generate';
+import { UploadedFile } from '@/types/upload';
 
 const GenerateTestpaper = () => {
   const [testName, setTestName] = useState('');
-  const [problemTypes, setProblemTypes] = useState<ProblemType[]>([
+  const [problemTypes, setProblemTypes] = useState<TestType[]>([
     { name: '객관식', count: 0 },
     { name: '주관식', count: 0 },
     { name: '서술형', count: 0 },
   ]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
   const totalProblems = useMemo(() => {
     return problemTypes.reduce((sum, type) => sum + type.count, 0);
@@ -46,30 +46,81 @@ const GenerateTestpaper = () => {
     );
   };
 
+  const handleFileUpload = (file: File) => {
+    const newFile: UploadedFile = {
+      id: Date.now().toString(),
+      title: file.name,
+      type: file.type,
+    };
+    setUploadedFiles((prev) => [...prev, newFile]);
+  };
+
+  const handleLinkSubmit = (url: string) => {
+    const newFile: UploadedFile = {
+      id: Date.now().toString(),
+      title: url,
+      type: 'URL',
+    };
+    setUploadedFiles((prev) => [...prev, newFile]);
+  };
+
+  const handleTextSubmit = (text: string) => {
+    const newFile: UploadedFile = {
+      id: Date.now().toString(),
+      title: '직접 입력한 텍스트',
+      type: 'Text',
+    };
+    setUploadedFiles((prev) => [...prev, newFile]);
+  };
+
+  const handleFileDelete = (id: string) => {
+    setUploadedFiles((prev) => prev.filter((file) => file.id !== id));
+  };
+
   return (
     <BlurBackground>
-      <div className='flex flex-col items-center justify-center min-h-screen py-10 px-4'>
+      <div className='flex flex-col items-start justify-center min-h-screen py-10 px-4 max-w-2xl mx-auto'>
         {/* Title Section */}
-        <h1 className='text-4xl font-bold text-[#754AFF] mb-12'>
+        <h1 className='text-2xl font-bold text-[#754AFF] mb-10'>
           시험지 생성하기
         </h1>
 
         {/* Test Name Input Section */}
-        <div className='w-full max-w-2xl mb-8'>
-          <h2 className='text-xl font-semibold mb-3'>시험지 이름</h2>
-          <div className='backdrop-blur-md bg-white/30 rounded-lg p-3 shadow-lg'>
+        <div className='w-full bg-white/50 rounded-lg p-6 mb-8'>
+          <h2 className='text-xl font-semibold mb-5'>시험지 이름</h2>
+          <div className='border border-gray-300 backdrop-blur-md bg-white/30 rounded-lg p-3'>
             <input
               type='text'
               placeholder='제목없는 시험지'
               value={testName}
               onChange={(e) => setTestName(e.target.value)}
-              className='w-full bg-transparent border-none outline-none text-gray-800 placeholder-gray-500'
+              className='w-full bg-transparent border-none outline-none text-gray-800 placeholder-gray-400'
             />
           </div>
         </div>
 
+        {/* File Upload Section */}
+        <div className='w-full bg-white/50 rounded-lg mb-8'>
+          <FileUploader
+            onFileUpload={handleFileUpload}
+            onLinkSubmit={handleLinkSubmit}
+            onTextSubmit={handleTextSubmit}
+          />
+        </div>
+
+        {/* Uploaded Files List */}
+        {uploadedFiles.length > 0 && (
+          <div className='w-full bg-white/50 rounded-lg p-6 mb-8'>
+            <UploadedList
+              files={uploadedFiles}
+              maxFiles={10}
+              onDelete={handleFileDelete}
+            />
+          </div>
+        )}
+
         {/* Problem Types and Count Selection Section */}
-        <div className='w-full max-w-2xl mb-8'>
+        <div className='bg-white/50 rounded-lg p-6 w-full mb-8'>
           <div className='flex justify-between items-center mb-5'>
             <h2 className='text-xl font-semibold'>문제 유형 및 개수 선택</h2>
             <span className='text-lg font-medium text-[#754AFF]'>
@@ -163,17 +214,17 @@ const GenerateTestpaper = () => {
                 >
                   <button
                     onClick={() => handleCountChange(type.name, type.count - 1)}
-                    className='w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors'
+                    className='w-8 h-8 rounded-full bg-[#764EFF]/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-[#764EFF]/70 transition-colors'
                     disabled={type.count === 0}
                   >
                     -
                   </button>
-                  <span className='w-8 text-center text-white font-semibold'>
+                  <span className='w-8 text-center text-black font-semibold'>
                     {type.count}
                   </span>
                   <button
                     onClick={() => handleCountChange(type.name, type.count + 1)}
-                    className='w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors'
+                    className='w-8 h-8 rounded-full bg-[#764EFF]/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-[#764EFF]/70 transition-colors'
                     disabled={totalProblems >= 8}
                   >
                     +
@@ -182,18 +233,17 @@ const GenerateTestpaper = () => {
               </div>
             ))}
           </div>
-
-          <p className='text-sm text-gray-500 mt-4 text-center'>
+          <p className='text-sm text-gray-500 mb-4 text-left'>
             최대 8문제까지 생성 가능합니다.
           </p>
         </div>
 
         {/* Generate Button Section */}
-        <div className='w-full max-w-2xl flex justify-center'>
+        <div className='w-full flex justify-center'>
           <Button
             onClick={() => {}}
             className='px-8 py-3 text-lg font-semibold'
-            disabled={totalProblems === 0}
+            disabled={totalProblems === 0 || uploadedFiles.length === 0}
           >
             시험지 생성하기
           </Button>
