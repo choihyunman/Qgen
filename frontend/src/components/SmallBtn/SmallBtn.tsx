@@ -1,13 +1,18 @@
 interface SmallBtnProps {
     text: string;
     onClick?: () => void;
+    outline?: boolean;
   }
   
-  function SmallBtn({ text, onClick }: SmallBtnProps) {
+  function SmallBtn({ text, onClick, outline = false }: SmallBtnProps) {
     return (
       <button
         onClick={onClick}
-        className="px-3 py-1 text-sm rounded-full bg-black text-white  bg-none "
+        className={`px-3 py-1 text-sm rounded-full ${
+          outline 
+            ? 'border border-black text-black bg-white' 
+            : 'bg-black text-white'
+        }`}
       >
         {text}
       </button>
