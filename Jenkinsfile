@@ -1,10 +1,16 @@
 import groovy.json.JsonOutput
 
 def notifyMattermost(message, success = true) {
-    def safeCommitMessage = params.COMMIT_MESSAGE.replaceAll(/\r?\n/, ' ')
-    def commitInfo = "[🧑 ${params.COMMIT_AUTHOR}] - \"${safeCommitMessage}\""
+    def safeCommitMessage = params.COMMIT_MESSAGE.replaceAll(/\r?\n/, ' ').trim()
+    def commitAuthor = params.COMMIT_AUTHOR
     def statusEmoji = success ? "✅" : "❌"
-    def finalMessage = "${statusEmoji} ${message}\n${commitInfo}"
+    def statusText = success ? "[배포 성공]" : "[배포 실패]"
+    def finalMessage = """
+${statusEmoji} ${statusText} ${message}
+
+🧑‍💻 커밋자: ${commitAuthor}
+📝 메시지: ${safeCommitMessage}
+""".stripIndent().trim()
 
     def payload = JsonOutput.toJson([text: finalMessage])
 
