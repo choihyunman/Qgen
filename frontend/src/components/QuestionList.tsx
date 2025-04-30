@@ -1,0 +1,41 @@
+interface QuestionListProps {
+  currentNumber: number;
+  totalQuestions: number;
+  onQuestionClick: (questionNumber: number) => void;
+}
+
+function QuestionList({
+  currentNumber,
+  totalQuestions,
+  onQuestionClick,
+}: QuestionListProps) {
+  return (
+    <div className='bg-white rounded-[24px] p-6 shadow-lg'>
+      <h3 className='text-lg font-bold mb-6'>문제 목록</h3>
+      <div className='grid grid-cols-5 gap-3 px-2'>
+        {Array.from(
+          { length: Math.min(totalQuestions, 30) },
+          (_, i) => i + 1
+        ).map((number) => (
+          <button
+            key={number}
+            onClick={() => onQuestionClick(number)}
+            className={`
+                aspect-square rounded-[18px] flex items-center justify-center text-sm font-medium
+                transition-colors duration-200 ease-in-out min-w-[32px] cursor-pointer
+                ${
+                  number === currentNumber
+                    ? 'bg-gradient-to-r from-[#754AFF] to-[#A34BFF] text-white shadow-sm'
+                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+                }
+              `}
+          >
+            {number}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default QuestionList;
