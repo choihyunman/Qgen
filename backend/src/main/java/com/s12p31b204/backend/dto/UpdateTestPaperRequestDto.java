@@ -9,6 +9,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class WorkBookRequestDto {
+public class UpdateTestPaperRequestDto {
+    private Long testPaperId;
     private String title;
 }

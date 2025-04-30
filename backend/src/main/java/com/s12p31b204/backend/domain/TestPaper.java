@@ -61,4 +61,17 @@ public class TestPaper {
 
     @CreatedDate
     private LocalDateTime createAt;
+
+    public TestPaper(String title, boolean choiceAns, boolean shortAns, boolean OXAns, boolean wordAns, int quantity) {
+        this.title = title;
+        this.choiceAns = choiceAns;
+        this.shortAns = shortAns;
+        this.OXAns = OXAns;
+        this.wordAns = wordAns;
+        this.quantity = quantity;
+    }
+
+    public void updateTestPaper(String title) {
+        this.title = title;
+    }
 }

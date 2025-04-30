@@ -9,6 +9,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class WorkBookRequestDto {
+public class CreateTestPaperRequestDto {
+    private Long workBookId;
     private String title;
+    private boolean choiceAns;
+    private boolean shortAns;
+    private boolean OXAns;
+    private boolean wordAns;
+    private int quantity;
 }
