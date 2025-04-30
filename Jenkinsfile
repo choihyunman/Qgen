@@ -1,18 +1,21 @@
 import groovy.json.JsonOutput
 
-def notifyMattermost(message, success = true) {
+def notifyMattermost(success = true) {
     def safeCommitMessage = params.COMMIT_MESSAGE.replaceAll(/\r?\n/, ' ').trim()
     def commitAuthor = params.COMMIT_AUTHOR
+    def branchName = params.BRANCH_NAME?.replaceAll('refs/heads/', '') ?: 'unknown'
     def statusEmoji = success ? "✅" : "❌"
-    def statusText = success ? "### ✅ 배포 성공" : "### ❌ 배포 실패"
+    def statusText = success ? "### ${statusEmoji} 배포 성공" : "### ${statusEmoji} 배포 실패"
 
-    def finalMessage = """
-${statusText}
-${message}
-
-🧑‍💻 커밋자: ${commitAuthor}
-📝 메시지: ${safeCommitMessage}
+    def contentBlock = """
+\`\`\`
+👤 ${commitAuthor}
+🌿 ${branchName}
+📝 ${safeCommitMessage}
+\`\`\`
 """.stripIndent().trim()
+
+    def finalMessage = "${statusText}\n\n${contentBlock}"
 
     def payload = JsonOutput.toJson([text: finalMessage])
 
@@ -41,6 +44,7 @@ pipeline {
     parameters {
         string(name: 'COMMIT_AUTHOR', defaultValue: '', description: '커밋 작성자')
         string(name: 'COMMIT_MESSAGE', defaultValue: '', description: '커밋 메시지')
+        string(name: 'BRANCH_NAME', defaultValue: '', description: '브랜치 이름') // ✅ 추가
         string(name: 'DEPLOY_COLOR', defaultValue: 'green', description: '배포할 색상')
         string(name: 'OLD_COLOR', defaultValue: 'blue', description: '현재 운영 중인 색상')
     }
@@ -154,12 +158,12 @@ pipeline {
     post {
         success {
             script {
-                notifyMattermost("${params.OLD_COLOR} → ${params.DEPLOY_COLOR} 전환 완료 🎉", true)
+                notifyMattermost(true)
             }
         }
         failure {
             script {
-                notifyMattermost("롤백 수행됨 🔥", false)
+                notifyMattermost(false)
             }
         }
     }
