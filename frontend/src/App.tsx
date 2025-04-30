@@ -6,10 +6,10 @@ import ArcBackground from './components/layout/Background/ArcBackground';
 import BlurBackground from './components/layout/Background/BlurBackground';
 
 function App() {
+  const arcPages = ['/quiz'];
   const location = useLocation();
+  const isArcPage = arcPages.some((path) => location.pathname.startsWith(path));
 
-  // 예시: /special로 시작하면 ArcBackground, 아니면 BlurBackground
-  const isArcPage = location.pathname.startsWith('/quiz');
   const BackgroundComponent = isArcPage ? ArcBackground : BlurBackground;
 
   return (
