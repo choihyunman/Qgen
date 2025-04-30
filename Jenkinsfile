@@ -1,7 +1,7 @@
 import groovy.json.JsonOutput
 
 def notifyMattermost(message, success = true) {
-    def safeCommitMessage = params.COMMIT_MESSAGE
+    def safeCommitMessage = params.COMMIT_MESSAGE.replaceAll(/\r?\n/, ' ')
     def commitInfo = "[🧑 ${params.COMMIT_AUTHOR}] - \"${safeCommitMessage}\""
     def statusEmoji = success ? "✅" : "❌"
     def finalMessage = "${statusEmoji} ${message}\n${commitInfo}"
