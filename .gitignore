@@ -16,3 +16,6 @@
 
 # Node
 node_modules/
+
+# jenkins
+jenkins_home
