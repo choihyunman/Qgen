@@ -38,7 +38,7 @@ interface IconBoxProps {
   /** 아이콘 크기 (px) */
   size?: number;
   /** 아이콘 색상 */
-  color?: string;
+  // color?: string;
   /** 추가 클래스명 */
   className?: string;
   /** 클릭 이벤트 핸들러 */
@@ -50,7 +50,7 @@ interface IconBoxProps {
 function IconBox({
   name,
   size = 24,
-  color,
+  // color,
   className,
   onClick,
   rotate,
@@ -85,9 +85,9 @@ function IconBox({
         alt={`${name} icon`}
         width={size}
         height={size}
-        style={{
-          filter: color ? `color(${color})` : undefined,
-        }}
+        // style={{
+        //   filter: color ? `color(${color})` : undefined,
+        // }}
       />
     </div>
   );
