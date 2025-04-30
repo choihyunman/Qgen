@@ -1,11 +1,10 @@
 import './App.css';
-import SmallBtn from './components/SmallBtn/SmallBtn';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   return (
     <div className=''>
-      메인 화면 입니다.
-      <SmallBtn text='로그인' />
+      <Outlet />
     </div>
   );
 }
