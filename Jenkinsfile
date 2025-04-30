@@ -8,11 +8,11 @@ def notifyMattermost(success = true) {
     def statusText = success ? "### ${statusEmoji} 배포 성공" : "### ${statusEmoji} 배포 실패"
 
     def contentBlock = """
-\`\`\`
+```
 👤 ${commitAuthor}
 🌿 ${branchName}
 📝 ${safeCommitMessage}
-\`\`\`
+```
 """.stripIndent().trim()
 
     def finalMessage = "${statusText}\n\n${contentBlock}"
