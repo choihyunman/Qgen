@@ -44,9 +44,17 @@ public class Document {
     @Column(nullable = false)
     private String documentType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String documentURL;
 
     @CreatedDate
     private LocalDateTime createAt;
+
+    public Document(WorkBook workBook, String name, long size, String type, String url) {
+        this.workBook = workBook;
+        this.documentName = name;
+        this.documentSize = size;
+        this.documentType = type;
+        this.documentURL = url;
+    }
 }
