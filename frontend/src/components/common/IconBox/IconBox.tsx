@@ -47,7 +47,7 @@ interface IconBoxProps {
   rotate?: number;
 }
 
-function IconBox({
+export default function IconBox({
   name,
   size = 24,
   // color,
@@ -92,5 +92,3 @@ function IconBox({
     </div>
   );
 }
-
-export default IconBox;

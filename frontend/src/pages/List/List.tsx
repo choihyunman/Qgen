@@ -6,6 +6,8 @@ import WorkBookList from './WorkBookList';
 import { useState } from 'react';
 import UploadedList from '@/components/upload/UploadedList/UploadedList';
 import TestPaperList from './TestPaperList';
+import IconBox from '@/components/common/IconBox/IconBox';
+import Button from '@/components/common/Button/Button';
 
 const mockFiles = [
   { id: '1', title: '정보처리기사 필기 준비 문제 모음', type: 'DOC' },
@@ -103,10 +105,8 @@ export default function List() {
         </h1>
         <div className='bg-white rounded-2xl shadow p-6 flex items-center gap-4 mb-8'>
           {/* 예시 이미지(아이콘) */}
-          <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center'>
-            <span role='img' aria-label='icon' className='text-3xl'>
-              🎓
-            </span>
+          <div className='p-3 w-24 h-26 bg-gray-100 rounded-full flex items-center justify-center'>
+            <img src='src/assets/images/dolpin-with-tablet.png' alt='' />
           </div>
           <div className='flex-1'>
             <div className='font-medium mb-1'>
@@ -115,9 +115,9 @@ export default function List() {
             <div className='text-gray-500 text-sm mb-2'>
               곧 잊어버리기 전에 함께 복습하러 가볼까요?
             </div>
-            <button className='px-4 py-1 border border-purple-400 text-purple-600 rounded-lg text-sm hover:bg-purple-50 transition'>
-              바로가기
-            </button>
+            <Button variant='filled' className='px-3 py-2 text-sm'>
+              문제 풀기
+            </Button>
           </div>
         </div>
       </section>
@@ -133,23 +133,27 @@ export default function List() {
             >
               워크북 목록
             </button>
+            {!selectedWorkbook && (
+              <>
+                <IconBox
+                  className='cursor-pointer'
+                  name='plusCircle'
+                  size={22}
+                />
+              </>
+            )}
             {selectedWorkbook && (
               <>
                 <span className='text-gray-400'>›</span>
-                <span className='text-lg font-semibold'>
+                <span className='text-xl font-semibold'>
                   {selectedWorkbookData?.title}
                 </span>
+                <button className='flex items-center ml-1 text-gray-400 hover:text-purple-500 cursor-pointer'>
+                  <span className='sr-only'>이름 수정</span>
+                  <IconBox name='edit' size={20} />
+                </button>
               </>
             )}
-            <button className='ml-2 text-gray-400 hover:text-purple-500'>
-              <span className='sr-only'>이름 수정</span>
-              <svg width='16' height='16' fill='none' viewBox='0 0 16 16'>
-                <path
-                  d='M2 12.5V14h1.5l8.06-8.06-1.5-1.5L2 12.5zM14.06 4.06a1 1 0 0 0 0-1.41l-1.71-1.71a1 1 0 0 0-1.41 0l-1.13 1.13 3.12 3.12 1.13-1.13z'
-                  fill='currentColor'
-                />
-              </svg>
-            </button>
           </div>
 
           {/* 조건부 렌더링 */}
@@ -172,9 +176,7 @@ export default function List() {
           <aside className='w-[340px] shrink-0'>
             <div className='flex items-center justify-between mb-2'>
               <span className='text-2xl font-semibold'>자료 업로드</span>
-              <button className='px-2 py-1 text-xs bg-purple-100 text-purple-600 rounded hover:bg-purple-200 transition'>
-                + 추가하기
-              </button>
+              <Button className='px-2 py-1 text-xs'>+ 추가하기</Button>
             </div>
             <UploadedList files={files} maxFiles={10} onDelete={handleDelete} />
           </aside>

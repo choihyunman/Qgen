@@ -55,7 +55,7 @@ function UploadedList({
           {files.map((file) => (
             <div
               key={file.id}
-              className='flex items-center justify-between p-4 rounded-2xl border border-gray-200'
+              className='flex cursor-pointer items-start justify-between p-4 rounded-2xl border border-gray-200'
             >
               <div className='space-y-1'>
                 <h3 className='font-medium'>{file.title}</h3>
@@ -63,7 +63,7 @@ function UploadedList({
               </div>
               <button
                 onClick={() => onDelete?.(file.id)}
-                className='p-1 hover:bg-gray-100 rounded-full transition-colors'
+                className='p-1 rounded-full cursor-pointer'
               >
                 <IconBox name='x' size={20} className='text-gray-400' />
               </button>
