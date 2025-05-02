@@ -42,10 +42,10 @@ public class TestPaper {
     @Column(length = 100, nullable = false)
     private String title;
 
-    private boolean choiceAns;
-    private boolean shortAns;
-    private boolean OXAns;
-    private boolean wordAns;
+    private int choiceAns;
+    private int shortAns;
+    private int OXAns;
+    private int wordAns;
 
     @Column(nullable = false)
     private int quantity;
@@ -61,4 +61,18 @@ public class TestPaper {
 
     @CreatedDate
     private LocalDateTime createAt;
+
+    public TestPaper(WorkBook workBook, String title, int choiceAns, int shortAns, int OXAns, int wordAns, int quantity) {
+        this.workBook = workBook;
+        this.title = title;
+        this.choiceAns = choiceAns;
+        this.shortAns = shortAns;
+        this.OXAns = OXAns;
+        this.wordAns = wordAns;
+        this.quantity = quantity;
+    }
+
+    public void updateTestPaper(String title) {
+        this.title = title;
+    }
 }

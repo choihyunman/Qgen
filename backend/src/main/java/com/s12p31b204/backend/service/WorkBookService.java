@@ -36,7 +36,7 @@ public class WorkBookService {
 
     @Transactional(readOnly = true)
     public List<WorkBookResponseDto> getAllWorkBooksByUser(Long userId) {
-        return workBookRepository.findByUserUserId(userId).stream()
+        return workBookRepository.findByUser_UserId(userId).stream()
                 .map(WorkBookResponseDto::new)
                 .collect(Collectors.toList());
     }

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.s12p31b204.backend.domain.WorkBook;
 
 public interface WorkBookRepository extends JpaRepository<WorkBook, Long> {
-    List<WorkBook> findByUserUserId(Long userId);
+    List<WorkBook> findByUser_UserId(Long userId);
 }

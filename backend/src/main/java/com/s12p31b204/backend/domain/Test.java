@@ -44,7 +44,7 @@ public class Test {
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String question;
 
     private String option1;
@@ -55,9 +55,10 @@ public class Test {
     @Column(nullable = false)
     private String answer;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String comment;
 
+    @Column(length = 1000)
     private String memo;
 
     @OneToMany(mappedBy = "test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -65,6 +66,32 @@ public class Test {
 
     @CreatedDate
     private LocalDateTime createAt;
+
+    // 객관식인 경우
+    public Test(TestPaper testPaper, Type type, String question,
+                String option1, String option2, String option3, String option4,
+                String answer, String comment) {
+        this.testPaper = testPaper;
+        this.type = type;
+        this.question = question;
+        this.option1 = option1;
+        this.option2 = option2;
+        this.option3 = option3;
+        this.option4 = option4;
+        this.answer = answer;
+        this.comment = comment;
+    }
+
+    // 주관식, OX인 경우
+    public Test(TestPaper testPaper, Type type, String question,
+                String answer, String comment) {
+        this.testPaper = testPaper;
+        this.type = type;
+        this.question = question;
+        this.answer = answer;
+        this.comment = comment;
+    }
+
 
     public enum Type {
         TYPE_CHOICE("객관식"),
