@@ -1,3 +1,4 @@
+import Button from '@/components/common/Button/Button';
 import IconBox from '@/components/common/IconBox/IconBox';
 import React, { useState, ChangeEvent } from 'react';
 
@@ -24,9 +25,13 @@ const LinkUploadModal: React.FC<LinkUploadModalProps> = ({
           <h2 className='text-2xl font-semibold'>텍스트 직접 입력</h2>
           <button
             onClick={onClose}
-            className='text-gray-500 hover:text-black text-xl p-1'
+            className='text-gray-100 hover:text-black text-xl p-1 hover:scale-120 transition-all'
           >
-            ✕
+            <IconBox
+              name='x'
+              size={24}
+              className='text-gray-200 cursor-pointer'
+            />
           </button>
         </div>
 
@@ -36,8 +41,7 @@ const LinkUploadModal: React.FC<LinkUploadModalProps> = ({
           </p>
 
           <div className='flex items-center border border-gray-200 rounded-lg p-3 bg-gray-50'>
-            {/* <img src={text} alt='text' className='mr-2 h-4 w-4' /> */}
-            <IconBox name='text' size={24}></IconBox>
+            <IconBox name='text' size={21} className='mr-2' />
             <input
               type='text'
               placeholder='텍스트 추가하기'
@@ -50,12 +54,12 @@ const LinkUploadModal: React.FC<LinkUploadModalProps> = ({
           </div>
         </div>
 
-        <button
+        <Button
           onClick={handleSubmit}
           className='w-full font-semibold text-base'
         >
           삽입
-        </button>
+        </Button>
       </div>
     </div>
   );
