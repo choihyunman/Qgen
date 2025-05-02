@@ -1,7 +1,7 @@
 // src/components/TestPaperList/TestPaperList.tsx
 
 interface TestPaper {
-  id: string | number;
+  workbookId: string | number;
   title: string;
   createdAt: string;
   questionCount: number;
@@ -19,7 +19,7 @@ function TestPaperList({ papers }: TestPaperListProps) {
     <div className='space-y-4'>
       {papers.map((paper) => (
         <div
-          key={paper.id}
+          key={paper.workbookId}
           className='bg-white rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100'
         >
           <div className='flex items-center justify-between'>
