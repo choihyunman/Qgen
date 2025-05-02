@@ -28,46 +28,48 @@ function UploadedList({
   className,
 }: UploadedListProps) {
   return (
-    <div className={twMerge('w-full space-y-4', className)}>
-      <h2 className='text-xl font-bold'>자료 업로드</h2>
+    <div className='bg-white rounded-3xl p-6 shadow-sm'>
+      <div className={twMerge('w-full space-y-4', className)}>
+        <h2 className='text-xl font-bold'>자료 업로드</h2>
 
-      {/* 업로드 진행률 */}
-      <div className='space-y-2'>
-        <div className='flex justify-between items-center'>
-          <span className='text-sm'>자료 한도</span>
-          <span className='text-sm'>
-            {files.length}/{maxFiles}
-          </span>
-        </div>
-        <div className='h-2 rounded-full bg-gray-200 overflow-hidden'>
-          <div
-            className='h-full bg-purple-500 rounded-full transition-all duration-300'
-            style={{
-              width: `${(files.length / maxFiles) * 100}%`,
-            }}
-          />
-        </div>
-      </div>
-
-      {/* 파일 목록 */}
-      <div className='space-y-3'>
-        {files.map((file) => (
-          <div
-            key={file.id}
-            className='flex items-center justify-between p-4 rounded-2xl border border-gray-200'
-          >
-            <div className='space-y-1'>
-              <h3 className='font-medium'>{file.title}</h3>
-              <span className='text-sm text-gray-500'>{file.type}</span>
-            </div>
-            <button
-              onClick={() => onDelete?.(file.id)}
-              className='p-1 hover:bg-gray-100 rounded-full transition-colors'
-            >
-              <IconBox name='x' size={20} className='text-gray-400' />
-            </button>
+        {/* 업로드 진행률 */}
+        <div className='space-y-2'>
+          <div className='flex justify-between items-center'>
+            <span className='text-sm'>자료 한도</span>
+            <span className='text-sm'>
+              {files.length}/{maxFiles}
+            </span>
           </div>
-        ))}
+          <div className='h-2 rounded-full bg-gray-200 overflow-hidden'>
+            <div
+              className='h-full bg-purple-500 rounded-full transition-all duration-300'
+              style={{
+                width: `${(files.length / maxFiles) * 100}%`,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* 파일 목록 */}
+        <div className='space-y-3'>
+          {files.map((file) => (
+            <div
+              key={file.id}
+              className='flex items-center justify-between p-4 rounded-2xl border border-gray-200'
+            >
+              <div className='space-y-1'>
+                <h3 className='font-medium'>{file.title}</h3>
+                <span className='text-sm text-gray-500'>{file.type}</span>
+              </div>
+              <button
+                onClick={() => onDelete?.(file.id)}
+                className='p-1 hover:bg-gray-100 rounded-full transition-colors'
+              >
+                <IconBox name='x' size={20} className='text-gray-400' />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
