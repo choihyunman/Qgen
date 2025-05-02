@@ -1,17 +1,14 @@
-import {
-  CreateWorkBookResponse,
-  GetWorkBooksResponse,
-  WorkBook,
-} from '@/types/list';
+import { CreateWorkBookResponse, WorkBook } from '@/types/list';
 import axiosInstance from '@/apis/axiosInstance';
 
 // 문제집 전체 조회 API
 export const getWorkBooks = async (userId: number): Promise<WorkBook[]> => {
   try {
-    const response = await axiosInstance.get<GetWorkBooksResponse>(
+    const response = await axiosInstance.get<WorkBook[]>(
       `/api/workbooks/${userId}`
     );
-    return response.data.data;
+    console.log('조회된 문제집 목록 : ', response.data);
+    return response.data;
   } catch (error) {
     console.error('Failed to fetch workbooks:', error);
     throw error;
@@ -28,6 +25,7 @@ export const createWorkBook = async (
       `/api/workbooks/${userId}`,
       { title }
     );
+    console.log('문제집 생성 응답 : ', response.data);
     return response.data;
   } catch (error) {
     console.error('Failed to create workbook:', error);
