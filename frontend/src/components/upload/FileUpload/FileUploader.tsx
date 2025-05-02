@@ -9,12 +9,14 @@ interface FileUploaderProps {
   onFileUpload?: (file: File) => void;
   onLinkSubmit?: (url: string) => void;
   onTextSubmit?: (text: string) => void;
+  className?: string;
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({
   onFileUpload,
   onLinkSubmit,
   onTextSubmit,
+  className = '',
 }) => {
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [showTextModal, setShowTextModal] = useState(false);
@@ -35,8 +37,8 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   };
 
   return (
-    <div className='p-6'>
-      <h1 className='text-3xl font-bold mb-2'>문제 생성 소스</h1>
+    <div className={`p-6 bg-white rounded-3xl shadow-sm ${className}`}>
+      <h1 className='text-2xl font-bold mb-2'>문제 생성 소스</h1>
       <p className='text-gray-500 mb-8'>
         문제 생성에 사용할 자료를 업로드하세요. PDF, DOCX, TXT 파일을
         지원합니다.

@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import Button from '@/components/common/Button/Button';
 import link from '@/assets/icons/link.svg';
+import IconBox from '@/components/common/IconBox/IconBox';
 
 interface LinkUploadModalProps {
   onClose: () => void;
@@ -25,9 +26,9 @@ const LinkUploadModal: React.FC<LinkUploadModalProps> = ({
           <h2 className='text-2xl font-semibold'>링크로 가져오기</h2>
           <button
             onClick={onClose}
-            className='text-gray-500 hover:text-black text-xl p-1'
+            className='text-gray-500 hover:text-gray-900 text-xl p-1 hover:scale-120 transition-all cursor-pointer'
           >
-            ✕
+            <IconBox name='x' size={24} />
           </button>
         </div>
 
@@ -37,7 +38,7 @@ const LinkUploadModal: React.FC<LinkUploadModalProps> = ({
           </p>
 
           <div className='flex items-center border border-gray-200 rounded-lg p-3 bg-gray-50'>
-            <img src={link} alt='link' className='mr-2 h-4 w-4' />
+            <IconBox name='link' size={20} className='mr-2' />
             <input
               type='text'
               placeholder='URL 붙여넣기'
