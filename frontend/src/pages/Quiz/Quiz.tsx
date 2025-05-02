@@ -2,8 +2,6 @@ import { useState } from 'react';
 import Background from '../../components/layout/Background/ArcBackground';
 import QuestionFrame from '../../components/quiz/QuestionFrame/QuestionFrame';
 import ExamSidebar from './ExamSidebar';
-import Header from '@/components/layout/Header/Header';
-import Footer from '@/components/layout/Footer/Footer';
 
 // 더미 데이터
 const QUIZ_DATA = Array.from({ length: 30 }, (_, i) => {
@@ -141,50 +139,44 @@ function QuizPage() {
 
   return (
     <Background>
-      <Header />
-      <div className='w-full px-[60px] py-10'>
-        <div>
-          <div className='flex gap-[70px] items-stretch'>
-            <div className='w-[1315px]'>
-              <div className='flex items-center gap-2 mb-1'>
-                <img
-                  src='/src/assets/images/chart.png'
-                  alt='시험 아이콘'
-                  className='w-11 h-11'
-                />
-                <h1 className='text-2xl font-bold'>정보처리기사 필기 1회</h1>
-              </div>
-              <p className='text-gray-600 mb-4'>
-                2024년 정보처리기사 필기 기출 문제
-              </p>
-              <QuestionFrame
-                currentNumber={current + 1}
-                totalNumber={QUIZ_DATA.length}
-                question={q.question}
-                options={q.options}
-                selectedOption={selected}
-                isSubmitted={isSubmitted}
-                answerIndex={q.answerIndex}
-                explanation={q.explanation}
-                onSelect={handleSelect}
-                onSubmit={handleSubmit}
-                onNext={handleNext}
+      <div className='w-full py-10'>
+        <div className='flex gap-[40px] items-stretch'>
+          <div className='w-[1315px]'>
+            <div className='flex items-center gap-2 mb-1'>
+              <img
+                src='/src/assets/images/chart.png'
+                alt='시험 아이콘'
+                className='w-11 h-11'
               />
+              <h1 className='text-2xl font-bold'>정보처리기사 필기 1회</h1>
             </div>
-            <ExamSidebar
+            <p className='text-gray-600 mb-4'>
+              2024년 정보처리기사 필기 기출 문제
+            </p>
+            <QuestionFrame
               currentNumber={current + 1}
-              totalQuestions={QUIZ_DATA.length}
-              answeredQuestions={
-                answerStatus.filter((s) => s !== 'none').length
-              }
-              answerStatus={answerStatus}
-              mode='연습 모드'
-              onQuestionClick={handleQuestionClick}
+              totalNumber={QUIZ_DATA.length}
+              question={q.question}
+              options={q.options}
+              selectedOption={selected}
+              isSubmitted={isSubmitted}
+              answerIndex={q.answerIndex}
+              explanation={q.explanation}
+              onSelect={handleSelect}
+              onSubmit={handleSubmit}
+              onNext={handleNext}
             />
           </div>
+          <ExamSidebar
+            currentNumber={current + 1}
+            totalQuestions={QUIZ_DATA.length}
+            answeredQuestions={answerStatus.filter((s) => s !== 'none').length}
+            answerStatus={answerStatus}
+            mode='연습 모드'
+            onQuestionClick={handleQuestionClick}
+          />
         </div>
       </div>
-      <Footer />
     </Background>
   );
 }

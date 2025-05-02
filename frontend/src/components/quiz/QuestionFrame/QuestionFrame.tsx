@@ -45,7 +45,7 @@ function QuestionFrame({
   }, [isSubmitted]);
 
   return (
-    <div className='w-full h-[calc(100% + 40px)] bg-white rounded-[24px] px-[45px] pt-[50px] pb-6 shadow-sm'>
+    <div className='w-full h-[calc(100% + 40px)] bg-white rounded-[24px] px-[45px] pt-10 pb-10 shadow-sm'>
       <div>
         {/* 문제 번호 */}
         <div className='mb-6'>

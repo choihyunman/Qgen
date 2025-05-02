@@ -1,6 +1,7 @@
-<<<<<<< HEAD
-=======
 .main {
   padding: 30px 40px;
 }
->>>>>>> f54ab366509fbd6884223dae4adb66bb2d700386
+
+.main.check {
+  padding: 30px 40px;
+}
