@@ -6,7 +6,7 @@ interface ExamInfoProps {
 
 function ExamInfo({ totalQuestions, answeredQuestions, mode }: ExamInfoProps) {
   return (
-    <div className='bg-white rounded-[24px] p-6 shadow-lg'>
+    <div className='bg-white rounded-[24px] p-6 shadow-sm'>
       <h3 className='text-lg font-bold mb-6'>시험 정보</h3>
       <div className='space-y-4'>
         <div className='flex justify-between items-center'>

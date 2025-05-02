@@ -17,7 +17,7 @@ export default function Footer() {
   return (
     <footer
       ref={contentRef}
-      className={`w-full relative overflow-hidden transition-all duration-500 ease-in-out rounded-3xl px-12 shadow-[0_0_24px_0_rgba(0,0,0,0.25)] ${
+      className={`w-full relative overflow-hidden transition-all duration-500 ease-in-out rounded-3xl px-12 shadow-[0_0_24px_0_rgba(0,0,0,0.12)] ${
         expanded ? 'bg-black text-white py-12' : 'bg-white text-black py-8'
       }`}
     >

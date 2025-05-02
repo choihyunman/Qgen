@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Background from '../../components/layout/Background/ArcBackground';
 import QuestionFrame from '../../components/quiz/QuestionFrame/QuestionFrame';
 import ExamSidebar from './ExamSidebar';
+import Header from '@/components/layout/Header/Header';
+import Footer from '@/components/layout/Footer/Footer';
 
 // 더미 데이터
 const QUIZ_DATA = Array.from({ length: 30 }, (_, i) => {
@@ -94,17 +96,29 @@ const QUIZ_DATA = Array.from({ length: 30 }, (_, i) => {
   }
 });
 
+type AnswerStatus = 'none' | 'correct' | 'wrong';
+
 function QuizPage() {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [answerStatus, setAnswerStatus] = useState<AnswerStatus[]>(
+    Array(QUIZ_DATA.length).fill('none')
+  );
 
   const handleSelect = (idx: number) => {
     if (!isSubmitted) setSelected(idx);
   };
 
   const handleSubmit = () => {
-    if (selected !== null) setIsSubmitted(true);
+    if (selected !== null) {
+      setIsSubmitted(true);
+      setAnswerStatus((prev) => {
+        const updated = [...prev];
+        updated[current] = selected === q.answerIndex ? 'correct' : 'wrong';
+        return updated;
+      });
+    }
   };
 
   const handleNext = () => {
@@ -113,7 +127,6 @@ function QuizPage() {
       setSelected(null);
       setIsSubmitted(false);
     } else {
-      // 마지막 문제 처리 (예: 결과 페이지 이동 등)
       alert('퀴즈가 끝났습니다!');
     }
   };
@@ -128,10 +141,11 @@ function QuizPage() {
 
   return (
     <Background>
-      <div className='w-full max-w-[1440px] mx-auto px-[60px]'>
-        <div className='pt-12'>
-          <div className='flex gap-[40px] items-stretch'>
-            <div className='flex-1 max-w-[920px]'>
+      <Header />
+      <div className='w-full px-[60px] py-10'>
+        <div>
+          <div className='flex gap-[70px] items-stretch'>
+            <div className='w-[1315px]'>
               <div className='flex items-center gap-2 mb-1'>
                 <img
                   src='/src/assets/images/chart.png'
@@ -160,13 +174,17 @@ function QuizPage() {
             <ExamSidebar
               currentNumber={current + 1}
               totalQuestions={QUIZ_DATA.length}
-              answeredQuestions={isSubmitted ? (selected !== null ? 1 : 0) : 0}
-              mode='실전 모드'
+              answeredQuestions={
+                answerStatus.filter((s) => s !== 'none').length
+              }
+              answerStatus={answerStatus}
+              mode='연습 모드'
               onQuestionClick={handleQuestionClick}
             />
           </div>
         </div>
       </div>
+      <Footer />
     </Background>
   );
 }
