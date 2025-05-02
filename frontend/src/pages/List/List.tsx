@@ -3,122 +3,60 @@
 
 import WorkBookList from './WorkBookList';
 import WorkBookAddModal from '@/components/list/WorkBookAddModal/WorkBookAddModal';
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UploadedList from '@/components/upload/UploadedList/UploadedList';
 import TestPaperList from './TestPaperList';
 import IconBox from '@/components/common/IconBox/IconBox';
 import Button from '@/components/common/Button/Button';
+import { useWorkBook } from '@/hooks/list/useWorkBooks';
 
-const mockFiles = [
-  { id: '1', title: '정보처리기사 필기 준비 문제 모음', type: 'DOC' },
-  { id: '2', title: '정보처리기사 필기 준비', type: 'DOC' },
-  { id: '3', title: '정보처리기사 필기 준비', type: 'DOC' },
-  { id: '4', title: '정보처리기사 필기 준비', type: 'DOC' },
-];
-
-const mockWorkbooks = [
-  {
-    id: '1',
-    title: '정보처리기사 필기 준비 1',
-    date: '2025-04-25',
-  },
-  {
-    id: '2',
-    title: '정보처리기사 필기 준비 2',
-    date: '2025-04-25',
-  },
-  {
-    id: '3',
-    title: '정보처리기사 필기 준비 3',
-    date: '2025-04-25',
-  },
-  {
-    id: '4',
-    title: '정보처리기사 필기 준비 4',
-    date: '2025-04-25',
-  },
-  {
-    id: '5',
-    title: '정보처리기사 필기 준비 5',
-    date: '2025-04-25',
-  },
-];
-
-const mockPapers = [
-  {
-    workbookId: '1',
-    title: '정보처리기사 필기 준비',
-    createdAt: '2025.04.25',
-    questionCount: 30,
-    types: '객관식, 주관식, OX, 암기형',
-  },
-  {
-    workbookId: '2',
-    title: '정보처리기사 필기 준비',
-    createdAt: '2025.04.25',
-    questionCount: 30,
-    types: '객관식, 주관식, OX, 암기형',
-  },
-  {
-    workbookId: '3',
-    title: '정보처리기사 필기 준비',
-    createdAt: '2025.04.25',
-    questionCount: 30,
-    types: '객관식, 주관식, OX, 암기형',
-  },
-  {
-    workbookId: '4',
-    title: '정보처리기사 필기 준비',
-    createdAt: '2025.04.25',
-    questionCount: 30,
-    types: '객관식, 주관식, OX, 암기형',
-  },
-];
+// 예시: 실제 로그인 유저의 id를 받아와야 함
+const userId = 1;
 
 export default function List() {
-  const [files, setFiles] = useState(mockFiles);
-  const [selectedWorkbook, setSelectedWorkbook] = useState<string | null>(null);
+  // 커스텀 훅 사용
+  const {
+    workbooks,
+    isLoading,
+    error,
+    fetchWorkBooks,
+    createNewWorkBook,
+    editWorkBook,
+    // removeWorkBook 등 필요시 추가
+  } = useWorkBook();
+
+  // 기타 상태
+  const [selectedWorkbook, setSelectedWorkbook] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingTitle, setEditingTitle] = useState('');
 
-  const handleDelete = (id: string) => {
-    setFiles((prev) => prev.filter((file) => file.id !== id));
-  };
+  // 자료 업로드 mock (실제 API 연동 시 교체)
+  const [files, setFiles] = useState([
+    { id: '1', title: '정보처리기사 필기 준비 문제 모음', type: 'DOC' },
+    { id: '2', title: '정보처리기사 필기 준비', type: 'DOC' },
+    { id: '3', title: '정보처리기사 필기 준비', type: 'DOC' },
+    { id: '4', title: '정보처리기사 필기 준비', type: 'DOC' },
+  ]);
 
-  const handleWorkBookClick = (id: string) => {
-    setSelectedWorkbook(id);
-  };
+  // 문제집 목록 불러오기
+  useEffect(() => {
+    fetchWorkBooks(userId);
+  }, []);
 
-  const handleBackToWorkbooks = () => {
-    setSelectedWorkbook(null);
-  };
-
-  // 선택된 워크북 정보 가져오기
-  const selectedWorkbookData = mockWorkbooks.find(
-    (wb) => wb.id === selectedWorkbook
+  // 선택된 워크북 정보
+  const selectedWorkbookData = workbooks.find(
+    (wb) => wb.workBookId === selectedWorkbook
   );
 
-  // 모달 열기
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  // 모달 닫기
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  // 모달 열기/닫기
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   // 새 워크북 추가
-  const handleAddWorkBook = (title: string) => {
-    // 실제 구현에서는 API 호출 등이 들어갈 수 있습니다
-    const newWorkBook = {
-      id: String(mockWorkbooks.length + 1),
-      title,
-      date: new Date().toISOString().split('T')[0],
-    };
-    mockWorkbooks.push(newWorkBook);
+  const handleAddWorkBook = async (title: string) => {
+    await createNewWorkBook(userId, title);
+    setIsModalOpen(false);
   };
 
   // 수정 모드 시작
@@ -134,21 +72,28 @@ export default function List() {
   };
 
   // 수정 완료
-  const handleSubmitEdit = () => {
+  const handleSubmitEdit = async () => {
     if (editingTitle.trim() && selectedWorkbook) {
-      const workbookIndex = mockWorkbooks.findIndex(
-        (wb) => wb.id === selectedWorkbook
-      );
-      if (workbookIndex !== -1) {
-        mockWorkbooks[workbookIndex].title = editingTitle.trim();
-      }
+      await editWorkBook(selectedWorkbook, editingTitle.trim());
     }
     setIsEditing(false);
     setEditingTitle('');
   };
 
+  // 문제집 클릭
+  const handleWorkBookClick = (id: number) => {
+    setSelectedWorkbook(id);
+  };
+
+  // 문제집 목록으로 돌아가기
+  const handleBackToWorkbooks = () => {
+    setSelectedWorkbook(null);
+    setIsEditing(false);
+    setEditingTitle('');
+  };
+
   return (
-    <main className='py-8  flex flex-col gap-8'>
+    <main className='py-8 flex flex-col gap-8'>
       {/* 인사 및 알림 카드 */}
       <section>
         <h1 className='text-2xl font-bold mb-6'>
@@ -185,14 +130,12 @@ export default function List() {
               문제집 목록
             </button>
             {!selectedWorkbook && (
-              <>
-                <IconBox
-                  className='cursor-pointer'
-                  name='plusCircle'
-                  size={22}
-                  onClick={handleOpenModal}
-                />
-              </>
+              <IconBox
+                className='cursor-pointer'
+                name='plusCircle'
+                size={22}
+                onClick={handleOpenModal}
+              />
             )}
             {selectedWorkbook && (
               <>
@@ -242,20 +185,28 @@ export default function List() {
             )}
           </div>
 
+          {/* 로딩/에러 처리 */}
+          {isLoading && <div>로딩 중...</div>}
+          {error && <div className='text-red-500'>{error.message}</div>}
+
           {/* 조건부 렌더링 */}
-          {selectedWorkbook ? (
-            <TestPaperList
-              papers={mockPapers.filter(
-                (paper) => paper.workbookId === selectedWorkbook
-              )}
-            />
-          ) : (
-            <WorkBookList
-              workbooks={mockWorkbooks}
-              onWorkBookClick={handleWorkBookClick}
-              onAddClick={handleOpenModal}
-            />
-          )}
+          {!isLoading &&
+            !error &&
+            (selectedWorkbook ? (
+              <TestPaperList
+                papers={[]} // 실제 문제 리스트 연동 필요
+              />
+            ) : (
+              <WorkBookList
+                workbooks={workbooks.map((wb) => ({
+                  id: String(wb.workBookId),
+                  title: wb.title,
+                  date: wb.createAt,
+                }))}
+                onWorkBookClick={(id) => handleWorkBookClick(Number(id))}
+                onAddClick={handleOpenModal}
+              />
+            ))}
         </div>
 
         {/* 자료 업로드 - selectedWorkbook이 있을 때만 표시 */}
@@ -265,7 +216,7 @@ export default function List() {
               <span className='text-2xl font-semibold'>자료 업로드</span>
               <Button className='px-2 py-1 text-xs'>+ 추가하기</Button>
             </div>
-            <UploadedList files={files} maxFiles={10} onDelete={handleDelete} />
+            <UploadedList files={files} maxFiles={10} onDelete={() => {}} />
           </aside>
         )}
       </section>
