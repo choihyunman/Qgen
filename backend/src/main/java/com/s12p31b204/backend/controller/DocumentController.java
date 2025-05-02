@@ -1,7 +1,6 @@
 package com.s12p31b204.backend.controller;
 
 import java.io.IOException;
-import java.nio.file.attribute.UserPrincipal;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
