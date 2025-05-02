@@ -1,6 +1,7 @@
 import App from '@/App';
-import GenerateTestpaper from '@/pages/GenerateTestpaper/GenerateTestpaper';
+import Generate from '@/pages/Generate/Generate';
 import List from '@/pages/List/List';
+import Incorrect from '@/pages/Incorrect/Incorrect';
 import { createBrowserRouter } from 'react-router-dom';
 import Quiz from '@/pages/Quiz/Quiz';
 
@@ -10,8 +11,8 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/generateTestpaper',
-        element: <GenerateTestpaper />,
+        path: '/generate',
+        element: <Generate />,
       },
       {
         path: '/quiz',
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
       {
         path: '/list',
         element: <List />,
+      },
+      {
+        path: '/incorrect',
+        element: <Incorrect />,
       },
     ],
   },
