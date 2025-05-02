@@ -45,7 +45,7 @@ export default function List() {
   }, []);
 
   // 선택된 워크북 정보
-  const selectedWorkbookData = workbooks.find(
+  const selectedWorkbookData = workbooks?.find(
     (wb) => wb.workBookId === selectedWorkbook
   );
 
@@ -176,9 +176,13 @@ export default function List() {
                     onClick={handleStartEdit}
                     className='group flex items-center cursor-pointer'
                   >
-                    <span className='text-xl font-semibold border-b-2 border-transparent group-hover:border-gray-300'>
-                      {selectedWorkbookData?.title}
-                    </span>
+                    {selectedWorkbookData ? (
+                      <span className='text-xl font-semibold border-b-2 border-transparent group-hover:border-gray-300'>
+                        {selectedWorkbookData.title}
+                      </span>
+                    ) : (
+                      <div>선택된 문제집이 없습니다.</div>
+                    )}
                   </div>
                 )}
               </>
