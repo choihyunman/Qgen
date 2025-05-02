@@ -12,9 +12,9 @@ import lombok.ToString;
 public class CreateTestPaperRequestDto {
     private Long workBookId;
     private String title;
-    private boolean choiceAns;
-    private boolean shortAns;
-    private boolean OXAns;
-    private boolean wordAns;
+    private int choiceAns;
+    private int shortAns;
+    private int OXAns;
+    private int wordAns;
     private int quantity;
 }

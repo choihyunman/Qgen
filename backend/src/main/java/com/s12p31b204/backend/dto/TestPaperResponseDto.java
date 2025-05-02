@@ -19,10 +19,10 @@ public class TestPaperResponseDto {
 
     private String title;
 
-    private boolean choiceAns;
-    private boolean shortAns;
-    private boolean OXAns;
-    private boolean wordAns;
+    private int choiceAns;
+    private int shortAns;
+    private int OXAns;
+    private int wordAns;
 
     private int quantity;
 
@@ -32,10 +32,10 @@ public class TestPaperResponseDto {
         return TestPaperResponseDto.builder()
                 .testPaperId(testPaper.getTestPaperId())
                 .title(testPaper.getTitle())
-                .choiceAns(testPaper.isChoiceAns())
-                .shortAns(testPaper.isShortAns())
-                .OXAns(testPaper.isOXAns())
-                .wordAns(testPaper.isWordAns())
+                .choiceAns(testPaper.getChoiceAns())
+                .shortAns(testPaper.getShortAns())
+                .OXAns(testPaper.getOXAns())
+                .wordAns(testPaper.getWordAns())
                 .quantity(testPaper.getQuantity())
                 .createAt(testPaper.getCreateAt())
                 .build();
