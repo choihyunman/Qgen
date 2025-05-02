@@ -14,6 +14,7 @@ import plus from '@/assets/icons/plus.svg';
 import plusCircle from '@/assets/icons/plusCircle.svg';
 import text from '@/assets/icons/text.svg';
 import x from '@/assets/icons/x.svg';
+import check from '@/assets/icons/check.svg';
 
 // 아이콘 이미지 매핑 객체
 const ICON_IMAGES = {
@@ -27,6 +28,7 @@ const ICON_IMAGES = {
   plusCircle,
   text,
   x,
+  check,
 } as const;
 
 // 아이콘 이름 타입

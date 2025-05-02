@@ -2,6 +2,7 @@
 'use client';
 
 import WorkBookList from './WorkBookList';
+import WorkBookAddModal from '@/components/list/WorkBookAddModal/WorkBookAddModal';
 
 import { useState } from 'react';
 import UploadedList from '@/components/upload/UploadedList/UploadedList';
@@ -78,6 +79,9 @@ const mockPapers = [
 export default function List() {
   const [files, setFiles] = useState(mockFiles);
   const [selectedWorkbook, setSelectedWorkbook] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingTitle, setEditingTitle] = useState('');
 
   const handleDelete = (id: string) => {
     setFiles((prev) => prev.filter((file) => file.id !== id));
@@ -96,8 +100,55 @@ export default function List() {
     (wb) => wb.id === selectedWorkbook
   );
 
+  // 모달 열기
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // 새 워크북 추가
+  const handleAddWorkBook = (title: string) => {
+    // 실제 구현에서는 API 호출 등이 들어갈 수 있습니다
+    const newWorkBook = {
+      id: String(mockWorkbooks.length + 1),
+      title,
+      date: new Date().toISOString().split('T')[0],
+    };
+    mockWorkbooks.push(newWorkBook);
+  };
+
+  // 수정 모드 시작
+  const handleStartEdit = () => {
+    setEditingTitle(selectedWorkbookData?.title || '');
+    setIsEditing(true);
+  };
+
+  // 수정 취소
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditingTitle('');
+  };
+
+  // 수정 완료
+  const handleSubmitEdit = () => {
+    if (editingTitle.trim() && selectedWorkbook) {
+      const workbookIndex = mockWorkbooks.findIndex(
+        (wb) => wb.id === selectedWorkbook
+      );
+      if (workbookIndex !== -1) {
+        mockWorkbooks[workbookIndex].title = editingTitle.trim();
+      }
+    }
+    setIsEditing(false);
+    setEditingTitle('');
+  };
+
   return (
-    <main className='py-8 px-4 flex flex-col gap-8'>
+    <main className='py-8  flex flex-col gap-8'>
       {/* 인사 및 알림 카드 */}
       <section>
         <h1 className='text-2xl font-bold mb-6'>
@@ -131,7 +182,7 @@ export default function List() {
               onClick={handleBackToWorkbooks}
               className='cursor-pointer text-2xl font-semibold hover:text-purple-600 transition-colors'
             >
-              워크북 목록
+              문제집 목록
             </button>
             {!selectedWorkbook && (
               <>
@@ -139,19 +190,54 @@ export default function List() {
                   className='cursor-pointer'
                   name='plusCircle'
                   size={22}
+                  onClick={handleOpenModal}
                 />
               </>
             )}
             {selectedWorkbook && (
               <>
                 <span className='text-gray-400'>›</span>
-                <span className='text-xl font-semibold'>
-                  {selectedWorkbookData?.title}
-                </span>
-                <button className='flex items-center ml-1 text-gray-400 hover:text-purple-500 cursor-pointer'>
-                  <span className='sr-only'>이름 수정</span>
-                  <IconBox name='edit' size={20} />
-                </button>
+                {isEditing ? (
+                  <div className='flex items-center gap-2'>
+                    <div className='relative inline-block'>
+                      <span
+                        className='invisible whitespace-pre absolute text-xl font-semibold'
+                        aria-hidden='true'
+                      >
+                        {editingTitle}
+                      </span>
+                      <input
+                        type='text'
+                        value={editingTitle}
+                        onChange={(e) => setEditingTitle(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleSubmitEdit();
+                          } else if (e.key === 'Escape') {
+                            handleCancelEdit();
+                          }
+                        }}
+                        className='w-full min-w-[200px] border-0 border-b-2 border-gray-300 focus:border-purple-500 focus:ring-0 focus:outline-none rounded-none px-0 py-0 text-xl font-semibold bg-transparent'
+                        autoFocus
+                      />
+                      <IconBox
+                        className='absolute right-0 top-1 cursor-pointer'
+                        name='check'
+                        size={20}
+                        onClick={handleSubmitEdit}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    onClick={handleStartEdit}
+                    className='group flex items-center cursor-pointer'
+                  >
+                    <span className='text-xl font-semibold border-b-2 border-transparent group-hover:border-gray-300'>
+                      {selectedWorkbookData?.title}
+                    </span>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -167,6 +253,7 @@ export default function List() {
             <WorkBookList
               workbooks={mockWorkbooks}
               onWorkBookClick={handleWorkBookClick}
+              onAddClick={handleOpenModal}
             />
           )}
         </div>
@@ -182,6 +269,13 @@ export default function List() {
           </aside>
         )}
       </section>
+
+      {/* 모달 추가 */}
+      <WorkBookAddModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleAddWorkBook}
+      />
     </main>
   );
 }

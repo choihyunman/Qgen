@@ -11,9 +11,14 @@ interface WorkBook {
 interface WorkBookListProps {
   workbooks: WorkBook[];
   onWorkBookClick?: (id: string) => void;
+  onAddClick?: () => void;
 }
 
-function WorkBookList({ workbooks, onWorkBookClick }: WorkBookListProps) {
+function WorkBookList({
+  workbooks,
+  onWorkBookClick,
+  onAddClick,
+}: WorkBookListProps) {
   return (
     <div className=''>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
@@ -30,6 +35,7 @@ function WorkBookList({ workbooks, onWorkBookClick }: WorkBookListProps) {
         ))}
 
         <div
+          onClick={onAddClick}
           className='flex-1 h-[260px] border-2 border-dashed border-gray-300 rounded-[20px] 
                      flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors'
         >
