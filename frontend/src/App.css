@@ -1,3 +1,7 @@
 .main {
   padding: 30px 40px;
 }
+
+.main.check {
+  padding: 30px 40px;
+}

@@ -3,6 +3,7 @@ import Generate from '@/pages/Generate/Generate';
 import List from '@/pages/List/List';
 import Incorrect from '@/pages/Incorrect/Incorrect';
 import { createBrowserRouter } from 'react-router-dom';
+import Quiz from '@/pages/Quiz/Quiz';
 
 export const router = createBrowserRouter([
   {
@@ -12,6 +13,10 @@ export const router = createBrowserRouter([
       {
         path: '/generate',
         element: <Generate />,
+      },
+      {
+        path: '/quiz',
+        element: <Quiz />,
       },
       {
         path: '/list',

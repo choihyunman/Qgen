@@ -28,7 +28,7 @@ function QuestionFrame({
   onNext,
 }: QuestionFrameProps) {
   const activeBtnClass =
-    'bg-white text-[#784AFF] border-[#774AFF] hover:bg-[#F4F0FF] cursor-pointer';
+    'bg-gray-700 text-white border-gray-700 hover:bg-gray-800 cursor-pointer';
   const disabledBtnClass =
     'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed';
   const explanationRef = useRef<HTMLDivElement>(null);
@@ -45,7 +45,7 @@ function QuestionFrame({
   }, [isSubmitted]);
 
   return (
-    <div className='w-full h-[calc(100% + 40px)] max-w-4xl bg-white rounded-[24px] px-[45px] pt-[50px] pb-6 shadow-lg'>
+    <div className='w-full h-[calc(100% + 40px)] bg-white rounded-[24px] px-[45px] pt-10 pb-10 shadow-sm'>
       <div>
         {/* 문제 번호 */}
         <div className='mb-6'>
@@ -73,8 +73,8 @@ function QuestionFrame({
                 textStyle = 'font-bold text-red-500';
               }
             } else if (selectedOption === index) {
-              optionStyle = 'border-purple-600 bg-purple-50';
-              textStyle = 'font-bold text-purple-700';
+              optionStyle = 'border-gray-400 bg-gray-100';
+              textStyle = 'font-bold text-gray-700';
             }
             return (
               <div
