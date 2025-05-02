@@ -34,6 +34,7 @@ export const useWorkBook = (): UseWorkBookReturn => {
     try {
       const userId = 1; // 임시
       const data = await getWorkBooks(userId);
+      console.log('조회된 문제집 목록 : ', data);
       setWorkbooks(data);
     } catch (err) {
       setError(
