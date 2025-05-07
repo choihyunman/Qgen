@@ -113,10 +113,11 @@ function QuestionFrame({
       <div className='flex justify-end'>
         {!isSubmitted ? (
           <button
-            onClick={onSubmit}
+            type='button'
+            onClick={() => onSubmit()}
             disabled={selectedOption === null}
             className={
-              `px-6 py-2 rounded-lg border-2 font-bold transition-colors ` +
+              `px-6 py-2 rounded-lg border-2 font-bold transition-all duration-300 ` +
               (selectedOption === null ? disabledBtnClass : activeBtnClass)
             }
           >
@@ -124,8 +125,9 @@ function QuestionFrame({
           </button>
         ) : (
           <button
-            onClick={onNext}
-            className={`px-6 py-2 rounded-lg border-2 font-bold transition-colors ${activeBtnClass}`}
+            type='button'
+            onClick={() => onNext()}
+            className={`px-6 py-2 rounded-lg border-2 font-bold transition-all duration-300 ${activeBtnClass}`}
           >
             다음
           </button>
