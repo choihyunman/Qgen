@@ -1,6 +1,7 @@
 // src/components/WorkBookList/WorkBookList.tsx
 
 import WorkBookCard from '@/components/list/WorkBookCard/WorkBookCard';
+import { useNavigate } from 'react-router-dom';
 
 interface WorkBook {
   id: string;
@@ -19,6 +20,15 @@ function WorkBookList({
   onWorkBookClick,
   onAddClick,
 }: WorkBookListProps) {
+  const navigate = useNavigate();
+
+  // 카드 클릭 시 라우팅 함수
+  const handleCardClick = (id: string) => {
+    navigate(`/list/${id}`);
+    // 필요하다면 onWorkBookClick도 호출
+    onWorkBookClick?.(id);
+  };
+
   return (
     <div className=''>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
@@ -30,7 +40,7 @@ function WorkBookList({
             key={workbook.id}
             title={workbook.title}
             date={workbook.date}
-            onClick={() => onWorkBookClick?.(workbook.id)}
+            onClick={() => handleCardClick(workbook.id)}
           />
         ))}
 

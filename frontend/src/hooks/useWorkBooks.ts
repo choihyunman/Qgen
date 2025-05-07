@@ -1,12 +1,12 @@
 // src/hooks/useWorkBook.ts
 import { useState } from 'react';
-import { WorkBook } from '@/types/list';
+import { WorkBook } from '@/types/workbook';
 import {
   getWorkBooks,
   createWorkBook,
   deleteWorkBook,
   updateWorkBook,
-} from '@/apis/list/list';
+} from '@/apis/workbook/workbook';
 
 interface UseWorkBookReturn {
   workbooks: WorkBook[];

@@ -8,12 +8,20 @@ import UploadedList from '@/components/upload/UploadedList/UploadedList';
 import TestPaperList from './TestPaperList';
 import IconBox from '@/components/common/IconBox/IconBox';
 import Button from '@/components/common/Button/Button';
-import { useWorkBook } from '@/hooks/list/useWorkBooks';
+import { useWorkBook } from '@/hooks/useWorkBooks';
+import UploadModal from '@/components/list/UploadModal/UploadModal';
+import { UploadedFile } from '@/types/upload';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useTestPaper } from '@/hooks/useTestPaper';
+import { useUpload } from '@/hooks/useUpload';
 
 // 예시: 실제 로그인 유저의 id를 받아와야 함
 const userId = 1;
 
 export default function List() {
+  const { workBookId } = useParams(); // URL 파라미터에서 workBookId 추출
+  const numericWorkBookId = workBookId ? Number(workBookId) : null;
+
   // 커스텀 훅 사용
   const {
     workbooks,
@@ -25,19 +33,35 @@ export default function List() {
     // removeWorkBook 등 필요시 추가
   } = useWorkBook();
 
+  const {
+    testPapers,
+    isLoading: papersLoading,
+    error: papersError,
+    getTestPapers,
+    addTestPaper,
+    editTestPaperTitle,
+    removeTestPaper,
+    setTestPapers, // 필요시 외부에서 직접 세팅 가능
+  } = useTestPaper();
+
+  const {
+    documents,
+    getDocuments,
+    isLoading: uploadLoading,
+    error: uploadError,
+  } = useUpload();
+
   // 기타 상태
   const [selectedWorkbook, setSelectedWorkbook] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingTitle, setEditingTitle] = useState('');
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
-  // 자료 업로드 mock (실제 API 연동 시 교체)
-  const [files, setFiles] = useState([
-    { id: '1', title: '정보처리기사 필기 준비 문제 모음', type: 'DOC' },
-    { id: '2', title: '정보처리기사 필기 준비', type: 'DOC' },
-    { id: '3', title: '정보처리기사 필기 준비', type: 'DOC' },
-    { id: '4', title: '정보처리기사 필기 준비', type: 'DOC' },
-  ]);
+  // files 상태를 상위에서 관리
+  const [files, setFiles] = useState<UploadedFile[]>([]);
+
+  const navigate = useNavigate();
 
   // 문제집 목록 불러오기
   useEffect(() => {
@@ -46,12 +70,14 @@ export default function List() {
 
   // 선택된 워크북 정보
   const selectedWorkbookData = workbooks?.find(
-    (wb) => wb.workBookId === selectedWorkbook
+    (wb) => wb.workBookId === numericWorkBookId
   );
 
   // 모달 열기/닫기
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
+  const handleOpenUploadModal = () => setIsUploadModalOpen(true);
+  const handleCloseUploadModal = () => setIsUploadModalOpen(false);
 
   // 새 워크북 추가
   const handleAddWorkBook = async (title: string) => {
@@ -90,7 +116,69 @@ export default function List() {
     setSelectedWorkbook(null);
     setIsEditing(false);
     setEditingTitle('');
+    navigate('/list');
   };
+
+  // 파일 추가 함수
+  const handleFileUpload = (file: File) => {
+    setFiles((prev) => [
+      ...prev,
+      {
+        id: `${Date.now()}`, // 고유 id 생성
+        title: file.name,
+        type: file.type || 'FILE',
+      },
+    ]);
+    setIsUploadModalOpen(false);
+  };
+
+  // 링크 추가 함수 (예시)
+  const handleLinkSubmit = (url: string) => {
+    setFiles((prev) => [
+      ...prev,
+      {
+        id: `${Date.now()}`,
+        title: url,
+        type: 'LINK',
+      },
+    ]);
+    setIsUploadModalOpen(false);
+  };
+
+  // 텍스트 추가 함수 (예시)
+  const handleTextSubmit = (text: string) => {
+    setFiles((prev) => [
+      ...prev,
+      {
+        id: `${Date.now()}`,
+        title: text,
+        type: 'TEXT',
+      },
+    ]);
+    setIsUploadModalOpen(false);
+  };
+
+  // 파일 삭제 함수
+  const handleDelete = (id: string) => {
+    setFiles((prev) => prev.filter((file) => file.id !== id));
+  };
+
+  // workBookId가 있을 때 시험지 리스트 조회
+  useEffect(() => {
+    if (numericWorkBookId) {
+      getTestPapers(numericWorkBookId);
+      getDocuments(numericWorkBookId).then(() => {
+        setFiles(
+          documents.map((doc) => ({
+            id: String(doc.documentId),
+            title: doc.documentName,
+            type: doc.documentType,
+            // 필요하다면 추가 필드도 넣을 수 있음
+          }))
+        );
+      });
+    }
+  }, [numericWorkBookId]);
 
   return (
     <main className='py-8 flex flex-col gap-8'>
@@ -129,7 +217,7 @@ export default function List() {
             >
               문제집 목록
             </button>
-            {!selectedWorkbook && (
+            {!numericWorkBookId && (
               <IconBox
                 className='cursor-pointer'
                 name='plusCircle'
@@ -137,7 +225,7 @@ export default function List() {
                 onClick={handleOpenModal}
               />
             )}
-            {selectedWorkbook && (
+            {numericWorkBookId && (
               <>
                 <span className='text-gray-400'>›</span>
                 {isEditing ? (
@@ -196,10 +284,14 @@ export default function List() {
           {/* 조건부 렌더링 */}
           {!isLoading &&
             !error &&
-            (selectedWorkbook ? (
-              <TestPaperList
-                papers={[]} // 실제 문제 리스트 연동 필요
-              />
+            (numericWorkBookId ? (
+              papersLoading ? (
+                <div>시험지 목록 불러오는 중...</div>
+              ) : papersError ? (
+                <div className='text-red-500'>{papersError.message}</div>
+              ) : (
+                <TestPaperList papers={testPapers} />
+              )
             ) : (
               <WorkBookList
                 workbooks={workbooks.map((wb) => ({
@@ -218,9 +310,22 @@ export default function List() {
           <aside className='w-[340px] shrink-0'>
             <div className='flex items-center justify-between mb-2'>
               <span className='text-2xl font-semibold'>자료 업로드</span>
-              <Button className='px-2 py-1 text-xs'>+ 추가하기</Button>
+              <Button
+                className='px-2 py-1 text-xs'
+                onClick={() => setIsUploadModalOpen(true)}
+              >
+                + 추가하기
+              </Button>
             </div>
-            <UploadedList files={files} maxFiles={10} onDelete={() => {}} />
+            <UploadedList files={files} maxFiles={10} onDelete={handleDelete} />
+            <UploadModal
+              isOpen={isUploadModalOpen}
+              onClose={() => setIsUploadModalOpen(false)}
+              onFileUpload={handleFileUpload}
+              onLinkSubmit={handleLinkSubmit}
+              onTextSubmit={handleTextSubmit}
+              workBookId={numericWorkBookId || 0} // 추가
+            />
           </aside>
         )}
       </section>

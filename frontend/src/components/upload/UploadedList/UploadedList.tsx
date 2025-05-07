@@ -27,6 +27,9 @@ function UploadedList({
   onDelete,
   className,
 }: UploadedListProps) {
+  // files가 null이거나 undefined일 경우를 대비해 기본값 처리
+  const safeFiles = files ?? [];
+
   return (
     <div className='bg-white rounded-3xl p-6 shadow-sm'>
       <div className={twMerge('w-full space-y-4', className)}>
@@ -37,14 +40,14 @@ function UploadedList({
           <div className='flex justify-between items-center'>
             <span className='text-sm'>자료 한도</span>
             <span className='text-sm'>
-              {files.length}/{maxFiles}
+              {safeFiles.length}/{maxFiles}
             </span>
           </div>
           <div className='h-2 rounded-full bg-gray-200 overflow-hidden'>
             <div
               className='h-full bg-purple-500 rounded-full transition-all duration-300'
               style={{
-                width: `${(files.length / maxFiles) * 100}%`,
+                width: `${(safeFiles.length / maxFiles) * 100}%`,
               }}
             />
           </div>
@@ -52,23 +55,29 @@ function UploadedList({
 
         {/* 파일 목록 */}
         <div className='space-y-3'>
-          {files.map((file) => (
-            <div
-              key={file.id}
-              className='flex cursor-pointer items-start justify-between p-4 rounded-2xl border border-gray-200'
-            >
-              <div className='space-y-1'>
-                <h3 className='font-medium'>{file.title}</h3>
-                <span className='text-sm text-gray-500'>{file.type}</span>
-              </div>
-              <button
-                onClick={() => onDelete?.(file.id)}
-                className='p-1 rounded-full cursor-pointer'
-              >
-                <IconBox name='x' size={20} className='text-gray-400' />
-              </button>
+          {!safeFiles || safeFiles.length === 0 ? (
+            <div className='text-gray-400 text-center py-8'>
+              업로드된 파일이 없습니다
             </div>
-          ))}
+          ) : (
+            safeFiles.map((file) => (
+              <div
+                key={file.id}
+                className='flex cursor-pointer items-start justify-between p-4 rounded-2xl border border-gray-200'
+              >
+                <div className='space-y-1'>
+                  <h3 className='font-medium'>{file.title}</h3>
+                  <span className='text-sm text-gray-500'>{file.type}</span>
+                </div>
+                <button
+                  onClick={() => onDelete?.(file.id)}
+                  className='p-1 rounded-full cursor-pointer'
+                >
+                  <IconBox name='x' size={20} className='text-gray-400' />
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

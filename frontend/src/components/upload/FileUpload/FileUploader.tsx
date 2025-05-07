@@ -4,12 +4,16 @@ import linkGlassIcon from '@/assets/icons/link-glass.png';
 import textGlassIcon from '@/assets/icons/text-glass.png';
 import LinkUploadModal from './LinkUploadModal';
 import TextUploadModal from './TextUploadModal';
+import { uploadDocument, fetchDocumentsByWorkBook } from '@/apis/upload/upload';
+import { DocumentInfo } from '@/types/upload';
+import { useUpload } from '@/hooks/useUpload';
 
 interface FileUploaderProps {
   onFileUpload?: (file: File) => void;
   onLinkSubmit?: (url: string) => void;
   onTextSubmit?: (text: string) => void;
   className?: string;
+  workBookId: number;
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({
@@ -17,9 +21,17 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   onLinkSubmit,
   onTextSubmit,
   className = '',
+  workBookId,
 }) => {
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [showTextModal, setShowTextModal] = useState(false);
+  const {
+    documents: uploadedFiles,
+    isLoading,
+    error,
+    handleUpload,
+  } = useUpload();
+  // const workBookId = 1; // 실제 사용 시 props나 context 등에서 받아올 수 있음
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -29,10 +41,17 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     }
   };
 
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files && files.length > 0 && onFileUpload) {
-      onFileUpload(files[0]);
+    if (files && files.length > 0) {
+      const file = files[0];
+      try {
+        await handleUpload(file, workBookId); // useUpload의 handleUpload 사용
+        alert('파일 업로드에 성공하였습니다.');
+        if (onFileUpload) onFileUpload(file);
+      } catch (error) {
+        alert('파일 업로드에 실패했습니다.');
+      }
     }
   };
 
@@ -120,6 +139,9 @@ const FileUploader: React.FC<FileUploaderProps> = ({
           }}
         />
       )}
+
+      {isLoading && <div>업로드 중...</div>}
+      {error && <div className='text-red-500'>{error.message}</div>}
     </div>
   );
 };
