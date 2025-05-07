@@ -1,7 +1,9 @@
 // src/components/TestPaperList/TestPaperList.tsx
 
+import Button from '@/components/common/Button/Button';
+
 interface TestPaper {
-  id: string | number;
+  workbookId: string | number;
   title: string;
   createdAt: string;
   questionCount: number;
@@ -19,24 +21,26 @@ function TestPaperList({ papers }: TestPaperListProps) {
     <div className='space-y-4'>
       {papers.map((paper) => (
         <div
-          key={paper.id}
-          className='bg-white rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100'
+          key={paper.workbookId}
+          className='cursor-pointer bg-white rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100'
         >
           <div className='flex items-center justify-between'>
             <div className='font-semibold'>{paper.title}</div>
             <div className='flex gap-2'>
-              <button
-                className='px-3 py-1 bg-purple-100 text-purple-600 rounded-lg text-xs font-medium hover:bg-purple-200 transition'
+              <Button
                 onClick={paper.onPdfClick}
+                variant='outlined'
+                className='px-2 py-1 text-xs'
               >
                 PDF 변환
-              </button>
-              <button
-                className='px-3 py-1 border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-100 transition'
+              </Button>
+              <Button
                 onClick={paper.onSolveClick}
+                variant='filled'
+                className='px-3 py-1 text-xs'
               >
                 문제 풀기
-              </button>
+              </Button>
             </div>
           </div>
           <div className='text-xs text-gray-500'>

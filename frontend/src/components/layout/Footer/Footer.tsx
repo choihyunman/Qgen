@@ -67,7 +67,7 @@ export default function Footer() {
             ) : (
               <div className='flex flex-col items-end'>
                 <button
-                  className='text-black text-lg flex items-center gap-1 mb-4'
+                  className='cursor-pointer text-black text-lg flex items-center gap-1 mb-4'
                   onClick={() => setExpanded(true)}
                 >
                   <span className='text-3xl'>+</span>
@@ -90,7 +90,7 @@ export default function Footer() {
         </div>
         {expanded && (
           <button
-            className='absolute right-12 top-8 text-white text-lg flex items-center gap-1'
+            className='cursor-pointer absolute right-12 top-8 text-white text-lg flex items-center gap-1'
             onClick={() => setExpanded(false)}
           >
             ㅡ
