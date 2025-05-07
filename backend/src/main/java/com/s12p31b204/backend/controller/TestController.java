@@ -1,6 +1,7 @@
 package com.s12p31b204.backend.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,8 @@ public class TestController {
             log.info("getting testIds...");
             List<Long> testIds = testService.findTestAll(testPaperId);
             return ApiResponse.success(testIds, "전체 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
+        } catch (NoSuchElementException e) {
+            return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
             return ApiResponse.failure("문제 전체 조회 중 오류 발생", HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
         }
@@ -89,6 +92,8 @@ public class TestController {
             log.info("getting test...");
             FindTestResponseDto response = testService.findTestOne(testId);
             return ApiResponse.success(response, "단일 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
+        } catch (NoSuchElementException e) {
+            return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
             return ApiResponse.failure("단일 문제 조회 중 오류 발생", HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
         }
@@ -130,6 +135,8 @@ public class TestController {
             log.info("solving test...");
             SolvingTestResponseDto response = testService.solvingTest(solvingTestRequestDto);
             return ApiResponse.success(response, "답안 제출 성공", HttpStatus.OK, request.getRequestURI());
+        } catch (NoSuchElementException e) {
+            return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
             return ApiResponse.failure("답안 제출 중 오류 발생", HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
         }

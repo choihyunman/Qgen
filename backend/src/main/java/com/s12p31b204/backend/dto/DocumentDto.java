@@ -12,6 +12,7 @@ public class DocumentDto {
     private long documentSize;
     private String documentType;
     private String documentURL;
+    private Long workBookId;
     private LocalDateTime createAt;
 
     public DocumentDto(Document document) {
@@ -20,6 +21,7 @@ public class DocumentDto {
         this.documentSize = document.getDocumentSize();
         this.documentType = document.getDocumentType();
         this.documentURL = document.getDocumentURL();
+        this.workBookId = document.getWorkBook().getWorkBookId();
         this.createAt = document.getCreateAt();
     }
 }
