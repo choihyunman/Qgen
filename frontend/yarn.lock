@@ -4146,7 +4146,7 @@ __metadata:
     "@storybook/react-vite": "npm:8.6.12"
     "@storybook/test": "npm:8.6.12"
     "@tailwindcss/vite": "npm:^4.1.4"
-    "@types/draft-js": "npm:^0"
+    "@types/canvas-confetti": "npm:^1.9.0"
     "@types/node": "npm:^22.14.1"
     "@types/react": "npm:^19.0.10"
     "@types/react-dom": "npm:^19.0.4"
@@ -4164,7 +4164,7 @@ __metadata:
     eslint-plugin-react-refresh: "npm:^0.4.19"
     eslint-plugin-storybook: "npm:^0.12.0"
     globals: "npm:^16.0.0"
-    immutable: "npm:^5.1.2"
+    lottie-react: "npm:^2.4.1"
     prettier: "npm:^3.5.3"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
@@ -7362,13 +7362,6 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 10c0/c97601234dba482cea5290f2a2ea0fcd65e1fab3df06718ea48adc8ceb14bc3129508216c4989329c618f6a0470b42f439677a207aef62b0c76f445091c2d89e
-  languageName: node
-  linkType: hard
-
-"webidl-conversions@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "webidl-conversions@npm:3.0.1"
-  checksum: 10c0/5612d5f3e54760a797052eb4927f0ddc01383550f542ccd33d5238cfd65aeed392a45ad38364970d0a0f4fea32e1f4d231b3d8dac4a3bdd385e5cf802ae097db
   languageName: node
   linkType: hard
 
