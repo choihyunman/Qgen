@@ -30,6 +30,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@chromatic-com/storybook", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:3.2.6"],\
           ["@eslint/js", "npm:9.25.1"],\
+          ["@lottiefiles/dotlottie-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:0.13.5"],\
           ["@storybook/addon-essentials", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:8.6.12"],\
           ["@storybook/addon-onboarding", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:8.6.12"],\
           ["@storybook/blocks", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:8.6.12"],\
@@ -47,6 +48,7 @@ const RAW_RUNTIME_STATE =
           ["@vitejs/plugin-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:4.4.1"],\
           ["@yarnpkg/sdks", "npm:3.2.1"],\
           ["axios", "npm:1.9.0"],\
+          ["canvas-confetti", "npm:1.9.3"],\
           ["eslint", "npm:8.57.1"],\
           ["eslint-config-prettier", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:10.1.2"],\
           ["eslint-plugin-prettier", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:5.2.6"],\
@@ -1011,6 +1013,38 @@ const RAW_RUNTIME_STATE =
           ["@jridgewell/resolve-uri", "npm:3.1.2"],\
           ["@jridgewell/sourcemap-codec", "npm:1.5.0"],\
           ["@jridgewell/trace-mapping", "npm:0.3.25"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@lottiefiles/dotlottie-react", [\
+      ["npm:0.13.5", {\
+        "packageLocation": "./.yarn/cache/@lottiefiles-dotlottie-react-npm-0.13.5-450c4c6113-fd6f47a730.zip/node_modules/@lottiefiles/dotlottie-react/",\
+        "packageDependencies": [\
+          ["@lottiefiles/dotlottie-react", "npm:0.13.5"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:0.13.5", {\
+        "packageLocation": "./.yarn/__virtual__/@lottiefiles-dotlottie-react-virtual-f65634fcd0/0/cache/@lottiefiles-dotlottie-react-npm-0.13.5-450c4c6113-fd6f47a730.zip/node_modules/@lottiefiles/dotlottie-react/",\
+        "packageDependencies": [\
+          ["@lottiefiles/dotlottie-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:0.13.5"],\
+          ["@lottiefiles/dotlottie-web", "npm:0.44.0"],\
+          ["@types/react", "npm:19.1.2"],\
+          ["react", "npm:18.3.1"]\
+        ],\
+        "packagePeers": [\
+          "@types/react",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@lottiefiles/dotlottie-web", [\
+      ["npm:0.44.0", {\
+        "packageLocation": "./.yarn/cache/@lottiefiles-dotlottie-web-npm-0.44.0-a6c0332ca9-b6454236b3.zip/node_modules/@lottiefiles/dotlottie-web/",\
+        "packageDependencies": [\
+          ["@lottiefiles/dotlottie-web", "npm:0.44.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3722,6 +3756,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["canvas-confetti", [\
+      ["npm:1.9.3", {\
+        "packageLocation": "./.yarn/cache/canvas-confetti-npm-1.9.3-b7b2362f3e-94c6f16591.zip/node_modules/canvas-confetti/",\
+        "packageDependencies": [\
+          ["canvas-confetti", "npm:1.9.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["chai", [\
       ["npm:5.2.0", {\
         "packageLocation": "./.yarn/cache/chai-npm-5.2.0-373e52d821-dfd1cb719c.zip/node_modules/chai/",\
@@ -5048,6 +5091,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@chromatic-com/storybook", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:3.2.6"],\
           ["@eslint/js", "npm:9.25.1"],\
+          ["@lottiefiles/dotlottie-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:0.13.5"],\
           ["@storybook/addon-essentials", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:8.6.12"],\
           ["@storybook/addon-onboarding", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:8.6.12"],\
           ["@storybook/blocks", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:8.6.12"],\
@@ -5065,6 +5109,7 @@ const RAW_RUNTIME_STATE =
           ["@vitejs/plugin-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:4.4.1"],\
           ["@yarnpkg/sdks", "npm:3.2.1"],\
           ["axios", "npm:1.9.0"],\
+          ["canvas-confetti", "npm:1.9.3"],\
           ["eslint", "npm:8.57.1"],\
           ["eslint-config-prettier", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:10.1.2"],\
           ["eslint-plugin-prettier", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:5.2.6"],\

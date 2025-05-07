@@ -770,6 +770,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lottiefiles/dotlottie-react@npm:^0.13.5":
+  version: 0.13.5
+  resolution: "@lottiefiles/dotlottie-react@npm:0.13.5"
+  dependencies:
+    "@lottiefiles/dotlottie-web": "npm:0.44.0"
+  peerDependencies:
+    react: ^17 || ^18 || ^19
+  checksum: 10c0/fd6f47a7308eb6b584e06e50e36a80258efe542019118a7b0d4f66b1016837ed4cba92ba6183a44ac7f951ae270baa4662ce725181ccf2edcc93081b85d148bc
+  languageName: node
+  linkType: hard
+
+"@lottiefiles/dotlottie-web@npm:0.44.0":
+  version: 0.44.0
+  resolution: "@lottiefiles/dotlottie-web@npm:0.44.0"
+  checksum: 10c0/b6454236b3310ca46bc9751041dbab29742a6fd45f6e1f3452bca2217f668b91c4d0ebd55bb99ef98a79a8e4bb52db51721f352b8a1c010447152241d0ac974e
+  languageName: node
+  linkType: hard
+
 "@mdx-js/react@npm:^3.0.0":
   version: 3.1.0
   resolution: "@mdx-js/react@npm:3.1.0"
@@ -2605,6 +2623,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"canvas-confetti@npm:^1.9.3":
+  version: 1.9.3
+  resolution: "canvas-confetti@npm:1.9.3"
+  checksum: 10c0/94c6f16591660d5ed4a48afb8da65902826ce6b38edc7644d62521aa9bf9ef5b950aa4396e980e7fe0a38e5f41a991a6d984721412a54c9fba4de3682c1eead0
+  languageName: node
+  linkType: hard
+
 "chai@npm:^5.1.1":
   version: 5.2.0
   resolution: "chai@npm:5.2.0"
@@ -3785,6 +3810,7 @@ __metadata:
   dependencies:
     "@chromatic-com/storybook": "npm:3"
     "@eslint/js": "npm:^9.25.1"
+    "@lottiefiles/dotlottie-react": "npm:^0.13.5"
     "@storybook/addon-essentials": "npm:8.6.12"
     "@storybook/addon-onboarding": "npm:8.6.12"
     "@storybook/blocks": "npm:8.6.12"
@@ -3802,6 +3828,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:^4.3.4"
     "@yarnpkg/sdks": "npm:^3.2.1"
     axios: "npm:^1.8.4"
+    canvas-confetti: "npm:^1.9.3"
     eslint: "npm:^8.56.0"
     eslint-config-prettier: "npm:^10.1.2"
     eslint-plugin-prettier: "npm:^5.2.6"
