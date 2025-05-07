@@ -1,4 +1,4 @@
-import { CreateWorkBookResponse, WorkBook } from '@/types/list';
+import { CreateWorkBookResponse, WorkBook } from '@/types/workbook';
 import axiosInstance from '@/apis/axiosInstance';
 
 // 문제집 전체 조회 API

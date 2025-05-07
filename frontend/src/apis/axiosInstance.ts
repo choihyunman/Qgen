@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const axiosInstance = axios.create({
-  baseURL: 'https://q-generator.com/',
+  baseURL: API_BASE_URL,
   // 필요하다면 withCredentials, timeout 등 추가 설정 가능
 });
 
