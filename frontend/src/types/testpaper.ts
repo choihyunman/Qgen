@@ -1,0 +1,29 @@
+export interface TestPaper {
+  testPaperId: number;
+  title: string;
+  choiceAns: number;
+  shortAns: number;
+  wordAns: number;
+  quantity: number;
+  createAt: string;
+  oxans: number;
+}
+
+export interface TestPaperListResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: TestPaper[] | null;
+  timestamp: string;
+  path: string;
+}
+
+export interface CreateTestPaperRequest {
+  workBookId: number;
+  title: string;
+  choiceAns: number;
+  shortAns: number;
+  OXAns: number;
+  wordAns: number;
+  quantity: number;
+}

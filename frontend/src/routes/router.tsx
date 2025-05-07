@@ -28,6 +28,10 @@ export const router = createBrowserRouter([
         element: <List />,
       },
       {
+        path: '/list/:workBookId',
+        element: <List />,
+      },
+      {
         path: '/incorrect',
         element: <Incorrect />,
       },
