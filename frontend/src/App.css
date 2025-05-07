@@ -1,5 +1,10 @@
 .main {
   padding: 30px 40px;
+  width: 100%;
+}
+
+.public-DraftEditor-focused .public-DraftEditorPlaceholder-root {
+  opacity: 0 !important;
 }
 
 .main.check {

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export default function Header() {
   return (
     <header className='w-full flex items-center justify-between px-8 py-4 bg-white rounded-full shadow-[0_0_24px_0_rgba(0,0,0,0.08)]'>
-      <span className='text-3xl font-bold'>Q-gen</span>
+      <span className='text-2xl font-bold'>Q-gen</span>
       <div className='flex items-center gap-3'>
         <Link
           to='/list'

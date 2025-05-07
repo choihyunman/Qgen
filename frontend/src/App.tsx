@@ -6,7 +6,7 @@ import ArcBackground from './components/layout/Background/ArcBackground';
 import BlurBackground from './components/layout/Background/BlurBackground';
 
 function App() {
-  const arcPages = ['/quiz'];
+  const arcPages = ['/quiz', '/incorrect'];
   const location = useLocation();
   const isArcPage = arcPages.some((path) => location.pathname.startsWith(path));
 
@@ -14,9 +14,9 @@ function App() {
 
   return (
     <BackgroundComponent>
-      <div className='main'>
+      <div className='main min-h-screen flex flex-col'>
         <Header />
-        <main>
+        <main className='flex-1 h-[calc(100vh-100px)] py-6'>
           <Outlet />
         </main>
         <Footer />
