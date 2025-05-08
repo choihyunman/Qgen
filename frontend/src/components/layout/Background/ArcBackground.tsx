@@ -4,7 +4,7 @@ interface BackgroundProps extends PropsWithChildren {}
 
 function Background({ children }: BackgroundProps) {
   return (
-    <div className='relative w-full bg-[#F9F5FF] min-h-screen'>
+    <div className='relative bg-[#F9F5FF] p-4'>
       <div className='pointer-events-none'>
         <img
           src='/src/assets/images/left-arc.png'

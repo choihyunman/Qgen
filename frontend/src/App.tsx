@@ -13,15 +13,17 @@ function App() {
   const BackgroundComponent = isArcPage ? ArcBackground : BlurBackground;
 
   return (
-    <BackgroundComponent>
-      <div className='main min-h-screen flex flex-col'>
-        <Header />
-        <main className='flex-1 h-[calc(100vh-100px)] py-6'>
-          <Outlet />
-        </main>
+    <div className='flex flex-col w-full'>
+      <BackgroundComponent>
+        <div className='flex flex-col flex-1 h-screen pb-4'>
+          <Header />
+          <main className='flex-1 py-4 h-full min-h-0'>
+            <Outlet />
+          </main>
+        </div>
         <Footer />
-      </div>
-    </BackgroundComponent>
+      </BackgroundComponent>
+    </div>
   );
 }
 

@@ -6,7 +6,7 @@ interface BlurBackgroundProps {
 
 const BlurBackground = ({ children }: BlurBackgroundProps) => {
   return (
-    <div className='min-h-screen w-screen bg-gradient-to-tr from-[#E6CAF4] via-[#F9F5FF] to-[#CAC7FC]'>
+    <div className='p-4 bg-gradient-to-tr from-[#E6CAF4] via-[#F9F5FF] to-[#CAC7FC]'>
       {children}
     </div>
   );
