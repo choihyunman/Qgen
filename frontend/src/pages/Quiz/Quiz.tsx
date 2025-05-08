@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import QuestionFrame from '../../components/quiz/QuestionFrame/QuestionFrame';
 import ExamSidebar from './ExamSidebar';
 import {
@@ -12,6 +13,9 @@ import QuizEnd from './QuizEnd';
 type AnswerStatus = 'none' | 'correct' | 'wrong';
 
 function QuizPage() {
+  const { testPaperId } = useParams();
+  const numericTestPaperId = testPaperId ? Number(testPaperId) : null;
+
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -39,10 +43,15 @@ function QuizPage() {
   // 전체 문제 ID 배열 받아오기 및 상태 초기화
   useEffect(() => {
     const fetchProblemIds = async () => {
+      if (!numericTestPaperId) {
+        setError('시험지 ID가 없습니다.');
+        return;
+      }
+
       setIsLoading(true);
       setError(null);
       try {
-        const res = await getTestIdList(1); // testPaperId 임시 1
+        const res = await getTestIdList(numericTestPaperId);
         if (res.success && res.data) {
           setProblemIds(res.data);
           setSelectedAnswers(Array(res.data.length).fill(null));
@@ -60,7 +69,7 @@ function QuizPage() {
       }
     };
     fetchProblemIds();
-  }, []);
+  }, [numericTestPaperId]);
 
   // 단일 문제 조회 API 호출 (문제 ID 배열 기반)
   useEffect(() => {
