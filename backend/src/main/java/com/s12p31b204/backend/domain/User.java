@@ -37,9 +37,24 @@ public class User {
     @Column(nullable = false, length = 30, unique = true)
     private String googleEmail;
 
+    private String username;
+
+    private String nickname;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WorkBook> workBooks;
 
     @CreatedDate
     private LocalDateTime createAt;
+
+    public User(String googleEmail, String username, String nickname) {
+        this.googleEmail = googleEmail;
+        this.username = username;
+        this.nickname = nickname;
+    }
+
+    public void update(String googleEmail, String nickname) {
+        this.googleEmail = googleEmail;
+        this.nickname = nickname;
+    }
 }
