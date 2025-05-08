@@ -8,5 +8,5 @@ import com.s12p31b204.backend.domain.TestHistory;
 
 @Repository
 public interface TestHistoryRepository extends JpaRepository<TestHistory, Long> {
-
+    
 }
