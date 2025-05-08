@@ -1,12 +1,17 @@
-.main {
-  padding: 30px 40px;
-  width: 100%;
-}
-
-.public-DraftEditor-focused .public-DraftEditorPlaceholder-root {
-  opacity: 0 !important;
-}
-
 .main.check {
   padding: 30px 40px;
+}
+
+/* simplebar-react 보라색 스크롤바 커스텀 */
+.simplebar-scrollbar:before {
+  background: #754aff !important;
+}
+.simplebar-track.simplebar-vertical {
+  width: 8px !important;
+  background: transparent !important; /* 트랙 색상(투명) */
+  top: 25px !important;
+  bottom: 25px !important;
+}
+.simplebar-scrollbar.simplebar-visible:before {
+  opacity: 1 !important;
 }

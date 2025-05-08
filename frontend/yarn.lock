@@ -1858,6 +1858,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/prismjs@npm:^1.26.0":
+  version: 1.26.5
+  resolution: "@types/prismjs@npm:1.26.5"
+  checksum: 10c0/5619cb449e0d8df098c8759d6f47bf8fdd510abf5dbdfa999e55c6a2545efbd1e209cc85a33d8d9f4ff2898089a1a6d9a70737c9baffaae635c46852c40d384a
+  languageName: node
+  linkType: hard
+
 "@types/react-dom@npm:^19.0.4":
   version: 19.1.3
   resolution: "@types/react-dom@npm:19.1.3"
@@ -2860,6 +2867,13 @@ __metadata:
   dependencies:
     mimic-response: "npm:^1.0.0"
   checksum: 10c0/06a2b611824efb128810708baee3bd169ec9a1bf5976a5258cd7eb3f7db25f00166c6eee5961f075c7e38e194f373d4fdf86b8166ad5b9c7e82bbd2e333a6087
+  languageName: node
+  linkType: hard
+
+"clsx@npm:^2.0.0":
+  version: 2.1.1
+  resolution: "clsx@npm:2.1.1"
+  checksum: 10c0/c4c8eb865f8c82baab07e71bfa8897c73454881c4f99d6bc81585aecd7c441746c1399d08363dc096c550cceaf97bd4ce1e8854e1771e9998d9f94c4fe075839
   languageName: node
   linkType: hard
 
@@ -4072,8 +4086,11 @@ __metadata:
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
     react-router-dom: "npm:^7.5.1"
+    simplebar: "npm:^6.3.0"
+    simplebar-react: "npm:^3.3.0"
     storybook: "npm:8.6.12"
     tailwind-merge: "npm:^3.2.0"
+    tailwind-scrollbar: "npm:^4.0.2"
     tailwindcss: "npm:^4.1.4"
     typescript: "npm:~5.7.2"
     typescript-eslint: "npm:^8.31.0"
@@ -5905,6 +5922,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prism-react-renderer@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "prism-react-renderer@npm:2.4.1"
+  dependencies:
+    "@types/prismjs": "npm:^1.26.0"
+    clsx: "npm:^2.0.0"
+  peerDependencies:
+    react: ">=16.0.0"
+  checksum: 10c0/ebbe8feb975224344bbdd046b3a937d121592dbe4b8f22ba0be31f5af37b9a8219f441138ef6cab1c5b96f2aa6b529015200959f7e5e85b60ca69c81d35edcd4
+  languageName: node
+  linkType: hard
+
 "proc-log@npm:^5.0.0":
   version: 5.0.0
   resolution: "proc-log@npm:5.0.0"
@@ -6555,6 +6584,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"simplebar-core@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "simplebar-core@npm:1.3.0"
+  dependencies:
+    lodash: "npm:^4.17.21"
+  checksum: 10c0/c8aa86a402e9a13ffb7a65d75851d400345f109f092f8c23c546bd3e451a7c63d84784fc3bb1c15283cd05ece2ccddd28025f42db0b50aa00db385d8afa7f5e6
+  languageName: node
+  linkType: hard
+
+"simplebar-react@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "simplebar-react@npm:3.3.0"
+  dependencies:
+    simplebar-core: "npm:^1.3.0"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 10c0/ad07ac2b239f7372af48f92ad01b82a7e6465fcd1c43da9f5d12edb26cba81a55c87badd2cffac4aa8aa769da56c05b4e2eb5de19fec52588ca57f87d1f6202b
+  languageName: node
+  linkType: hard
+
+"simplebar@npm:^6.3.0":
+  version: 6.3.0
+  resolution: "simplebar@npm:6.3.0"
+  dependencies:
+    simplebar-core: "npm:^1.3.0"
+  checksum: 10c0/e74f2637065d3f447124342b6223dbf7098966fff2c3185b62d056a38295c1b846496024d7ee4c3b17c0497dfd9c800d2231d3890c33e4e50ec0c53558872529
+  languageName: node
+  linkType: hard
+
 "slash@npm:^3.0.0":
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
@@ -6833,6 +6891,17 @@ __metadata:
   version: 3.2.0
   resolution: "tailwind-merge@npm:3.2.0"
   checksum: 10c0/294f6c2db0df74405bff126107107426c3126a70a1717d78e8d6811db65546c9bb3d61282bdb8d9fbded23f6bc8ec3e8e61031a4f53265f90b7f3dba558f88f4
+  languageName: node
+  linkType: hard
+
+"tailwind-scrollbar@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "tailwind-scrollbar@npm:4.0.2"
+  dependencies:
+    prism-react-renderer: "npm:^2.4.1"
+  peerDependencies:
+    tailwindcss: 4.x
+  checksum: 10c0/942dd9ec381e09f65220fb9370f6ec1de137e88b9c7a043ee1eafd0397da1d0c4a9780e833ed159892106da820611867d358c73e05509746329cd0414102c587
   languageName: node
   linkType: hard
 
