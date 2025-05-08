@@ -1,5 +1,6 @@
 package com.s12p31b204.backend.service;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -53,6 +54,7 @@ public class TestPaperService {
                 .bodyValue(new CreateTestRequestDto(testPaper.getChoiceAns(), testPaper.getOXAns(), testPaper.getShortAns()))
                 .retrieve()
                 .bodyToMono(CreateTestResponseDto.class)
+                .timeout(Duration.ofMinutes(5))
                 .block();
 
         List<Test> tests = new ArrayList<>();
