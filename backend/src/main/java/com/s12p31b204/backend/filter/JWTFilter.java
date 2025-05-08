@@ -31,9 +31,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 쿠키에서 Authorization 키 값 찾기
         Cookie[] cookies = request.getCookies();
-        for(Cookie cookie : cookies) {
-            if(cookie.getName().equals("Authorization")) {
-                authorizaiton = cookie.getValue();
+        if(cookies != null) {
+            for(Cookie cookie : cookies) {
+                if(cookie.getName().equals("Authorization")) {
+                    authorizaiton = cookie.getValue();
+                }
             }
         }
 
