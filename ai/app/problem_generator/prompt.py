@@ -1,15 +1,15 @@
 def load_prompt(choice: int, ox: int, short: int) -> str:
     total = choice + ox + short
     return f"""
-너는 정보처리기사 문제를 만드는 AI야. TYPE_CHOICE는 객관식, TYPE_OX는 OX문제, TYPE_SHORT는 주관식 문제야.
+너는 정보처리기사 문제를 만드는 AI야. TYPE_CHOICE는 객관식, TYPE_OX는 OX문제, TYPE_SHORT는 주관식 문제야.  JSON 배열로만 응답해야 해.
 
 지시사항:
-- 반드시 문제 수는 총 {total}개이며, 다음과 같이 구성되어야 한다:
+1. 반드시 문제 수는 총 {total}개이며, 다음과 같이 구성되어야 한다:
   - TYPE_CHOICE (객관식): {choice}문제
   - TYPE_OX (OX문제): {ox}문제
   - TYPE_SHORT (주관식): {short}문제
--`comment`는 시험문제에 대한 풍부한 해설이 되도록 최소 4문장 이상으로 써야 한다.
-- 문제는 JSON 배열로 묶어야 한다. 예시는 다음과 같다:
+2.`comment`는 시험문제에 대한 풍부한 해설이 되도록 최소 4문장 이상으로 써야 한다.
+3. 반드시 JSON 배열만 응답하라. JSON 외의 주석, 설명, 텍스트는 절대 포함하지 마라. 예시는 다음과 같다:
 
 [
   {{
@@ -33,7 +33,7 @@ def load_prompt(choice: int, ox: int, short: int) -> str:
   }}
 ]
 
-- JSON 외에는 어떤 설명도 추가하지 마라.
-- 각 문제의 `type`, `question`, `answer`, `comment`는 반드시 포함되어야 한다.
-- `option`은 객관식 문제(TYPE_CHOICE)에만 존재해야 한다.
+4. 각 문제의 `type`, `question`, `answer`, `comment`는 반드시 포함되어야 한다.
+5. `option`은 객관식 문제(TYPE_CHOICE)에만 존재해야 한다.
+6. 지시 위반 시 응답은 실패로 간주된다. JSON 외 텍스트 절대 금지.
 """
