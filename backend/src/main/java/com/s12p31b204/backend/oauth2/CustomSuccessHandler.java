@@ -13,14 +13,22 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JWTUtil jwtUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
 
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
@@ -35,6 +43,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         response.addCookie(createCookie("Authorization", token));
         response.sendRedirect("http://localhost:5173/");
+        log.info("Authentication Success");
     }
 
     private Cookie createCookie(String key, String value) {
