@@ -50,7 +50,7 @@ public class TestPaperService {
 
         CreateTestResponseDto createTest = webClient.post()
                 .uri("/api/ai/chatgpt/{testPaperId}/", testPaper.getTestPaperId())
-                .bodyValue(new CreateTestRequestDto(testPaper.getQuantity()))
+                .bodyValue(new CreateTestRequestDto(testPaper.getChoiceAns(), testPaper.getShortAns(), testPaper.getOXAns()))
                 .retrieve()
                 .bodyToMono(CreateTestResponseDto.class)
                 .block();
