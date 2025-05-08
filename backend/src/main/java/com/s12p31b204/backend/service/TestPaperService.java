@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.s12p31b204.backend.domain.Test;
+import com.s12p31b204.backend.domain.TestPaper;
 import com.s12p31b204.backend.domain.WorkBook;
 import com.s12p31b204.backend.dto.CreateTestPaperRequestDto;
 import com.s12p31b204.backend.dto.CreateTestRequestDto;
 import com.s12p31b204.backend.dto.CreateTestResponseDto;
 import com.s12p31b204.backend.dto.TestPaperResponseDto;
 import com.s12p31b204.backend.dto.UpdateTestPaperRequestDto;
-import com.s12p31b204.backend.domain.TestPaper;
 import com.s12p31b204.backend.repository.TestPaperRepository;
 import com.s12p31b204.backend.repository.TestRepository;
 import com.s12p31b204.backend.repository.WorkBookRepository;
@@ -50,7 +50,7 @@ public class TestPaperService {
 
         CreateTestResponseDto createTest = webClient.post()
                 .uri("/api/ai/chatgpt/{testPaperId}/", testPaper.getTestPaperId())
-                .bodyValue(new CreateTestRequestDto(testPaper.getChoiceAns(), testPaper.getShortAns(), testPaper.getOXAns()))
+                .bodyValue(new CreateTestRequestDto(testPaper.getChoiceAns(), testPaper.getOXAns(), testPaper.getShortAns()))
                 .retrieve()
                 .bodyToMono(CreateTestResponseDto.class)
                 .block();
