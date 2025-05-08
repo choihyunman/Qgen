@@ -10,5 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CreateTestRequestDto {
-    private int quantity;
+    private int choiceAns;
+    private int shortAns;
+    private int OXAns;
 }

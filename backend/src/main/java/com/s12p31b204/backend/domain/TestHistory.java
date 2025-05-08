@@ -35,11 +35,17 @@ public class TestHistory {
     private Test test;
 
     @Column(nullable = false)
-    private String solved;
+    private String userAnswer;
 
     @Column(name = "isCorrect", nullable = false)
     private boolean correct;
 
     @CreatedDate
     private LocalDateTime createAt;
+
+    public TestHistory(Test test, String userAnswer, boolean correct) {
+        this.test = test;
+        this.userAnswer = userAnswer;
+        this.correct = correct;
+    }
 }
