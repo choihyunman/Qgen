@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import BlurBackground from '../../components/layout/Background/BlurBackground';
 import Button from '../../components/common/Button/Button';
 import UploadedList from '@/components/upload/UploadedList/UploadedList';
@@ -9,6 +10,9 @@ import { useGeneration } from '@/hooks/useGeneration';
 import { useGenerateStore } from '@/stores/generateStore';
 
 const Generate = () => {
+  const { workBookId } = useParams();
+  const numericWorkBookId = workBookId ? Number(workBookId) : undefined;
+
   const [testName, setTestName] = useState('');
   const [testTypes, setTestTypes] = useState<TestType[]>([
     { name: '객관식', count: 0 },
@@ -91,7 +95,7 @@ const Generate = () => {
 
   const handleGenerate = async () => {
     const request = {
-      workBookId: 1, // This should come from your app's state or props
+      workBookId: numericWorkBookId ?? 0, // This should come from your app's state or props
       title: testName,
       choiceAns: testTypes.find((t) => t.name === '객관식')?.count || 0,
       shortAns: testTypes.find((t) => t.name === '주관식')?.count || 0,
@@ -147,6 +151,7 @@ const Generate = () => {
             onLinkSubmit={handleLinkSubmit}
             onTextSubmit={handleTextSubmit}
             className='md:col-span-2'
+            workBookId={numericWorkBookId ?? 0}
           />
           {/* Problem Types and Count Selection Section */}
           <div className='bg-white rounded-3xl shadow-sm p-6 w-full md:col-span-1'>

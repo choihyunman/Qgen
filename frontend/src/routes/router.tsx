@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/generate',
+        path: '/generate/:workBookId',
         element: <Generate />,
       },
       {
@@ -30,6 +30,18 @@ export const router = createBrowserRouter([
       {
         path: '/list/:workBookId',
         element: <List />,
+      },
+      {
+        path: '/quiz-end',
+        element: <QuizEnd />,
+      },
+      {
+        path: '/list',
+        element: <List />,
+      },
+      {
+        path: '/quiz',
+        element: <Quiz />,
       },
       {
         path: '/incorrect',

@@ -34,9 +34,11 @@ export function useUpload() {
     try {
       const docs = await fetchDocumentsByWorkBook(workBookId);
       setDocuments(docs);
+      return docs;
     } catch (err: any) {
       setError(err);
       setDocuments([]);
+      return [];
     } finally {
       setIsLoading(false);
     }
