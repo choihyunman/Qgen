@@ -51,7 +51,7 @@ function QuizStartModal({ isOpen, onClose, onStart }: QuizStartModalProps) {
         </div>
 
         {/* 모드 선택 탭 */}
-        <div className='w-full flex mb-6'>
+        <div className='w-full flex '>
           <button
             className={`flex-1 flex flex-col items-center py-3 rounded-t-xl border transition-colors
               ${
@@ -90,7 +90,7 @@ function QuizStartModal({ isOpen, onClose, onStart }: QuizStartModalProps) {
         </div>
 
         {/* 모드별 내용 */}
-        <div className='w-full min-h-[90px] flex flex-col items-center justify-center border border-purple-200 rounded-b-xl mb-6'>
+        <div className='w-full min-h-[120px] flex flex-col items-center justify-center border border-purple-200 rounded-b-xl mb-6'>
           {mode === 'practice' ? (
             <div className='text-center text-gray-700 py-6'>
               별도의 시간 제한 없이
@@ -109,7 +109,7 @@ function QuizStartModal({ isOpen, onClose, onStart }: QuizStartModalProps) {
                   max={99}
                   value={timer.min.toString().padStart(2, '0')}
                   onChange={(e) => handleTimerChange('min', e.target.value)}
-                  className='w-12 h-12 text-2xl text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
+                  className='w-13 h-13 text-2xl text-center border-gray-300 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
                 />
                 <span className='text-2xl font-bold'>:</span>
                 <input
@@ -118,7 +118,7 @@ function QuizStartModal({ isOpen, onClose, onStart }: QuizStartModalProps) {
                   max={59}
                   value={timer.sec.toString().padStart(2, '0')}
                   onChange={(e) => handleTimerChange('sec', e.target.value)}
-                  className='w-12 h-12 text-2xl text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
+                  className='w-13 h-13 text-2xl text-center border-gray-300 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
                 />
               </div>
             </div>

@@ -16,7 +16,7 @@ function App() {
     <BackgroundComponent>
       <div className='main min-h-screen flex flex-col'>
         <Header />
-        <main className='flex-1 h-[calc(100vh-100px)] py-6'>
+        <main className='flex-1 h-[calc(100dvh-100px)] py-6'>
           <Outlet />
         </main>
         <Footer />
