@@ -19,6 +19,7 @@ interface UploadedListProps {
   onDelete?: (id: string) => void;
   /** 추가 클래스명 */
   className?: string;
+  isLoading?: boolean;
 }
 
 function UploadedList({
@@ -26,6 +27,7 @@ function UploadedList({
   maxFiles = 10,
   onDelete,
   className,
+  isLoading = false,
 }: UploadedListProps) {
   // files가 null이거나 undefined일 경우를 대비해 기본값 처리
   const safeFiles = files ?? [];
@@ -55,7 +57,9 @@ function UploadedList({
 
         {/* 파일 목록 */}
         <div className='space-y-3'>
-          {!safeFiles || safeFiles.length === 0 ? (
+          {isLoading ? (
+            <div className='text-center text-purple-500 py-8'>로딩 중...</div>
+          ) : !safeFiles || safeFiles.length === 0 ? (
             <div className='text-gray-400 text-center py-8'>
               업로드된 파일이 없습니다
             </div>

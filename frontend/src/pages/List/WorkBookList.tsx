@@ -1,6 +1,6 @@
 // src/components/WorkBookList/WorkBookList.tsx
 
-import WorkBookCard from '@/components/list/WorkBookCard/WorkBookCard';
+import WorkBookCard from '@/components/workbook/WorkBookCard/WorkBookCard';
 import { useNavigate } from 'react-router-dom';
 
 interface WorkBook {
