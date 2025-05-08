@@ -23,6 +23,7 @@ export const fetchDocumentsByWorkBook = async (
   const response = await axiosInstance.get(
     `/api/document/workbook/${workBookId}`
   );
+  console.log('문제집', workBookId, '의 조회된 파일 목록', response.data);
   return response.data;
 };
 

@@ -4,6 +4,7 @@ import Button from '@/components/common/Button/Button';
 
 interface TestPaper {
   workbookId: string | number;
+  testPaperId: string | number;
   title: string;
   createdAt: string;
   questionCount: number;
@@ -21,21 +22,21 @@ function TestPaperList({ papers }: TestPaperListProps) {
     <div className='space-y-4'>
       {papers.map((paper) => (
         <div
-          key={paper.workbookId}
+          key={paper.testPaperId}
           className='cursor-pointer bg-white rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100'
         >
           <div className='flex items-center justify-between'>
             <div className='font-semibold'>{paper.title}</div>
             <div className='flex gap-2'>
               <Button
-                onClick={paper.onPdfClick}
+                onClick={() => paper.onPdfClick?.()}
                 variant='outlined'
                 className='px-2 py-1 text-xs'
               >
                 PDF 변환
               </Button>
               <Button
-                onClick={paper.onSolveClick}
+                onClick={() => paper.onSolveClick?.()}
                 variant='filled'
                 className='px-3 py-1 text-xs'
               >

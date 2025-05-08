@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/generate',
+        path: '/generate/:workBookId',
         element: <Generate />,
       },
       {

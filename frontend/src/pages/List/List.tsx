@@ -2,18 +2,21 @@
 'use client';
 
 import WorkBookList from './WorkBookList';
-import WorkBookAddModal from '@/components/list/WorkBookAddModal/WorkBookAddModal';
+import WorkBookAddModal from '@/components/workbook/WorkBookAddModal/WorkBookAddModal';
 import { useEffect, useState } from 'react';
 import UploadedList from '@/components/upload/UploadedList/UploadedList';
 import TestPaperList from './TestPaperList';
 import IconBox from '@/components/common/IconBox/IconBox';
 import Button from '@/components/common/Button/Button';
 import { useWorkBook } from '@/hooks/useWorkBooks';
-import UploadModal from '@/components/list/UploadModal/UploadModal';
+import UploadModal from '@/components/upload/UploadModal/UploadModal';
 import { UploadedFile } from '@/types/upload';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTestPaper } from '@/hooks/useTestPaper';
 import { useUpload } from '@/hooks/useUpload';
+import { TestPaper } from '@/types/testpaper';
+import PdfModal from '@/components/testpaper/PdfModal';
+import QuizStartModal from '@/components/testpaper/QuizStartModal';
 
 // 예시: 실제 로그인 유저의 id를 받아와야 함
 const userId = 1;
@@ -38,15 +41,13 @@ export default function List() {
     isLoading: papersLoading,
     error: papersError,
     getTestPapers,
-    addTestPaper,
-    editTestPaperTitle,
     removeTestPaper,
-    setTestPapers, // 필요시 외부에서 직접 세팅 가능
   } = useTestPaper();
 
   const {
     documents,
     getDocuments,
+    handleDelete: handleDeleteFromServer,
     isLoading: uploadLoading,
     error: uploadError,
   } = useUpload();
@@ -63,6 +64,12 @@ export default function List() {
 
   const navigate = useNavigate();
 
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+  const [selectedPaper, setSelectedPaper] = useState<TestPaper | null>(null);
+  const [isQuizStartModalOpen, setIsQuizStartModalOpen] = useState(false);
+  const [selectedPaperForQuiz, setSelectedPaperForQuiz] =
+    useState<TestPaper | null>(null);
+
   // 문제집 목록 불러오기
   useEffect(() => {
     fetchWorkBooks(userId);
@@ -76,8 +83,6 @@ export default function List() {
   // 모달 열기/닫기
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
-  const handleOpenUploadModal = () => setIsUploadModalOpen(true);
-  const handleCloseUploadModal = () => setIsUploadModalOpen(false);
 
   // 새 워크북 추가
   const handleAddWorkBook = async (title: string) => {
@@ -159,26 +164,64 @@ export default function List() {
   };
 
   // 파일 삭제 함수
-  const handleDelete = (id: string) => {
-    setFiles((prev) => prev.filter((file) => file.id !== id));
+  const handleDelete = async (id: string) => {
+    if (!numericWorkBookId) return;
+    try {
+      // 서버에서 파일 삭제
+      await handleDeleteFromServer(Number(id), numericWorkBookId);
+      // 삭제 후 최신 파일 목록을 다시 불러와서 files 상태 갱신
+      const docs = await getDocuments(numericWorkBookId);
+      setFiles(
+        docs.map((doc) => ({
+          id: String(doc.documentId),
+          title: doc.documentName,
+          type: doc.documentType,
+        }))
+      );
+    } catch (error) {
+      alert('파일 삭제에 실패했습니다.');
+    }
   };
 
   // workBookId가 있을 때 시험지 리스트 조회
   useEffect(() => {
     if (numericWorkBookId) {
+      setFiles([]); // 초기화
       getTestPapers(numericWorkBookId);
-      getDocuments(numericWorkBookId).then(() => {
+      getDocuments(numericWorkBookId).then((docs) => {
         setFiles(
-          documents.map((doc) => ({
+          docs.map((doc) => ({
             id: String(doc.documentId),
             title: doc.documentName,
             type: doc.documentType,
-            // 필요하다면 추가 필드도 넣을 수 있음
+            // 필요하다면 추가 필드도 넣기
           }))
         );
       });
     }
   }, [numericWorkBookId]);
+
+  // PDF 버튼 클릭 핸들러
+  const handlePdfClick = (paper: TestPaper) => {
+    setSelectedPaper(paper);
+    setIsPdfModalOpen(true);
+  };
+
+  // 퀴즈 시작 핸들러
+  const handleQuizStart = (paper: TestPaper) => {
+    setSelectedPaperForQuiz(paper);
+    setIsQuizStartModalOpen(true);
+  };
+
+  // 퀴즈 모드 시작 핸들러
+  const handleQuizModeStart = (
+    mode: 'practice' | 'real',
+    timer?: { min: number; sec: number }
+  ) => {
+    // TODO: 선택된 모드와 타이머로 퀴즈 페이지로 이동
+    console.log('Quiz mode:', mode, 'Timer:', timer);
+    setIsQuizStartModalOpen(false);
+  };
 
   return (
     <main className='py-8 flex flex-col gap-8'>
@@ -290,7 +333,13 @@ export default function List() {
               ) : papersError ? (
                 <div className='text-red-500'>{papersError.message}</div>
               ) : (
-                <TestPaperList papers={testPapers} />
+                <TestPaperList
+                  papers={testPapers.map((paper) => ({
+                    ...paper,
+                    onPdfClick: () => handlePdfClick(paper),
+                    onSolveClick: () => handleQuizStart(paper),
+                  }))}
+                />
               )
             ) : (
               <WorkBookList
@@ -330,11 +379,26 @@ export default function List() {
         )}
       </section>
 
-      {/* 모달 추가 */}
+      {/* 모달 모음  */}
       <WorkBookAddModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSubmit={handleAddWorkBook}
+      />
+
+      <PdfModal
+        isOpen={isPdfModalOpen}
+        onClose={() => setIsPdfModalOpen(false)}
+        onDownload={(option) => {
+          // 다운로드 로직 (selectedPaper, option 활용)
+          setIsPdfModalOpen(false);
+        }}
+      />
+
+      <QuizStartModal
+        isOpen={isQuizStartModalOpen}
+        onClose={() => setIsQuizStartModalOpen(false)}
+        onStart={handleQuizModeStart}
       />
     </main>
   );
