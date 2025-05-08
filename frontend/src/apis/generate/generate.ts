@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { GenerateRequest, GenerateResponse } from '@/types/generate';
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-});
+import axiosInstance from '../axiosInstance';
 
 export const generate = async (
   request: GenerateRequest
 ): Promise<GenerateResponse> => {
   try {
-    const response = await api.post<GenerateResponse>('/api/', request);
+    const response = await axiosInstance.post<GenerateResponse>(
+      '/api/testpaper',
+      request
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import BlurBackground from '../../components/layout/Background/BlurBackground';
 import Button from '../../components/common/Button/Button';
 import UploadedList from '@/components/upload/UploadedList/UploadedList';
@@ -11,6 +11,7 @@ import { useGenerateStore } from '@/stores/generateStore';
 
 const Generate = () => {
   const { workBookId } = useParams();
+  const navigate = useNavigate();
   const numericWorkBookId = workBookId ? Number(workBookId) : undefined;
 
   const [testName, setTestName] = useState('');
@@ -94,12 +95,17 @@ const Generate = () => {
   };
 
   const handleGenerate = async () => {
+    if (!numericWorkBookId) {
+      alert('문제집 ID가 없습니다.');
+      return;
+    }
+
     const request = {
-      workBookId: numericWorkBookId ?? 0, // This should come from your app's state or props
-      title: testName,
+      workBookId: numericWorkBookId,
+      title: testName || '제목없는 시험지',
       choiceAns: testTypes.find((t) => t.name === '객관식')?.count || 0,
       shortAns: testTypes.find((t) => t.name === '주관식')?.count || 0,
-      OXAns: 0, // Add this type if needed
+      OXAns: 0,
       wordAns: testTypes.find((t) => t.name === '서술형')?.count || 0,
       quantity: totalProblems,
     };
@@ -108,11 +114,10 @@ const Generate = () => {
       const response = await generatePaper(request);
       if (response.success && response.data) {
         setGenerated(response.data);
-        // Add navigation or success notification here
+        navigate(`/list/${numericWorkBookId}`);
       }
     } catch (err) {
-      // Error is handled by the hook
-      console.error('Failed to generate test paper:', err);
+      console.error('시험지 생성 실패:', err);
     }
   };
 
