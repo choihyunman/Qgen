@@ -33,11 +33,6 @@ export const router = createBrowserRouter([
         element: <List />,
       },
       {
-        path: '/quiz-end',
-        element: <QuizEnd />,
-      },
-
-      {
         path: '/incorrect',
         element: <Incorrect />,
       },

@@ -126,7 +126,7 @@ const Generate = () => {
       <div className='flex flex-col items-start justify-center min-h-screen  w-full mx-auto gap-6'>
         {/* Title Section */}
         <div className='flex justify-between items-center'>
-          <h1 className='text-2xl font-bold text-[#754AFF]'>시험지 생성하기</h1>
+          <h1 className='text-2xl font-bold'>시험지 생성하기</h1>
         </div>
 
         {/* Test Name Input Section */}
