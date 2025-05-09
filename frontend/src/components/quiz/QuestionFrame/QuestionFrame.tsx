@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import Button from '@/components/common/Button/Button';
 
 interface QuestionFrameProps {
   currentNumber: number;
@@ -32,6 +33,7 @@ function QuestionFrame({
   const disabledBtnClass =
     'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed';
   const explanationRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isSubmitted && explanationRef.current) {
@@ -44,8 +46,24 @@ function QuestionFrame({
     }
   }, [isSubmitted]);
 
+  useEffect(() => {
+    if (frameRef.current) {
+      frameRef.current.classList.remove('opacity-0');
+      frameRef.current.classList.add('opacity-100');
+    }
+    return () => {
+      if (frameRef.current) {
+        frameRef.current.classList.remove('opacity-100');
+        frameRef.current.classList.add('opacity-0');
+      }
+    };
+  }, [question]);
+
   return (
-    <div className='w-full h-[calc(100% + 40px)] bg-white rounded-[24px] px-[45px] pt-10 pb-10 shadow-sm'>
+    <div
+      ref={frameRef}
+      className='transition-opacity duration-300 opacity-100 w-full h-[calc(100% + 40px)] bg-white rounded-[24px] px-[45px] pt-10 pb-10 shadow-sm'
+    >
       <div>
         {/* 문제 번호 */}
         <div className='mb-6'>
@@ -112,25 +130,26 @@ function QuestionFrame({
       {/* 버튼 */}
       <div className='flex justify-end'>
         {!isSubmitted ? (
-          <button
-            type='button'
-            onClick={() => onSubmit()}
+          <Button
+            onClick={onSubmit}
             disabled={selectedOption === null}
+            variant='filled'
             className={
-              `px-6 py-2 rounded-lg border-2 font-bold transition-all duration-300 ` +
-              (selectedOption === null ? disabledBtnClass : activeBtnClass)
+              (selectedOption === null
+                ? 'bg-gray-300 text-gray-500 border-gray-300'
+                : '') + ' px-6 py-2 min-w-[96px]'
             }
           >
             제출
-          </button>
+          </Button>
         ) : (
-          <button
-            type='button'
-            onClick={() => onNext()}
-            className={`px-6 py-2 rounded-lg border-2 font-bold transition-all duration-300 ${activeBtnClass}`}
+          <Button
+            onClick={onNext}
+            variant='filled'
+            className='px-6 py-2 min-w-[96px]'
           >
             다음
-          </button>
+          </Button>
         )}
       </div>
     </div>

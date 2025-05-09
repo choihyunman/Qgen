@@ -33,7 +33,7 @@ function QuizPage() {
   const [currentQuestion, setCurrentQuestion] = useState<TestQuestion | null>(
     null
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // 모든 문제를 다 풀었는지 체크
@@ -65,7 +65,7 @@ function QuizPage() {
       } catch (e) {
         setError('문제 ID 목록을 불러오지 못했습니다.');
       } finally {
-        setIsLoading(false);
+        console.log('문제 불러오기 완료');
       }
     };
     fetchProblemIds();
@@ -76,9 +76,10 @@ function QuizPage() {
     const fetchQuestion = async () => {
       if (!problemIds.length) return;
       try {
-        setIsLoading(true);
+        // setIsLoading(true);                      [다음] 버튼 클릭 시, 리랜더링되는 코드
         const response = await getTestQuestion(problemIds[current]);
         setCurrentQuestion(response.data);
+        setIsLoading(false);
       } catch (error) {
         setCurrentQuestion(null);
       } finally {
@@ -95,7 +96,8 @@ function QuizPage() {
   const handleSubmit = async () => {
     if (selected !== null && currentQuestion) {
       try {
-        setIsLoading(true);
+        // debugger;
+        // setIsLoading(true);              [제출] 버튼 클릭 시, 리랜더링 되는 코드
         setIsSubmitted(true);
         setIsSubmittedArr((prev) => {
           const updated = [...prev];
@@ -154,6 +156,17 @@ function QuizPage() {
     setIsSubmitted(isSubmittedArr[idx] ?? false);
   };
 
+  if (isLoading) {
+    return (
+      <div className='flex items-center justify-center min-h-[60vh]'>
+        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500'></div>
+        <span className='ml-4 text-lg text-gray-500'>
+          문제를 불러오는 중입니다...
+        </span>
+      </div>
+    );
+  }
+
   if (error) {
     return <div className='text-red-500 p-4'>{error}</div>;
   }
@@ -163,14 +176,15 @@ function QuizPage() {
   }
 
   if (!currentQuestion) {
+    console.log(currentQuestion);
     return <div>문제를 불러오는데 실패했습니다.</div>;
   }
 
   return (
-    <div className='w-full py-10'>
+    <div className='w-full'>
       <div className='flex gap-[40px] items-stretch'>
         <div className='w-[1315px]'>
-          <div className='flex items-center gap-2 mb-1 pl-3'>
+          <div className='flex items-center gap-2 mb-1'>
             <img
               src='/src/assets/images/chart.png'
               alt='시험 아이콘'
@@ -178,37 +192,31 @@ function QuizPage() {
             />
             <h1 className='text-2xl font-bold'>정보처리기사 필기 1회</h1>
           </div>
-          <p className='text-gray-600 mb-4 pl-3'>
+          <p className='text-gray-600 mb-4'>
             2024년 정보처리기사 필기 기출 문제
           </p>
-          {isLoading ? (
-            <div className='flex items-center justify-center min-h-[60vh]'>
-              <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500'></div>
-            </div>
-          ) : (
-            <QuestionFrame
-              currentNumber={current + 1}
-              totalNumber={totalQuestions}
-              question={currentQuestion?.question || ''}
-              options={[
-                currentQuestion?.option1 || '',
-                currentQuestion?.option2 || '',
-                currentQuestion?.option3 || '',
-                currentQuestion?.option4 || '',
-              ]}
-              selectedOption={selected}
-              isSubmitted={isSubmitted}
-              answerIndex={
-                resultArr[current]?.correctAnswer
-                  ? parseInt(resultArr[current]!.correctAnswer, 10) - 1
-                  : -1
-              }
-              explanation={resultArr[current]?.comment || ''}
-              onSelect={handleSelect}
-              onSubmit={handleSubmit}
-              onNext={handleNext}
-            />
-          )}
+          <QuestionFrame
+            currentNumber={current + 1}
+            totalNumber={totalQuestions}
+            question={currentQuestion?.question || ''}
+            options={[
+              currentQuestion?.option1 || '',
+              currentQuestion?.option2 || '',
+              currentQuestion?.option3 || '',
+              currentQuestion?.option4 || '',
+            ]}
+            selectedOption={selected}
+            isSubmitted={isSubmitted}
+            answerIndex={
+              resultArr[current]?.correctAnswer
+                ? parseInt(resultArr[current]!.correctAnswer, 10) - 1
+                : -1
+            }
+            explanation={resultArr[current]?.comment || ''}
+            onSelect={handleSelect}
+            onSubmit={handleSubmit}
+            onNext={handleNext}
+          />
         </div>
         <ExamSidebar
           currentNumber={current + 1}

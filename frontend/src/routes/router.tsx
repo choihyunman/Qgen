@@ -5,6 +5,7 @@ import Incorrect from '@/pages/Incorrect/Incorrect';
 import { createBrowserRouter } from 'react-router-dom';
 import Quiz from '@/pages/Quiz/Quiz';
 import QuizEnd from '@/pages/Quiz/QuizEnd';
+import Login from '@/pages/Login/Login';
 
 export const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: '/incorrect',
         element: <Incorrect />,
+      },
+      {
+        path: '/login',
+        element: <Login />,
       },
     ],
   },

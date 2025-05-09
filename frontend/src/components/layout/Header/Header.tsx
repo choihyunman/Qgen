@@ -14,7 +14,9 @@ export default function Header() {
         >
           문제집 바로가기
         </Link>
-        <SmallBtn text='로그인' />
+        <Link to='/login'>
+          <SmallBtn text='로그인' />
+        </Link>
         <SmallBtn text='가입' outline />
       </div>
     </header>
