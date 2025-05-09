@@ -122,8 +122,8 @@ const Generate = () => {
   };
 
   return (
-    <BlurBackground>
-      <div className='flex flex-col items-start justify-center min-h-screen py-10 px-6 w-full mx-auto gap-6'>
+    <div>
+      <div className='flex flex-col items-start justify-center min-h-screen  w-full mx-auto gap-6'>
         {/* Title Section */}
         <div className='flex justify-between items-center'>
           <h1 className='text-2xl font-bold text-[#754AFF]'>시험지 생성하기</h1>
@@ -131,7 +131,7 @@ const Generate = () => {
 
         {/* Test Name Input Section */}
         <div className='w-full bg-white rounded-3xl shadow-sm p-6 md:col-span-2'>
-          <h2 className='text-2xl font-semibold mb-5'>시험지 이름</h2>
+          <h2 className='text-xl font-semibold mb-5'>시험지 이름</h2>
           <div className='border-b-1 border-gray-300 pb-2 transition-colors focus-within:border-[#754AFF]'>
             <input
               type='text'
@@ -161,7 +161,7 @@ const Generate = () => {
           {/* Problem Types and Count Selection Section */}
           <div className='bg-white rounded-3xl shadow-sm p-6 w-full md:col-span-1'>
             <div className='flex justify-between items-center mb-5'>
-              <h2 className='text-2xl font-semibold'>문제 유형 및 개수 선택</h2>
+              <h2 className='text-xl font-semibold'>문제 유형 및 개수 선택</h2>
               <span className='text-lg font-medium text-[#754AFF]'>
                 총 {totalProblems}문제
               </span>
@@ -296,7 +296,7 @@ const Generate = () => {
           {isLoading ? '생성 중...' : '시험지 생성하기'}
         </Button>
       </div>
-    </BlurBackground>
+    </div>
   );
 };
 

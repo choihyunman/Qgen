@@ -3,7 +3,7 @@ import Test from './Test';
 import TestList from './TestList';
 import Button from '@/components/common/Button/Button';
 import Note from './Note';
-import SimpleBar from 'simplebar-react';
+// import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 
 const Incorrect = () => {
@@ -71,12 +71,9 @@ const Incorrect = () => {
   return (
     <div className='flex gap-4 h-full'>
       {/* TestList (1/5) */}
-      <div style={{ flex: 1 }} className='flex flex-col gap-4 h-full min-h-0'>
-        <SimpleBar
-          style={{ flex: 3.3, height: '0', minHeight: 0 }}
-          className='bg-white rounded-3xl p-6 shadow-sm'
-        >
-          <h3 className='text-lg font-bold mb-4'>내가 푼 시험지 List</h3>
+      <div className='flex  flex-col overflow-scroll rounded-3xl shadow-sm  gap-4 h-full min-h-0'>
+        <div className='flex-1 p-6 bg-white '>
+          <h3 className='text-lg font-bold mb-4 '>내가 푼 시험지 List</h3>
           <div className='flex flex-col gap-3'>
             {mockExams.map((exam) => (
               <Button
@@ -88,18 +85,14 @@ const Incorrect = () => {
               </Button>
             ))}
           </div>
-        </SimpleBar>
-
-        <SimpleBar
-          style={{ flex: 1.7, height: '0', minHeight: 0 }}
-          className='bg-white rounded-3xl p-6 shadow-sm'
-        >
+        </div>
+        <div className='flex-1'>
           <TestList
             currentNumber={currentNumber}
             totalTests={totalTests}
             onTestClick={handleTestClick}
           />
-        </SimpleBar>
+        </div>
       </div>
 
       {/* Test (3/5) */}
