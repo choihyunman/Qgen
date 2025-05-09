@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import com.s12p31b204.backend.domain.TestHistory;
 
+import java.util.List;
+
 @Repository
 public interface TestHistoryRepository extends JpaRepository<TestHistory, Long> {
-
+    List<TestHistory> findAllByTest_TestId(Long testId);
 }
