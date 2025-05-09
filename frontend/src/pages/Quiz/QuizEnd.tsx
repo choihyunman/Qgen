@@ -24,7 +24,7 @@ const QuizEnd = () => {
   }, []);
 
   return (
-    <div className='w-full py-10'>
+    <div className='w-full'>
       <div className='flex gap-[40px] items-stretch'>
         <div className='w-[800px] mx-auto flex flex-col items-center justify-center min-h-[60vh] bg-white/30 rounded-3xl shadow-sm p-10 animate-fade-in'>
           <div className='mb-2 w-48 h-48 flex items-center justify-center'>
