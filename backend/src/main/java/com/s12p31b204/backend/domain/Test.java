@@ -92,6 +92,13 @@ public class Test {
         this.comment = comment;
     }
 
+    public void updateMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public void removeMemo() {
+        this.memo = null;
+    }
 
     public enum Type {
         TYPE_CHOICE("객관식"),
