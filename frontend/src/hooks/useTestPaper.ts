@@ -75,14 +75,14 @@ export function useTestPaper() {
   };
 
   // 시험지 삭제
-  const removeTestPaper = async (workBookId: number) => {
+  const removeTestPaper = async (testPaperId: number) => {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await deleteTestPaper(workBookId);
+      const res = await deleteTestPaper(testPaperId);
       if (res.success) {
         setTestPapers((prev) =>
-          prev.filter((paper) => paper.workBookId !== workBookId)
+          prev.filter((paper) => paper.workBookId !== testPaperId)
         );
       }
       return res;

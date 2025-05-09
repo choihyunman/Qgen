@@ -57,7 +57,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 
   return (
     <div className={`p-6 bg-white rounded-3xl shadow-sm ${className}`}>
-      <h1 className='text-2xl font-bold mb-2'>문제 생성 소스</h1>
+      <h1 className='text-xl font-bold mb-2'>문제 생성 소스</h1>
       <p className='text-gray-500 mb-8'>
         문제 생성에 사용할 자료를 업로드하세요. PDF, DOCX, TXT 파일을
         지원합니다.

@@ -222,6 +222,33 @@ export default function List() {
     setIsQuizStartModalOpen(false);
   };
 
+  // 오답 노트 이동 핸들러
+  const handleIncorrectClick = () => {
+    navigate('/incorrect');
+  };
+
+  // 시험지 생성 페이지 이동 핸들러
+  const handleGenerateClick = () => {
+    if (!numericWorkBookId) {
+      alert('문제집을 선택해주세요.');
+      return;
+    }
+    navigate(`/generate/${numericWorkBookId}`);
+  };
+
+  // List.tsx에 handleDeleteTestPaper 함수 추가
+  const handleDeleteTestPaper = async (testPaperId: number) => {
+    try {
+      await removeTestPaper(testPaperId);
+      // 삭제 후 시험지 목록 새로고침
+      if (numericWorkBookId) {
+        await getTestPapers(numericWorkBookId);
+      }
+    } catch (error) {
+      alert('시험지 삭제에 실패했습니다.');
+    }
+  };
+
   return (
     <main className='py-8 flex flex-col gap-8'>
       {/* 인사 및 알림 카드 */}
@@ -251,131 +278,154 @@ export default function List() {
       {/* 문제집 & 자료 업로드 */}
       <section className='flex gap-8'>
         {/* 문제집 리스트 */}
-        <div className='flex-1'>
-          <div className='flex items-center gap-2 mb-4'>
-            <button
-              onClick={handleBackToWorkbooks}
-              className='cursor-pointer text-2xl font-semibold hover:text-purple-600 transition-colors'
-            >
-              문제집 목록
-            </button>
-            {!numericWorkBookId && (
-              <IconBox
-                className='cursor-pointer'
-                name='plusCircle'
-                size={22}
-                onClick={handleOpenModal}
-              />
-            )}
-            {numericWorkBookId && (
-              <>
-                <span className='text-gray-400'>›</span>
-                {isEditing ? (
-                  <div className='flex items-center gap-2'>
-                    <div className='relative inline-block'>
-                      <span
-                        className='invisible whitespace-pre absolute text-xl font-semibold'
-                        aria-hidden='true'
-                      >
-                        {editingTitle}
-                      </span>
-                      <input
-                        type='text'
-                        value={editingTitle}
-                        onChange={(e) => setEditingTitle(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            handleSubmitEdit();
-                          } else if (e.key === 'Escape') {
-                            handleCancelEdit();
-                          }
-                        }}
-                        className='w-full min-w-[200px] border-0 border-b-2 border-gray-300 focus:border-purple-500 focus:ring-0 focus:outline-none rounded-none px-0 py-0 text-xl font-semibold bg-transparent'
-                        autoFocus
-                      />
-                      <IconBox
-                        className='absolute right-0 top-1 cursor-pointer'
-                        name='check'
-                        size={20}
-                        onClick={handleSubmitEdit}
-                      />
+        <div className='flex-1 flex flex-col gap-0'>
+          {/* 제목 파트 */}
+          <div className='flex justify-between py-4 items-center'>
+            <div className='flex items-center gap-2'>
+              <button
+                onClick={handleBackToWorkbooks}
+                className='cursor-pointer text-2xl font-semibold hover:text-purple-600 transition-colors'
+              >
+                문제집 목록
+              </button>
+              {!numericWorkBookId && (
+                <IconBox
+                  className='cursor-pointer'
+                  name='plusCircle'
+                  size={22}
+                  onClick={handleOpenModal}
+                />
+              )}
+              {numericWorkBookId && (
+                <>
+                  <span className='text-gray-400'>›</span>
+                  {isEditing ? (
+                    <div className='flex items-center gap-2'>
+                      <div className='relative inline-block'>
+                        <span
+                          className='invisible whitespace-pre absolute text-xl font-semibold'
+                          aria-hidden='true'
+                        >
+                          {editingTitle}
+                        </span>
+                        <input
+                          type='text'
+                          value={editingTitle}
+                          onChange={(e) => setEditingTitle(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleSubmitEdit();
+                            } else if (e.key === 'Escape') {
+                              handleCancelEdit();
+                            }
+                          }}
+                          className='w-full min-w-[200px] border-0 border-b-2 border-gray-300 focus:border-purple-500 focus:ring-0 focus:outline-none rounded-none px-0 py-0 text-xl font-semibold bg-transparent'
+                          autoFocus
+                        />
+                        <IconBox
+                          className='absolute right-0 top-1 cursor-pointer'
+                          name='check'
+                          size={20}
+                          onClick={handleSubmitEdit}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div
-                    onClick={handleStartEdit}
-                    className='group flex items-center cursor-pointer'
+                  ) : (
+                    <div
+                      onClick={handleStartEdit}
+                      className='group flex items-center cursor-pointer'
+                    >
+                      {selectedWorkbookData ? (
+                        <span className='text-xl font-semibold border-b-2 border-transparent group-hover:border-gray-300'>
+                          {selectedWorkbookData.title}
+                        </span>
+                      ) : (
+                        <div>선택된 문제집이 없습니다.</div>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+            <div className='flex items-center justify-between gap-3'>
+              {numericWorkBookId && (
+                <div className='flex gap-2'>
+                  <Button
+                    variant='outlined'
+                    className=''
+                    onClick={handleIncorrectClick}
                   >
-                    {selectedWorkbookData ? (
-                      <span className='text-xl font-semibold border-b-2 border-transparent group-hover:border-gray-300'>
-                        {selectedWorkbookData.title}
-                      </span>
-                    ) : (
-                      <div>선택된 문제집이 없습니다.</div>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
+                    문제 노트
+                  </Button>
+                  <Button
+                    variant='filled'
+                    className=''
+                    onClick={handleGenerateClick}
+                  >
+                    시험지 생성하기 ✨
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* 로딩/에러 처리 */}
-          {isLoading && <div>로딩 중...</div>}
-          {error && <div className='text-red-500'>{error.message}</div>}
-
-          {/* 조건부 렌더링 */}
-          {!isLoading &&
-            !error &&
-            (numericWorkBookId ? (
-              papersLoading ? (
-                <div>시험지 목록 불러오는 중...</div>
-              ) : papersError ? (
-                <div className='text-red-500'>{papersError.message}</div>
-              ) : (
-                <TestPaperList
-                  papers={testPapers.map((paper) => ({
-                    ...paper,
-                    onPdfClick: () => handlePdfClick(paper),
-                    onSolveClick: () => handleQuizStart(paper),
-                  }))}
-                />
-              )
-            ) : (
-              <WorkBookList
-                workbooks={workbooks.map((wb) => ({
-                  id: String(wb.workBookId),
-                  title: wb.title,
-                  date: wb.createAt,
-                }))}
-                onWorkBookClick={(id) => handleWorkBookClick(Number(id))}
-                onAddClick={handleOpenModal}
-              />
-            ))}
-        </div>
-
-        {/* 자료 업로드 - selectedWorkbook이 있을 때만 표시 */}
-        {selectedWorkbook && (
-          <aside className='w-[340px] shrink-0'>
-            <div className='flex items-center justify-between mb-2'>
-              <span className='text-2xl font-semibold'>자료 업로드</span>
-              <Button
-                className='px-2 py-1 text-xs'
-                onClick={() => setIsUploadModalOpen(true)}
-              >
-                + 추가하기
-              </Button>
+          <div className='flex gap-5'>
+            <div className='flex-1'>
+              {/* 로딩/에러 처리 */}
+              {isLoading && <div>로딩 중...</div>}
+              {error && <div className='text-red-500'>{error.message}</div>}
+              {/* 조건부 렌더링 */}
+              {!isLoading &&
+                !error &&
+                (numericWorkBookId ? (
+                  papersLoading ? (
+                    <div>시험지 목록 불러오는 중...</div>
+                  ) : papersError ? (
+                    <div className='text-red-500'>{papersError.message}</div>
+                  ) : (
+                    <TestPaperList
+                      papers={testPapers.map((paper) => ({
+                        ...paper,
+                        onPdfClick: () => handlePdfClick(paper),
+                        onSolveClick: () => handleQuizStart(paper),
+                        onDelete: (testPaperId) =>
+                          handleDeleteTestPaper(testPaperId),
+                      }))}
+                    />
+                  )
+                ) : (
+                  <WorkBookList
+                    workbooks={workbooks.map((wb) => ({
+                      id: String(wb.workBookId),
+                      title: wb.title,
+                      date: wb.createAt,
+                    }))}
+                    onWorkBookClick={(id) => handleWorkBookClick(Number(id))}
+                    onAddClick={handleOpenModal}
+                  />
+                ))}
             </div>
-            <UploadedList files={files} maxFiles={10} onDelete={handleDelete} />
-            <UploadModal
-              isOpen={isUploadModalOpen}
-              onClose={() => setIsUploadModalOpen(false)}
-              onFileUpload={handleFileUpload}
-              onLinkSubmit={handleLinkSubmit}
-              onTextSubmit={handleTextSubmit}
-              workBookId={numericWorkBookId || 0} // 추가
-            />
-          </aside>
-        )}
+            {/* 자료 업로드 - selectedWorkbook이 있을 때만 표시 */}
+            {numericWorkBookId && (
+              <aside className='w-[340px] shrink-0'>
+                <UploadedList
+                  files={files}
+                  maxFiles={10}
+                  onDelete={handleDelete}
+                  onClick={() => setIsUploadModalOpen(true)}
+                />
+                <UploadModal
+                  isOpen={isUploadModalOpen}
+                  onClose={() => setIsUploadModalOpen(false)}
+                  onFileUpload={handleFileUpload}
+                  onLinkSubmit={handleLinkSubmit}
+                  onTextSubmit={handleTextSubmit}
+                  workBookId={numericWorkBookId || 0} // 추가
+                />
+              </aside>
+            )}
+          </div>
+        </div>
       </section>
 
       {/* 모달 모음  */}
