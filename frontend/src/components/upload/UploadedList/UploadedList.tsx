@@ -3,6 +3,7 @@
 
 import { twMerge } from 'tailwind-merge';
 import IconBox from '../../common/IconBox/IconBox';
+import Button from '@/components/common/Button/Button';
 
 interface UploadedFile {
   id: string;
@@ -15,11 +16,11 @@ interface UploadedListProps {
   files: UploadedFile[];
   /** 전체 업로드 가능한 파일 수 */
   maxFiles?: number;
-  /** 파일 삭제 핸들러 */
   onDelete?: (id: string) => void;
   /** 추가 클래스명 */
   className?: string;
   isLoading?: boolean;
+  onClick?: () => void;
 }
 
 function UploadedList({
@@ -28,6 +29,7 @@ function UploadedList({
   onDelete,
   className,
   isLoading = false,
+  onClick,
 }: UploadedListProps) {
   // files가 null이거나 undefined일 경우를 대비해 기본값 처리
   const safeFiles = files ?? [];
@@ -35,8 +37,16 @@ function UploadedList({
   return (
     <div className='bg-white rounded-3xl p-6 shadow-sm'>
       <div className={twMerge('w-full space-y-4', className)}>
-        <h2 className='text-xl font-bold'>자료 업로드</h2>
-
+        <div className='flex justify-between items-center'>
+          <h2 className='text-xl font-bold'>업로드 된 자료</h2>
+          <Button
+            variant='filled'
+            className='px-2 py-1 text-xs'
+            onClick={() => onClick?.()}
+          >
+            + 자료 추가
+          </Button>
+        </div>
         {/* 업로드 진행률 */}
         <div className='space-y-2'>
           <div className='flex justify-between items-center'>
@@ -67,7 +77,7 @@ function UploadedList({
             safeFiles.map((file) => (
               <div
                 key={file.id}
-                className='flex cursor-pointer items-start justify-between p-4 rounded-2xl border border-gray-200'
+                className='flex cursor-pointer items-start justify-between p-4 rounded-2xl border border-gray-200 bg-white'
               >
                 <div className='space-y-1'>
                   <h3 className='font-medium'>{file.title}</h3>
