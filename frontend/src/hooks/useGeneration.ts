@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { generate } from '@/apis/generate';
+import { generate } from '@/apis/generate/generate';
 import { GenerateRequest, GenerateResponse } from '@/types/generate';
 
 interface UseGenerationReturn {

@@ -2,7 +2,7 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface ButtonProps {
-  variant?: 'filled' | 'outlined' | 'icon' | 'small';
+  variant?: 'filled' | 'outlined' | 'basic' | 'small';
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
@@ -24,8 +24,8 @@ const Button: React.FC<ButtonProps> = ({
       'bg-gradient-to-r from-[#754AFF] to-[#A34BFF] text-white px-6 py-3 hover:from-[#6642E6] hover:to-[#9343E6]',
     outlined:
       'border border-[#754AFF] text-[#754AFF] px-6 py-3 hover:bg-[#754AFF] hover:text-white hover:border-transparent',
-    icon: 'bg-[#754AFF] text-white px-6 py-3 hover:bg-[#6642E6]',
-    small: 'px-4 py-2 text-sm',
+    basic: 'bg-[#754AFF] text-white px-6 py-3 hover:bg-[#6642E6]',
+    small: 'bg-[#754AFF] text-white px-4 py-2 text-sm hover:bg-[#6642E6]',
   };
 
   const getButtonClasses = () => {
@@ -36,7 +36,7 @@ const Button: React.FC<ButtonProps> = ({
         classes += ' bg-[#754AFF] text-white hover:bg-[#6642E6]';
       } else if (className?.includes('secondary')) {
         classes +=
-          ' bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 hover:border-transparent';
+          ' bg-white text-gray-700 border border-gray-300 hover:bg-[#754AFF]/10 hover:border-[#754AFF]/80';
       }
     }
 

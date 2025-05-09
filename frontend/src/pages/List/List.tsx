@@ -209,8 +209,7 @@ export default function List() {
 
   // 퀴즈 시작 핸들러
   const handleQuizStart = (paper: TestPaper) => {
-    setSelectedPaperForQuiz(paper);
-    setIsQuizStartModalOpen(true);
+    navigate(`/quiz/${paper.testPaperId}`);
   };
 
   // 퀴즈 모드 시작 핸들러

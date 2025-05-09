@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { IncorrectTestProps } from '@/types/incorrect';
 import Button from '@/components/common/Button/Button';
-
+import SimpleBar from 'simplebar-react';
 function IncorrectTest({
   currentNumber,
   totalNumber,
@@ -29,15 +29,21 @@ function IncorrectTest({
   return (
     <div className='w-full h-full min-h-0 bg-white rounded-3xl p-6 shadow-sm'>
       <div>
-        {/* 문제 번호 */}
-        <div className='mb-4'>
-          <p className='text-base font-medium'>
-            문제 {currentNumber}/{totalNumber}
-          </p>
+        <div className='flex justify-between'>
+          {/* 문제 번호 */}
+          <div className='mb-4'>
+            <p className='text-base font-bold'>
+              문제 {currentNumber}/{totalNumber}
+            </p>
+          </div>
+          <div className='flex justify-end'>
+            <Button onClick={onNext} variant='small'>
+              다음
+            </Button>
+          </div>
         </div>
-
         {/* 문제 내용 */}
-        <div className='mb-8'>
+        <div className='mb-6'>
           <h2 className='text-lg font-bold'>{test}</h2>
         </div>
 
@@ -70,19 +76,10 @@ function IncorrectTest({
         </div>
 
         {/* 해설 */}
-        <div className='my-6'>
-          <div className='p-4 bg-purple-50 rounded-2xl text-gray-700'>
-            <div className='font-semibold mb-2'>해설</div>
-            <div>{explanation}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* 버튼 */}
-      <div className='flex justify-end'>
-        <Button onClick={onNext} variant='outlined' className='py-3 px-5'>
-          다음
-        </Button>
+        <SimpleBar className='my-6 h-full min-h-0 bg-[#CAC7FC]/20 rounded-3xl max-h-52 flex flex-col p-6'>
+          <div className='font-semibold mb-2 text-gray-700'>해설</div>
+          <div className='text-gray-700'>{explanation}</div>
+        </SimpleBar>
       </div>
     </div>
   );
