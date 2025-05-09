@@ -1,17 +1,38 @@
+import { useEffect } from 'react';
 import Button from '@/components/common/Button/Button';
-import Lottie from 'lottie-react';
-import celebrationAnimation from '@/assets/animations/complete.json'; // JSON 파일 경로는 실제 다운로드한 파일에 맞게 수정해주세요
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import confetti from 'canvas-confetti';
 
 const QuizEnd = () => {
+  useEffect(() => {
+    // 왼쪽 아래에서 오른쪽 위 대각선(중앙)
+    confetti({
+      particleCount: 80,
+      angle: 45, // 오른쪽 위 대각선
+      spread: 35,
+      startVelocity: 90,
+      origin: { x: 0, y: 1 },
+    });
+    // 오른쪽 아래에서 왼쪽 위 대각선(중앙)
+    confetti({
+      particleCount: 80,
+      angle: 135, // 왼쪽 위 대각선
+      spread: 35,
+      startVelocity: 90,
+      origin: { x: 1, y: 1 },
+    });
+  }, []);
+
   return (
-    <div className='w-full py-10'>
+    <div className='w-full'>
       <div className='flex gap-[40px] items-stretch'>
         <div className='w-[800px] mx-auto flex flex-col items-center justify-center min-h-[60vh] bg-white/30 rounded-3xl shadow-sm p-10 animate-fade-in'>
-          <div className='mb-8 w-64 h-64'>
-            <Lottie
-              animationData={celebrationAnimation}
-              loop={true}
-              autoplay={true}
+          <div className='mb-2 w-48 h-48 flex items-center justify-center'>
+            <DotLottieReact
+              src='https://lottie.host/5851c0d5-f978-414e-8d73-8403cb8cded5/XJR5Ma7DBl.lottie'
+              autoplay
+              style={{ width: 150, height: 150 }}
+              speed={1.7}
             />
           </div>
           <h2 className='text-3xl font-extrabold text-[#754AFF] mb-4 tracking-tight text-center'>

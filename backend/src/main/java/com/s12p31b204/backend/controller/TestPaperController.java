@@ -1,6 +1,7 @@
 package com.s12p31b204.backend.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,8 @@ public class TestPaperController {
             log.info("getting TestPapers...");
             List<TestPaperResponseDto> testPapers = testPaperService.findTestPaperByWorkBookId(workBookId);
             return ApiResponse.success(testPapers, "시험지 리스트 조회 성공", HttpStatus.OK, request.getRequestURI());
+        } catch (NoSuchElementException e) {
+            return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResponse.failure("시험지 조회 중 오류 발생", HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
@@ -50,6 +53,8 @@ public class TestPaperController {
             log.info("creating TestPaper...");
             TestPaperResponseDto response = testPaperService.createTestPaper(createTestPaperRequestDto);
             return ApiResponse.success(response, "시험지 생성 성공", HttpStatus.CREATED, request.getRequestURI());
+        } catch (NoSuchElementException e) {
+            return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResponse.failure("시험지 생성 중 오류 발생", HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
@@ -74,6 +79,8 @@ public class TestPaperController {
             log.info("modifying TestPaper...");
             TestPaperResponseDto response = testPaperService.updateTestPaper(updateTestPaperRequestDto);
             return ApiResponse.success(response, "시험지 수정 성공", HttpStatus.OK, request.getRequestURI());
+        } catch (NoSuchElementException e) {
+            return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResponse.failure("시험지 수정 중 오류 발생", HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
