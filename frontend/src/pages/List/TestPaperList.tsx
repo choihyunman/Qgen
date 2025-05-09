@@ -21,11 +21,11 @@ interface TestPaperListProps {
 
 function TestPaperList({ papers }: TestPaperListProps) {
   return (
-    <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 bg-[rgba(255,255,255,0.75)] rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100'>
+    <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 bg-[rgba(255,255,255,0.75)] h-full rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100'>
       {papers.map((paper) => (
         <div
           key={paper.testPaperId}
-          className='cursor-pointer bg-white rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100'
+          className=' cursor-pointer bg-white rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100 '
         >
           <div className='flex items-center justify-between'>
             <div className='font-semibold truncate max-w-[200px]'>

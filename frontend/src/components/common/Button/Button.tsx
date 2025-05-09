@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 interface ButtonProps {
   variant?: 'filled' | 'outlined' | 'basic' | 'small';
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   className?: string;
 }
