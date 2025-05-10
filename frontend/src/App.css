@@ -15,3 +15,17 @@
 .simplebar-scrollbar.simplebar-visible:before {
   opacity: 1 !important;
 }
+
+@keyframes gradient-move-bg {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+.btn-gradient-move {
+  background: linear-gradient(90deg, #754aff, #b16dff, #754aff);
+  background-size: 200% 100%;
+  animation: gradient-move-bg 2s linear infinite;
+}

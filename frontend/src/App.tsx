@@ -15,13 +15,13 @@ function App() {
   return (
     <div className='flex flex-col w-full'>
       <BackgroundComponent>
-        <div className='flex flex-col flex-1 pb-4'>
+        <div className='flex flex-col max-w-[1400px] mx-auto flex-1 pb-4'>
           <Header />
-          <main className='flex-1 py-4 min-h-0'>
+          <main className='flex-1 py-10 min-h-0'>
             <Outlet />
           </main>
+          <Footer />
         </div>
-        <Footer />
       </BackgroundComponent>
     </div>
   );
