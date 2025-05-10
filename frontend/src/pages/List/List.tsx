@@ -1,5 +1,4 @@
 // src/pages/MainContent.tsx
-'use client';
 
 import WorkBookList from './WorkBookList';
 // import WorkBookAddModal from '@/components/workbook/WorkBookAddModal/WorkBookAddModal';
@@ -19,6 +18,7 @@ import PdfModal from '@/components/testpaper/PdfModal';
 import QuizStartModal from '@/components/testpaper/QuizStartModal';
 import { formatDateTime } from '@/utils/dateFormat';
 import WorkBookTitleModal from '@/components/workbook/WorkBookTitleModal/WorkBookTitleModal';
+import GradientTitle from '@/components/common/GradientTitle/GradientTitle';
 
 // 예시: 실제 로그인 유저의 id를 받아와야 함
 const userId = 1;
@@ -224,6 +224,11 @@ export default function List() {
     navigate(`/quiz/${paper.testPaperId}`);
   };
 
+  // 이력 확인 핸들러
+  const handleHistoryClick = (paper: TestPaper) => {
+    navigate(`/note/${paper.testPaperId}`);
+  };
+
   // 퀴즈 모드 시작 핸들러
   const handleQuizModeStart = (
     mode: 'practice' | 'real',
@@ -324,13 +329,16 @@ export default function List() {
   };
 
   return (
-    <main className='py-8 flex flex-col gap-8'>
+    <div className='pb-8 flex flex-col gap-8'>
       {/* 인사 및 알림 카드 */}
-      <section>
-        <h1 className='text-2xl font-bold mb-6'>
-          안녕하세요! 오늘도 Q-gen에서 즐겁게 공부해요 !
-        </h1>
-        <div className='bg-white rounded-2xl shadow p-6 flex items-center gap-4 mb-8'>
+      <GradientTitle
+        highlight='Q-gen'
+        before='안녕하세요! 오늘도 '
+        after='에서 효율적인 공부를 시작하세요!'
+      ></GradientTitle>
+      <section className='max-w-[600px] '>
+        {/* <h1 className='text-2xl font-bold mb-3'></h1> */}
+        <div className='bg-white rounded-2xl shadow p-6 flex items-center gap-4 '>
           {/* 예시 이미지(아이콘) */}
           <div className='p-3 w-24 h-26 bg-gray-100 rounded-full flex items-center justify-center'>
             <img src='src/assets/images/dolpin-with-tablet.png' alt='' />
@@ -379,9 +387,9 @@ export default function List() {
                   ></IconBox>
                   {isEditing ? (
                     <div className='flex items-center gap-2'>
-                      <div className='relative inline-block'>
+                      <div className='flex items-center gap-2 '>
                         <span
-                          className='invisible whitespace-pre absolute text-xl font-semibold'
+                          className='invisible whitespace-pre absolute text-2xl font-semibold'
                           aria-hidden='true'
                         >
                           {editingTitle}
@@ -397,11 +405,11 @@ export default function List() {
                               handleCancelEdit();
                             }
                           }}
-                          className='w-full min-w-[200px] border-0 border-b-2 border-gray-300 focus:border-purple-500 focus:ring-0 focus:outline-none rounded-none px-0 py-0 text-xl font-semibold bg-transparent'
+                          className='w-full min-w-[200px] border-0 border-b-2 border-gray-300 focus:border-purple-500 focus:ring-0 focus:outline-none rounded-none px-0 py-0 text-2xl font-semibold bg-transparent'
                           autoFocus
                         />
                         <IconBox
-                          className='absolute right-0 top-1 cursor-pointer'
+                          className=' cursor-pointer'
                           name='check'
                           size={20}
                           onClick={handleSubmitEdit}
@@ -468,7 +476,11 @@ export default function List() {
                         onSolveClick: () => handleQuizStart(paper),
                         onDelete: (testPaperId) =>
                           handleDeleteTestPaper(testPaperId),
+                        onHistoryClick: () => handleHistoryClick(paper),
                       }))}
+                      onAddClick={() =>
+                        navigate(`/generate/${numericWorkBookId}`)
+                      }
                     />
                   )
                 ) : (
@@ -538,6 +550,6 @@ export default function List() {
         onClose={() => setIsQuizStartModalOpen(false)}
         onStart={handleQuizModeStart}
       />
-    </main>
+    </div>
   );
 }
