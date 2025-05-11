@@ -30,6 +30,7 @@ export default function List() {
   // 커스텀 훅 사용
   const {
     workbooks,
+    setWorkbooks,
     isLoading,
     error,
     fetchWorkBooks,
@@ -318,6 +319,13 @@ export default function List() {
   // 모달에서 submit 시
   const handleTitleModalSubmit = async (title: string) => {
     if (titleModalMode === 'add') {
+      // const tempWorkBook = {
+      //   workBookId: 0,
+      //   title: title,
+      //   createAt: new Date().toISOString(),
+      // };
+      // setWorkbooks([...workbooks, tempWorkBook]);
+      setIsTitleModalOpen(false);
       await createNewWorkBook(userId, title);
       await fetchWorkBooks(userId);
     } else if (titleModalMode === 'edit' && editTargetId) {
