@@ -230,14 +230,16 @@ const Generate = () => {
         </div>
 
         {/* File Upload and List Section */}
-        <div className='w-full grid grid-cols-1 md:grid-cols-3 gap-6'>
-          <FileUploader
-            onFileUpload={handleFileUpload}
-            onLinkSubmit={handleLinkSubmit}
-            onTextSubmit={handleTextSubmit}
-            className='md:col-span-2'
-            workBookId={numericWorkBookId ?? 0}
-          />
+        <div className='w-full grid grid-cols-1 md:grid-cols-3 gap-6 '>
+          <div className='flex md:col-span-2 p-6 bg-white rounded-3xl shadow-sm'>
+            <FileUploader
+              onFileUpload={handleFileUpload}
+              onLinkSubmit={handleLinkSubmit}
+              onTextSubmit={handleTextSubmit}
+              className='md:col-span-2'
+              workBookId={numericWorkBookId ?? 0}
+            />
+          </div>
           <div className='flex flex-col gap-6'>
             <UploadedList
               files={uploadedFiles}

@@ -1,6 +1,7 @@
 // src/components/list/UploadModal/UploadModal.tsx
 import React from 'react';
 import FileUploader from '@/components/upload/FileUpload/FileUploader';
+import IconBox from '@/components/common/IconBox/IconBox';
 
 interface UploadModalProps {
   isOpen: boolean;
@@ -28,14 +29,14 @@ const UploadModal: React.FC<UploadModalProps> = ({
       {/* Modal Content */}
       <div className='relative bg-white rounded-2xl w-full max-w-xl p-8 shadow-lg z-10'>
         {/* Modal Header */}
-        <div className='flex items-center justify-between mb-6'>
-          <h2 className='text-xl font-bold'>자료 업로드</h2>
+        <div className='flex items-center justify-end absolute top-8 right-8'>
+          {/* <h2 className='text-xl font-bold'>자료 업로드</h2> */}
           <button
             onClick={onClose}
-            className='text-gray-400 hover:text-gray-600 text-2xl'
+            className='cursor-pointer text-gray-400 hover:text-gray-600 text-2xl'
             aria-label='닫기'
           >
-            ×
+            <IconBox name='x' size={24} />
           </button>
         </div>
         {/* FileUploader 본체 */}

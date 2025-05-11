@@ -362,7 +362,7 @@ export default function List() {
         <div className='flex-1 flex flex-col gap-0'>
           {/* 제목 파트 */}
           <div className='flex justify-between py-4 items-center'>
-            <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-2 h-[66px]'>
               <button
                 onClick={handleBackToWorkbooks}
                 className='cursor-pointer text-2xl font-semibold hover:text-purple-600 transition-colors'

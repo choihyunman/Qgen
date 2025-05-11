@@ -96,7 +96,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 
   return (
     <div
-      className={`flex flex-col p-6 min-h-[80dvh] bg-white rounded-3xl shadow-sm select-none ${className}`}
+      className={`flex flex-col min-h-[80dvh] w-full select-none ${className}`}
     >
       <style>{pulseAnimation}</style>
       {/* 전역 스피너 */}
