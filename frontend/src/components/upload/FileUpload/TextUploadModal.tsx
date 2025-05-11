@@ -11,10 +11,10 @@ const LinkUploadModal: React.FC<LinkUploadModalProps> = ({
   onClose,
   onSubmit,
 }) => {
-  const [url, setUrl] = useState('');
+  const [text, setText] = useState('');
 
   const handleSubmit = () => {
-    onSubmit(url);
+    onSubmit(text);
     onClose();
   };
 
@@ -40,16 +40,18 @@ const LinkUploadModal: React.FC<LinkUploadModalProps> = ({
             소스로 업로드할 텍스트를 아래에 추가해주세요
           </p>
 
-          <div className='flex items-center border border-gray-200 rounded-lg p-3 bg-gray-50'>
-            <IconBox name='text' size={21} className='mr-2' />
-            <input
-              type='text'
-              placeholder='텍스트 추가하기'
-              value={url}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setUrl(e.target.value)
+          <div className='flex flex-col border border-gray-200 rounded-lg p-3 bg-gray-50'>
+            {/* <div className='flex items-center mb-2'>
+              <IconBox name='text' size={21} className='mr-2' />
+            </div> */}
+            <textarea
+              value={text}
+              onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                setText(e.target.value)
               }
-              className='flex-1 bg-transparent text-base placeholder-gray-500 focus:outline-none'
+              placeholder='텍스트를 입력해주세요'
+              rows={3}
+              className='w-full h-[72px] resize-none bg-transparent text-base placeholder-gray-500 focus:outline-none'
             />
           </div>
         </div>

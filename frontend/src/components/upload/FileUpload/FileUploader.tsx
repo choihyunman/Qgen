@@ -4,18 +4,29 @@ import linkGlassIcon from '@/assets/icons/link-glass.png';
 import textGlassIcon from '@/assets/icons/text-glass.png';
 import LinkUploadModal from './LinkUploadModal';
 import TextUploadModal from './TextUploadModal';
-import { uploadDocument, fetchDocumentsByWorkBook } from '@/apis/upload/upload';
-import { DocumentInfo } from '@/types/upload';
-import { useUpload } from '@/hooks/useUpload';
+import { useDocuments } from '@/hooks/useDocument';
 import GlobalSpinner from '@/components/common/GlobalSpinner/GlobalSpinner';
 
 interface FileUploaderProps {
-  onFileUpload?: (file: File) => void;
-  onLinkSubmit?: (url: string) => void;
-  onTextSubmit?: (text: string) => void;
+  onFileUpload: (file: File) => void;
+  onLinkSubmit: (url: string) => void;
+  onTextSubmit: (text: string) => void;
   className?: string;
   workBookId: number;
 }
+
+const pulseAnimation = `
+  @keyframes iconPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  @keyframes bgPulse {
+    0% { background-color: rgb(243 232 255); }
+    50% { background-color: white; }
+    100% { background-color: rgb(243 232 255); }
+  }
+`;
 
 const FileUploader: React.FC<FileUploaderProps> = ({
   onFileUpload,
@@ -26,19 +37,44 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 }) => {
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [showTextModal, setShowTextModal] = useState(false);
-  const {
-    documents: uploadedFiles,
-    isLoading,
-    error,
-    handleUpload,
-  } = useUpload();
-  // const workBookId = 1; // 실제 사용 시 props나 context 등에서 받아올 수 있음
+  const { isLoading, uploadDocument } = useDocuments();
+  const [isDragging, setIsDragging] = useState(false);
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
     const files = e.dataTransfer.files;
-    if (files.length > 0 && onFileUpload) {
-      onFileUpload(files[0]);
+    if (files.length > 0) {
+      const file = files[0];
+      try {
+        // await uploadDocument(file, workBookId);
+        onFileUpload(file);
+        alert('파일 업로드에 성공하였습니다.');
+      } catch (error) {
+        alert(
+          error instanceof Error ? error.message : '파일 업로드에 실패했습니다.'
+        );
+      }
     }
   };
 
@@ -47,19 +83,22 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     if (files && files.length > 0) {
       const file = files[0];
       try {
-        await handleUpload(file, workBookId); // useUpload의 handleUpload 사용
+        // await uploadDocument(file, workBookId);
+        onFileUpload(file);
         alert('파일 업로드에 성공하였습니다.');
-        if (onFileUpload) onFileUpload(file);
       } catch (error) {
-        alert('파일 업로드에 실패했습니다.');
+        alert(
+          error instanceof Error ? error.message : '파일 업로드에 실패했습니다.'
+        );
       }
     }
   };
 
   return (
     <div
-      className={`flex flex-col p-6 min-h-[80dvh] bg-white rounded-3xl shadow-sm ${className}`}
+      className={`flex flex-col min-h-[80dvh] w-full select-none ${className}`}
     >
+      <style>{pulseAnimation}</style>
       {/* 전역 스피너 */}
       <GlobalSpinner show={isLoading} />
 
@@ -72,18 +111,33 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       <div className='flex-1 flex flex-col gap-6'>
         {/* 파일 선택 영역 - flex-1 */}
         <div
-          className='border-2 border-dashed border-gray-300 rounded-lg p-12 mb-0 flex flex-col items-center justify-center min-h-[200px] flex-1'
+          className={`border-2 border-dashed rounded-lg p-12 mb-0 flex flex-col items-center justify-center min-h-[200px] flex-1 cursor-pointer group transition-all duration-300 select-none
+            ${
+              isDragging
+                ? 'border-purple-500'
+                : 'border-gray-300 hover:border-gray-400'
+            }`}
+          style={{
+            animation: isDragging ? 'bgPulse 1.2s infinite' : 'none',
+            backgroundColor: isDragging ? 'rgb(243 232 255)' : 'white',
+          }}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDragOver={handleDragOver}
           onDrop={handleDrop}
-          onDragOver={(e) => e.preventDefault()}
+          onClick={() => document.getElementById('fileInput')?.click()}
         >
           <img
             src={uploadGlassIcon}
             alt='upload'
-            className='h-15 w-15 mb-3 transition-transform duration-300 hover:scale-110 cursor-pointer'
-            onClick={() => document.getElementById('fileInput')?.click()}
+            className={`h-15 w-15 mb-3 transition-transform duration-300 group-hover:scale-110 select-none`}
+            style={{
+              animation: isDragging ? 'iconPulse 1.2s infinite' : 'none',
+            }}
+            draggable='false'
           />
-          <h2 className='text-xl font-semibold mb-2'>파일 선택</h2>
-          <p className='text-gray-500 mb-4 text-center'>
+          <h2 className='text-xl font-semibold mb-2 select-none'>파일 선택</h2>
+          <p className='text-gray-500 mb-4 text-center select-none'>
             파일을 드래그하거나 선택하여 업로드하세요. <br />
             PDF, DOCX, TXT 파일을 지원합니다.
           </p>
@@ -99,29 +153,39 @@ const FileUploader: React.FC<FileUploaderProps> = ({
         {/* 링크/텍스트 입력 옵션 - flex-row */}
         <div className='flex flex-row gap-6'>
           {/* Link Input Option */}
-          <div className='bg-white rounded-lg p-8 border border-gray-300 flex flex-col items-center flex-1'>
+          <div
+            className='bg-white rounded-lg p-8 border border-gray-300 flex flex-col items-center flex-1 cursor-pointer group select-none'
+            onClick={() => setShowLinkModal(true)}
+          >
             <img
               src={linkGlassIcon}
               alt='link'
-              className='h-15 w-15 mb-3 transition-transform duration-300 hover:scale-110 cursor-pointer'
-              onClick={() => setShowLinkModal(true)}
+              className='h-15 w-15 mb-3 transition-transform duration-300 group-hover:scale-110 select-none'
+              draggable='false'
             />
-            <h3 className='text-lg font-semibold'>링크로 가져오기</h3>
-            <p className='text-sm text-gray-500 text-center mb-4'>
+            <h3 className='text-lg font-semibold select-none'>
+              링크로 가져오기
+            </h3>
+            <p className='text-sm text-gray-500 text-center mb-4 select-none'>
               웹 URL에 표시되는 텍스트를 가져옵니다.
             </p>
           </div>
 
           {/* Direct Text Input Option */}
-          <div className='bg-white rounded-lg p-8 border border-gray-300 flex flex-col items-center flex-1'>
+          <div
+            className='bg-white rounded-lg p-8 border border-gray-300 flex flex-col items-center flex-1 cursor-pointer group select-none'
+            onClick={() => setShowTextModal(true)}
+          >
             <img
               src={textGlassIcon}
               alt='text'
-              className='h-15 w-15 mb-3 transition-transform duration-300 hover:scale-110 cursor-pointer'
-              onClick={() => setShowTextModal(true)}
+              className='h-15 w-15 mb-3 transition-transform duration-300 group-hover:scale-110 select-none'
+              draggable='false'
             />
-            <h3 className='text-lg font-semibold'>텍스트 직접 입력</h3>
-            <p className='text-sm text-gray-500 text-center mb-4'>
+            <h3 className='text-lg font-semibold select-none'>
+              텍스트 직접 입력
+            </h3>
+            <p className='text-sm text-gray-500 text-center mb-4 select-none'>
               텍스트를 직접 입력하여 문제를 생성합니다.
             </p>
           </div>
@@ -148,8 +212,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({
           }}
         />
       )}
-
-      {/* {error && <div className='text-red-500'>{error.message}</div>} */}
     </div>
   );
 };
