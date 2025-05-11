@@ -1,8 +1,7 @@
 // src/pages/MainContent.tsx
-'use client';
 
 import WorkBookList from './WorkBookList';
-import WorkBookAddModal from '@/components/workbook/WorkBookAddModal/WorkBookAddModal';
+// import WorkBookAddModal from '@/components/workbook/WorkBookAddModal/WorkBookAddModal';
 import { useEffect, useState } from 'react';
 import UploadedList from '@/components/upload/UploadedList/UploadedList';
 import TestPaperList from './TestPaperList';
@@ -17,6 +16,9 @@ import { useUpload } from '@/hooks/useUpload';
 import { TestPaper } from '@/types/testpaper';
 import PdfModal from '@/components/testpaper/PdfModal';
 import QuizStartModal from '@/components/testpaper/QuizStartModal';
+import { formatDateTime } from '@/utils/dateFormat';
+import WorkBookTitleModal from '@/components/workbook/WorkBookTitleModal/WorkBookTitleModal';
+import GradientTitle from '@/components/common/GradientTitle/GradientTitle';
 
 // 예시: 실제 로그인 유저의 id를 받아와야 함
 const userId = 1;
@@ -33,7 +35,7 @@ export default function List() {
     fetchWorkBooks,
     createNewWorkBook,
     editWorkBook,
-    // removeWorkBook 등 필요시 추가
+    removeWorkBook,
   } = useWorkBook();
 
   const {
@@ -69,6 +71,16 @@ export default function List() {
   const [isQuizStartModalOpen, setIsQuizStartModalOpen] = useState(false);
   const [selectedPaperForQuiz, setSelectedPaperForQuiz] =
     useState<TestPaper | null>(null);
+
+  const [miniModalOpen, setMiniModalOpen] = useState(false);
+  const [selectedWorkBookId, setSelectedWorkBookId] = useState<number | null>(
+    null
+  );
+
+  const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
+  const [titleModalMode, setTitleModalMode] = useState<'add' | 'edit'>('add');
+  const [editTargetId, setEditTargetId] = useState<number | null>(null);
+  const [editTargetTitle, setEditTargetTitle] = useState('');
 
   // 문제집 목록 불러오기
   useEffect(() => {
@@ -212,6 +224,11 @@ export default function List() {
     navigate(`/quiz/${paper.testPaperId}`);
   };
 
+  // 이력 확인 핸들러
+  const handleHistoryClick = (paper: TestPaper) => {
+    navigate(`/note/${paper.testPaperId}`);
+  };
+
   // 퀴즈 모드 시작 핸들러
   const handleQuizModeStart = (
     mode: 'practice' | 'real',
@@ -223,8 +240,8 @@ export default function List() {
   };
 
   // 오답 노트 이동 핸들러
-  const handleIncorrectClick = () => {
-    navigate('/incorrect');
+  const handleNoteClick = () => {
+    navigate(`/note/${numericWorkBookId}`);
   };
 
   // 시험지 생성 페이지 이동 핸들러
@@ -249,14 +266,79 @@ export default function List() {
     }
   };
 
+  const handleIconClick = (workBookId: number) => {
+    setSelectedWorkBookId(workBookId);
+    setMiniModalOpen(true);
+  };
+
+  // 문제집 삭제
+  const handleWorkBookDelete = async (workBookId: string) => {
+    if (!workBookId) return;
+    if (!window.confirm('이 문제집을 삭제하시겠습니까?')) return;
+    try {
+      await removeWorkBook(Number(workBookId));
+      // 삭제 후 목록 새로고침
+      await fetchWorkBooks(userId);
+      setMiniModalOpen(false);
+    } catch (error) {
+      alert('문제집 삭제에 실패했습니다.');
+    }
+  };
+
+  // 문제집 이름 수정
+  const handleWorkBookEdit = async (workBookId: string) => {
+    if (!workBookId) return;
+    const newTitle = window.prompt('새로운 문제집 이름을 입력하세요.');
+    if (!newTitle || !newTitle.trim()) return;
+    try {
+      await editWorkBook(Number(workBookId), newTitle.trim());
+      // 수정 후 목록 새로고침
+      await fetchWorkBooks(userId);
+      setMiniModalOpen(false);
+    } catch (error) {
+      alert('문제집 이름 수정에 실패했습니다.');
+    }
+  };
+
+  // 문제집 추가 버튼 클릭 시
+  const handleOpenAddModal = () => {
+    setTitleModalMode('add');
+    setEditTargetId(null);
+    setEditTargetTitle('');
+    setIsTitleModalOpen(true);
+  };
+
+  // 문제집 이름 수정 버튼 클릭 시
+  const handleOpenEditModal = (id: string, title: string) => {
+    setTitleModalMode('edit');
+    setEditTargetId(Number(id));
+    setEditTargetTitle(title);
+    setIsTitleModalOpen(true);
+  };
+
+  // 모달에서 submit 시
+  const handleTitleModalSubmit = async (title: string) => {
+    if (titleModalMode === 'add') {
+      await createNewWorkBook(userId, title);
+      await fetchWorkBooks(userId);
+    } else if (titleModalMode === 'edit' && editTargetId) {
+      await editWorkBook(editTargetId, title);
+      await fetchWorkBooks(userId);
+    }
+    setIsTitleModalOpen(false);
+  };
+
   return (
-    <main className='py-8 flex flex-col gap-8'>
+    <div className='pb-8 flex flex-col gap-8'>
       {/* 인사 및 알림 카드 */}
-      <section>
-        <h1 className='text-2xl font-bold mb-6'>
-          안녕하세요! 오늘도 Q-gen에서 즐겁게 공부해요 !
-        </h1>
-        <div className='bg-white rounded-2xl shadow p-6 flex items-center gap-4 mb-8'>
+      <GradientTitle
+        highlight='Q-gen'
+        before='안녕하세요! 오늘도 '
+        after='에서 효율적인 공부를 시작하세요!'
+      ></GradientTitle>
+      <section className='max-w-[600px] '>
+        {/* <h1 className='text-2xl font-bold mb-3'></h1> */}
+        <div className='bg-white rounded-2xl shadow p-6 flex items-center gap-4 '>
           {/* 예시 이미지(아이콘) */}
           <div className='p-3 w-24 h-26 bg-gray-100 rounded-full flex items-center justify-center'>
             <img src='src/assets/images/dolpin-with-tablet.png' alt='' />
@@ -293,17 +375,21 @@ export default function List() {
                   className='cursor-pointer'
                   name='plusCircle'
                   size={22}
-                  onClick={handleOpenModal}
+                  onClick={handleOpenAddModal}
                 />
               )}
               {numericWorkBookId && (
                 <>
-                  <span className='text-gray-400'>›</span>
+                  <IconBox
+                    className='text-gray-400'
+                    name='chevronDown'
+                    rotate={-90}
+                  ></IconBox>
                   {isEditing ? (
                     <div className='flex items-center gap-2'>
-                      <div className='relative inline-block'>
+                      <div className='flex items-center gap-2 '>
                         <span
-                          className='invisible whitespace-pre absolute text-xl font-semibold'
+                          className='invisible whitespace-pre absolute text-2xl font-semibold'
                           aria-hidden='true'
                         >
                           {editingTitle}
@@ -319,11 +405,11 @@ export default function List() {
                               handleCancelEdit();
                             }
                           }}
-                          className='w-full min-w-[200px] border-0 border-b-2 border-gray-300 focus:border-purple-500 focus:ring-0 focus:outline-none rounded-none px-0 py-0 text-xl font-semibold bg-transparent'
+                          className='w-full min-w-[200px] border-0 border-b-2 border-gray-300 focus:border-purple-500 focus:ring-0 focus:outline-none rounded-none px-0 py-0 text-2xl font-semibold bg-transparent'
                           autoFocus
                         />
                         <IconBox
-                          className='absolute right-0 top-1 cursor-pointer'
+                          className=' cursor-pointer'
                           name='check'
                           size={20}
                           onClick={handleSubmitEdit}
@@ -336,7 +422,7 @@ export default function List() {
                       className='group flex items-center cursor-pointer'
                     >
                       {selectedWorkbookData ? (
-                        <span className='text-xl font-semibold border-b-2 border-transparent group-hover:border-gray-300'>
+                        <span className='text-2xl font-semibold border-b-2 border-transparent group-hover:border-gray-300'>
                           {selectedWorkbookData.title}
                         </span>
                       ) : (
@@ -353,7 +439,7 @@ export default function List() {
                   <Button
                     variant='outlined'
                     className=''
-                    onClick={handleIncorrectClick}
+                    onClick={handleNoteClick}
                   >
                     문제 노트
                   </Button>
@@ -390,7 +476,11 @@ export default function List() {
                         onSolveClick: () => handleQuizStart(paper),
                         onDelete: (testPaperId) =>
                           handleDeleteTestPaper(testPaperId),
+                        onHistoryClick: () => handleHistoryClick(paper),
                       }))}
+                      onAddClick={() =>
+                        navigate(`/generate/${numericWorkBookId}`)
+                      }
                     />
                   )
                 ) : (
@@ -398,10 +488,17 @@ export default function List() {
                     workbooks={workbooks.map((wb) => ({
                       id: String(wb.workBookId),
                       title: wb.title,
-                      date: wb.createAt,
+                      date: formatDateTime(wb.createAt), // 날짜 포맷팅 적용
                     }))}
                     onWorkBookClick={(id) => handleWorkBookClick(Number(id))}
-                    onAddClick={handleOpenModal}
+                    onAddClick={handleOpenAddModal}
+                    onWorkBookDelete={handleWorkBookDelete}
+                    onWorkBookEdit={(id) => {
+                      const target = workbooks.find(
+                        (wb) => String(wb.workBookId) === id
+                      );
+                      handleOpenEditModal(id, target?.title ?? '');
+                    }}
                   />
                 ))}
             </div>
@@ -429,17 +526,21 @@ export default function List() {
       </section>
 
       {/* 모달 모음  */}
-      <WorkBookAddModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onSubmit={handleAddWorkBook}
+      <WorkBookTitleModal
+        isOpen={isTitleModalOpen}
+        onClose={() => setIsTitleModalOpen(false)}
+        onSubmit={handleTitleModalSubmit}
+        defaultTitle={editTargetTitle}
+        titleText={
+          titleModalMode === 'add' ? '새 문제집 만들기' : '문제집 이름 수정'
+        }
+        submitText={titleModalMode === 'add' ? '만들기' : '수정하기'}
       />
 
       <PdfModal
         isOpen={isPdfModalOpen}
         onClose={() => setIsPdfModalOpen(false)}
         onDownload={(option) => {
-          // 다운로드 로직 (selectedPaper, option 활용)
           setIsPdfModalOpen(false);
         }}
       />
@@ -449,6 +550,6 @@ export default function List() {
         onClose={() => setIsQuizStartModalOpen(false)}
         onStart={handleQuizModeStart}
       />
-    </main>
+    </div>
   );
 }

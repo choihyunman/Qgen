@@ -34,15 +34,9 @@ export const createWorkBook = async (
 };
 
 // 문제집 삭제 API
-export const deleteWorkBook = async (
-  userId: number,
-  workBookId: number,
-  title: string
-): Promise<void> => {
+export const deleteWorkBook = async (workBookId: number): Promise<void> => {
   try {
-    await axiosInstance.delete(`/api/workbooks/${userId}/${workBookId}`, {
-      data: { title },
-    });
+    await axiosInstance.delete(`/api/workbooks/${workBookId}`);
   } catch (error) {
     console.error('Failed to delete workbook:', error);
     throw error;
