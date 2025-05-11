@@ -15,5 +15,4 @@ public interface DocumentRepository extends JpaRepository<Document, Long>{
     Long findUserIdByDocumentId(Long documentId);
 
     List<Document> findByWorkBook_WorkBookId(Long workBookId);
-    void deleteByDocumentId(Long documentId);
 } 
