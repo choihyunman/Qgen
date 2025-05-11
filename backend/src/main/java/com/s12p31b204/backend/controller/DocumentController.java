@@ -3,7 +3,10 @@ package com.s12p31b204.backend.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.http.protocol.HTTP;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,13 +16,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.s12p31b204.backend.oauth2.CustomOAuth2User;
 import com.s12p31b204.backend.repository.WorkBookRepository;
 import com.s12p31b204.backend.domain.Document;
 import com.s12p31b204.backend.domain.WorkBook;
 import com.s12p31b204.backend.dto.DocumentDto;
 import com.s12p31b204.backend.repository.DocumentRepository;
+import com.s12p31b204.backend.service.AuthorizationService;
 import com.s12p31b204.backend.service.DocumentService;
 import com.s12p31b204.backend.service.S3Service;
+import com.s12p31b204.backend.util.ApiResponse;
+import com.s12p31b204.backend.util.ResponseData;
+
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -28,51 +37,64 @@ import lombok.RequiredArgsConstructor;
 public class DocumentController {
 
     private final S3Service s3Service;
-    private final DocumentRepository documentRepository;
-    private final WorkBookRepository workBookRepository;
     private final DocumentService documentService;
+    private final AuthorizationService authorizationService;
 
     // document-01: 파일 업로드
     @PostMapping("/upload")
-    public ResponseEntity<Long> uploadDocument(
+    public ResponseEntity<ResponseData<Long>> uploadDocument(
         @RequestParam("file") MultipartFile file,
-        @RequestParam("workBookId") Long workBookId
-    ) throws IOException {
+        @RequestParam("workBookId") Long workBookId,
+        @AuthenticationPrincipal CustomOAuth2User user,
+        HttpServletRequest request
+    ) {
+        try {
+            if(authorizationService.checkWorkBookAuthorization(user.getUserId(), workBookId)) {
+                String url = s3Service.upload(file, "documents");
 
-        String url = s3Service.upload(file, "documents");
+                Long documentId = documentService.createDocument(file, workBookId, url);
 
-        WorkBook workBook = workBookRepository.findById(workBookId)
-            .orElseThrow(() -> new IllegalArgumentException("워크북 없음"));
+                return ApiResponse.success(documentId, "파일 업로드 성공", HttpStatus.CREATED, request.getRequestURI());
+            } else {
+                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+            }
+        } catch (Exception e) {
+            return ApiResponse.failure(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
+        }
 
-        Document doc = new Document(
-            workBook,
-            file.getOriginalFilename(),
-            file.getSize(),
-            file.getContentType(),
-            url
-        );
-
-        documentRepository.save(doc);
-        return ResponseEntity.ok(doc.getDocumentId());
     }
 
     // document-02: 파일 전체 조회
     @GetMapping("/workbook/{workBookId}")
-    public ResponseEntity<List<DocumentDto>> getDocumentsByWorkBookId(@PathVariable Long workBookId) {
-    List<DocumentDto> documents = documentService.getDocumentsByWorkBookId(workBookId);
-    return ResponseEntity.ok(documents);
+    public ResponseEntity<ResponseData<List<DocumentDto>>> getDocumentsByWorkBookId(
+            @PathVariable Long workBookId,
+            @AuthenticationPrincipal CustomOAuth2User user,
+            HttpServletRequest request) {
+        if(authorizationService.checkWorkBookAuthorization(user.getUserId(), workBookId)) {
+            List<DocumentDto> documents = documentService.getDocumentsByWorkBookId(workBookId);
+            return ApiResponse.success(documents, "파일 전체 조회 성공", HttpStatus.OK, request.getRequestURI());
+        }
+        else {
+            return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+        }
     }
 
     // document-03: 파일 삭제
     @DeleteMapping("/{documentId}")
-    public ResponseEntity<Void> deleteDocument(@PathVariable Long documentId) {
-        // 문서 존재 여부만 확인
-        Document document = documentRepository.findById(documentId)
-                .orElseThrow(() -> new RuntimeException("삭제할 문서가 존재하지 않습니다."));
-    
-        s3Service.deleteFileFromS3(document.getDocumentURL());
-        documentRepository.delete(document);
-        
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ResponseData<Void>> deleteDocument(
+            @PathVariable Long documentId,
+            @AuthenticationPrincipal CustomOAuth2User user,
+            HttpServletRequest request
+    ) {
+        try {
+            if(authorizationService.checkDocumentAuthorization(user.getUserId(), documentId)) {
+                documentService.deleteDocumentWithS3File(documentId);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+            }
+        } catch (Exception e) {
+            return ApiResponse.failure(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
+        }
     }
 }
