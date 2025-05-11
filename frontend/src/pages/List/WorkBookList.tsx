@@ -65,7 +65,7 @@ function WorkBookList({
 
         <div
           onClick={onAddClick}
-          className='flex-1 h-[260px] border-2 border-dashed border-gray-300 rounded-[20px] 
+          className='flex-1 h-[260px] border-1 border-gray-300 rounded-[20px] 
                      flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors'
         >
           <div className='flex flex-col items-center gap-2'>

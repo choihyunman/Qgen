@@ -12,7 +12,7 @@ export default function Header() {
           to='/list'
           className='text-base font-medium cursor-pointer hover:text-purple-600 transition-colors'
         >
-          문제집 바로가기
+          문제집 목록
         </Link>
         <Link to='/login'>
           <SmallBtn text='로그인' />

@@ -26,7 +26,7 @@ function ProblemTypeSelector({
       <p className='text-sm text-gray-500 mb-4 text-left'>
         최대 30문제까지 생성 가능합니다.
       </p>
-      <div className='flex flex-col gap-4 mb-4 w-full'>
+      <div className='flex flex-col gap-4  w-full'>
         {testTypes.map((type) => (
           <div key={type.name} className='flex items-center gap-4'>
             {/* Type Button */}

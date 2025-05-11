@@ -10,6 +10,7 @@ import {
 
 interface UseWorkBookReturn {
   workbooks: WorkBook[];
+  setWorkbooks: (workbooks: WorkBook[]) => void;
   isLoading: boolean;
   error: Error | null;
   fetchWorkBooks: (userId: number) => Promise<void>;
@@ -107,6 +108,7 @@ export const useWorkBook = (): UseWorkBookReturn => {
 
   return {
     workbooks,
+    setWorkbooks,
     isLoading,
     error,
     fetchWorkBooks,
