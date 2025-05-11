@@ -1,11 +1,15 @@
 package com.s12p31b204.backend.service;
 
 import com.s12p31b204.backend.domain.Document;
+import com.s12p31b204.backend.domain.WorkBook;
 import com.s12p31b204.backend.dto.DocumentDto;
 import com.s12p31b204.backend.repository.DocumentRepository;
+import com.s12p31b204.backend.repository.WorkBookRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DocumentService {
 
+    private final WorkBookRepository workBookRepository;
     private final DocumentRepository documentRepository;
     private final S3Service s3Service;
 
@@ -26,8 +31,19 @@ public class DocumentService {
     }
 
     @Transactional
-    public void deleteDocument(Long documentId) {
-        documentRepository.deleteByDocumentId(documentId);
+    public Long createDocument(MultipartFile file, Long workBookId, String url) {
+        WorkBook workBook = workBookRepository.findById(workBookId)
+            .orElseThrow(() -> new IllegalArgumentException("워크북 없음"));
+        Document doc = new Document(
+                workBook,
+                file.getOriginalFilename(),
+                file.getSize(),
+                file.getContentType(),
+                url
+        );
+
+        documentRepository.save(doc);
+        return doc.getDocumentId();
     }
 
     @Transactional
