@@ -1,8 +1,11 @@
-import { DocumentInfo } from '@/types/upload';
+import { DocumentInfo } from '@/types/document';
 import axiosInstance from '@/apis/axiosInstance';
 
 // 자료 업로드 api
-export const uploadDocument = async (file: File, workBookId: number) => {
+export const uploadDocumentByWorkBookId = async (
+  file: File,
+  workBookId: number
+) => {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('workBookId', workBookId.toString());
@@ -28,7 +31,7 @@ export const fetchDocumentsByWorkBook = async (
 };
 
 // 파일 삭제 API
-export const deleteDocument = async (documentId: number) => {
+export const deleteDocumentByDocumentId = async (documentId: number) => {
   const response = await axiosInstance.delete(`/api/document/${documentId}`);
   return response.data;
 };

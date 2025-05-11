@@ -41,7 +41,7 @@ function TestPaperList({ papers, onAddClick }: TestPaperListProps) {
   };
 
   return (
-    <div className='bg-[rgba(255,255,255,0.75)] h-full rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100 min-h-[30vh] overflow-y-auto'>
+    <div className='bg-[rgba(255,255,255,0.75)] h-full rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100 min-h-[40vh] overflow-y-auto'>
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
         {papers.map((paper) => (
           <div
@@ -101,7 +101,7 @@ function TestPaperList({ papers, onAddClick }: TestPaperListProps) {
         {/* 새 시험지 추가 박스 */}
         <div
           onClick={onAddClick}
-          className='flex-1 border-1 border border-gray-200 bg-white rounded-2xl 
+          className='flex-1 border-1 border border-gray-200 rounded-2xl 
                      flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors'
         >
           <div className='flex flex-col items-center justify-center gap-2 min-h-[100px]'>

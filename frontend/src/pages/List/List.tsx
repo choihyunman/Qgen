@@ -9,10 +9,10 @@ import IconBox from '@/components/common/IconBox/IconBox';
 import Button from '@/components/common/Button/Button';
 import { useWorkBook } from '@/hooks/useWorkBooks';
 import UploadModal from '@/components/upload/UploadModal/UploadModal';
-import { UploadedFile } from '@/types/upload';
+import { UploadedFile } from '@/types/document';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTestPaper } from '@/hooks/useTestPaper';
-import { useUpload } from '@/hooks/useUpload';
+import { useDocuments } from '@/hooks/useDocument';
 import { TestPaper } from '@/types/testpaper';
 import PdfModal from '@/components/testpaper/PdfModal';
 import QuizStartModal from '@/components/testpaper/QuizStartModal';
@@ -47,12 +47,13 @@ export default function List() {
   } = useTestPaper();
 
   const {
-    documents,
+    // documents,
     getDocuments,
-    handleDelete: handleDeleteFromServer,
-    isLoading: uploadLoading,
-    error: uploadError,
-  } = useUpload();
+    deleteDocument,
+    uploadDocument,
+    // isLoading: uploadLoading,
+    // error: uploadError,
+  } = useDocuments();
 
   // 기타 상태
   const [selectedWorkbook, setSelectedWorkbook] = useState<number | null>(null);
@@ -138,6 +139,7 @@ export default function List() {
 
   // 파일 추가 함수
   const handleFileUpload = (file: File) => {
+    if (!numericWorkBookId) return; // workBookId가 없으면 early return
     setFiles((prev) => [
       ...prev,
       {
@@ -146,6 +148,7 @@ export default function List() {
         type: file.type || 'FILE',
       },
     ]);
+    uploadDocument(file, numericWorkBookId);
     setIsUploadModalOpen(false);
   };
 
@@ -180,7 +183,7 @@ export default function List() {
     if (!numericWorkBookId) return;
     try {
       // 서버에서 파일 삭제
-      await handleDeleteFromServer(Number(id), numericWorkBookId);
+      await deleteDocument(Number(id));
       // 삭제 후 최신 파일 목록을 다시 불러와서 files 상태 갱신
       const docs = await getDocuments(numericWorkBookId);
       setFiles(
@@ -201,6 +204,7 @@ export default function List() {
       setFiles([]); // 초기화
       getTestPapers(numericWorkBookId);
       getDocuments(numericWorkBookId).then((docs) => {
+        console.log('조회된 시험지 :: ', docs);
         setFiles(
           docs.map((doc) => ({
             id: String(doc.documentId),
@@ -264,11 +268,6 @@ export default function List() {
     } catch (error) {
       alert('시험지 삭제에 실패했습니다.');
     }
-  };
-
-  const handleIconClick = (workBookId: number) => {
-    setSelectedWorkBookId(workBookId);
-    setMiniModalOpen(true);
   };
 
   // 문제집 삭제
@@ -456,7 +455,7 @@ export default function List() {
           </div>
 
           <div className='flex gap-5'>
-            <div className='flex-1'>
+            <div className='flex-4'>
               {/* 로딩/에러 처리 */}
               {isLoading && <div>로딩 중...</div>}
               {error && <div className='text-red-500'>{error.message}</div>}
@@ -504,7 +503,7 @@ export default function List() {
             </div>
             {/* 자료 업로드 - selectedWorkbook이 있을 때만 표시 */}
             {numericWorkBookId && (
-              <aside className='w-[340px] shrink-0'>
+              <aside className='flex flex-2 shrink-0'>
                 <UploadedList
                   files={files}
                   maxFiles={10}

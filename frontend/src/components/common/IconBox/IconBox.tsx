@@ -17,6 +17,7 @@ import x from '@/assets/icons/x.svg';
 import check from '@/assets/icons/check.svg';
 import trash from '@/assets/icons/trash.svg';
 import colDots from '@/assets/icons/colDots.svg';
+import checkW from '@/assets/icons/check-w.svg';
 
 // 아이콘 이미지 매핑 객체
 const ICON_IMAGES = {
@@ -33,6 +34,7 @@ const ICON_IMAGES = {
   check,
   trash,
   colDots,
+  checkW,
 } as const;
 
 // 아이콘 이름 타입

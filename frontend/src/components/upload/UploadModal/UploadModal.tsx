@@ -5,9 +5,9 @@ import FileUploader from '@/components/upload/FileUpload/FileUploader';
 interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onFileUpload?: (file: File) => void;
-  onLinkSubmit?: (url: string) => void;
-  onTextSubmit?: (text: string) => void;
+  onFileUpload: (file: File) => void;
+  onLinkSubmit: (url: string) => void;
+  onTextSubmit: (text: string) => void;
   workBookId?: number;
 }
 
