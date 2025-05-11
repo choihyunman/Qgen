@@ -44,7 +44,7 @@ const UploadModal: React.FC<UploadModalProps> = ({
           onFileUpload={onFileUpload}
           onLinkSubmit={onLinkSubmit}
           onTextSubmit={onTextSubmit}
-          workBookId={workBookId || 0}
+          // workBookId={workBookId || 0}
         />
       </div>
     </div>

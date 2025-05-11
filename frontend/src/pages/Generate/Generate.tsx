@@ -29,13 +29,13 @@ const Generate = () => {
     return testTypes.reduce((sum, type) => sum + type.count, 0);
   }, [testTypes]);
 
-  const { isLoading, error, generatePaper } = useGeneration();
+  const { isLoading, generatePaper } = useGeneration();
   // const { isLoading: isUploading, handleUpload, handleDelete } = useUpload();
   const {
     getDocuments,
     deleteDocument,
     uploadDocument,
-    isLoading: isDocumentLoading,
+    // isLoading: isDocumentLoading,
   } = useDocuments();
   const setGenerated = useGenerateStore((state) => state.setGenerated);
 
@@ -237,7 +237,7 @@ const Generate = () => {
               onLinkSubmit={handleLinkSubmit}
               onTextSubmit={handleTextSubmit}
               className='md:col-span-2'
-              workBookId={numericWorkBookId ?? 0}
+              // workBookId={numericWorkBookId ?? 0}
             />
           </div>
           <div className='flex flex-col gap-6'>

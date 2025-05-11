@@ -30,7 +30,7 @@ export default function List() {
   // 커스텀 훅 사용
   const {
     workbooks,
-    setWorkbooks,
+    // setWorkbooks,
     isLoading,
     error,
     fetchWorkBooks,
@@ -95,14 +95,14 @@ export default function List() {
   );
 
   // 모달 열기/닫기
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+  // const handleOpenModal = () => setIsModalOpen(true);
+  // const handleCloseModal = () => setIsModalOpen(false);
 
   // 새 워크북 추가
-  const handleAddWorkBook = async (title: string) => {
-    await createNewWorkBook(userId, title);
-    setIsModalOpen(false);
-  };
+  // const handleAddWorkBook = async (title: string) => {
+  //   await createNewWorkBook(userId, title);
+  //   setIsModalOpen(false);
+  // };
 
   // 수정 모드 시작
   const handleStartEdit = () => {
