@@ -17,7 +17,6 @@ export default function Header() {
         <Link to='/login'>
           <SmallBtn text='로그인' />
         </Link>
-        <SmallBtn text='가입' outline />
       </div>
     </header>
   );

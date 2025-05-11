@@ -21,7 +21,7 @@ function ExamSidebar({
   onQuestionClick,
 }: ExamSidebarProps) {
   return (
-    <div className='w-[415px] h-[calc(100% + 40px)] flex flex-col gap-[30px] pt-[84px]'>
+    <div className='w-[415px] h-[calc(100% + 40px)] flex flex-col gap-[30px] pt-[58px]'>
       <QuestionList
         currentNumber={currentNumber}
         totalQuestions={totalQuestions}

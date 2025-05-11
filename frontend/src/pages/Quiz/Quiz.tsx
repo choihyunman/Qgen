@@ -182,9 +182,9 @@ function QuizPage() {
 
   return (
     <div className='w-full'>
-      <div className='flex gap-[40px] items-stretch'>
+      <div className='flex gap-[40px] items-start'>
         <div className='w-[1315px]'>
-          <div className='flex items-center gap-2 mb-1'>
+          <div className='flex items-center gap-2 mb-4'>
             <img
               src='/src/assets/images/chart.png'
               alt='시험 아이콘'
@@ -192,9 +192,6 @@ function QuizPage() {
             />
             <h1 className='text-2xl font-bold'>정보처리기사 필기 1회</h1>
           </div>
-          <p className='text-gray-600 mb-4'>
-            2024년 정보처리기사 필기 기출 문제
-          </p>
           <QuestionFrame
             currentNumber={current + 1}
             totalNumber={totalQuestions}

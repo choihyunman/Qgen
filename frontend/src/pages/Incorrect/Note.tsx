@@ -21,7 +21,7 @@ const Note = () => {
 
   return (
     <div className='bg-white rounded-3xl p-6 shadow-sm flex flex-col h-full'>
-      <div className='text-lg font-bold text-[#754AFF] mb-2'>문제별 노트</div>
+      <div className='text-lg font-bold mb-2'>문제별 노트</div>
       <div className='flex items-center gap-6 mb-2'>
         <button
           type='button'

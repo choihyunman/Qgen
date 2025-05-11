@@ -1,5 +1,7 @@
 import { useRef, useEffect } from 'react';
 import Button from '@/components/common/Button/Button';
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
 
 interface QuestionFrameProps {
   currentNumber: number;
@@ -62,14 +64,27 @@ function QuestionFrame({
   return (
     <div
       ref={frameRef}
-      className='transition-opacity duration-300 opacity-100 w-full h-[calc(100% + 40px)] bg-white rounded-[24px] px-[45px] pt-10 pb-10 shadow-sm'
+      className='transition-opacity duration-300 opacity-100 w-full h-[537px] bg-white rounded-[24px] p-6 shadow-sm'
     >
       <div>
         {/* 문제 번호 */}
-        <div className='mb-6'>
-          <p className='text-lg font-medium'>
+        <div className='flex justify-between items-center mb-3'>
+          <p className='text-base font-bold'>
             문제 {currentNumber}/{totalNumber}
           </p>
+          {!isSubmitted ? (
+            <Button
+              onClick={onSubmit}
+              disabled={selectedOption === null}
+              variant='small'
+            >
+              제출
+            </Button>
+          ) : (
+            <Button onClick={onNext} variant='small'>
+              다음
+            </Button>
+          )}
         </div>
 
         {/* 문제 내용 */}
@@ -110,47 +125,19 @@ function QuestionFrame({
 
         {/* 해설 */}
         <div
-          ref={explanationRef}
+          className='transition-all duration-500 ease-in-out overflow-hidden mt-6'
           style={{
-            maxHeight: 0,
-            opacity: 0,
-            overflow: 'hidden',
-            transition:
-              'max-height 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.4s',
+            maxHeight: isSubmitted ? 220 : 0, // 타이틀+SimpleBar 높이 합산
+            opacity: isSubmitted ? 1 : 0,
           }}
-          className='mb-6'
         >
-          <div className='p-4 bg-purple-50 rounded-lg text-gray-700'>
-            <div className='font-semibold mb-2'>해설</div>
-            <div>{explanation}</div>
-          </div>
+          <div className='font-semibold mb-2'>해설</div>
+          <SimpleBar style={{ maxHeight: 180 }}>
+            <div className='bg-purple-50 rounded-lg text-gray-700 p-4'>
+              {explanation}
+            </div>
+          </SimpleBar>
         </div>
-      </div>
-
-      {/* 버튼 */}
-      <div className='flex justify-end'>
-        {!isSubmitted ? (
-          <Button
-            onClick={onSubmit}
-            disabled={selectedOption === null}
-            variant='filled'
-            className={
-              (selectedOption === null
-                ? 'bg-gray-300 text-gray-500 border-gray-300'
-                : '') + ' px-6 py-2 min-w-[96px]'
-            }
-          >
-            제출
-          </Button>
-        ) : (
-          <Button
-            onClick={onNext}
-            variant='filled'
-            className='px-6 py-2 min-w-[96px]'
-          >
-            다음
-          </Button>
-        )}
       </div>
     </div>
   );
