@@ -1,6 +1,5 @@
 package com.s12p31b204.backend.controller;
 
-import org.apache.http.protocol.HTTP;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,10 +28,14 @@ public class MainController {
     @GetMapping("/userinfo")
     public ResponseEntity<ResponseData<UserInfoResponseDto>> getUserInfo(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, HttpServletRequest request) {
         if(customOAuth2User == null) {
-            return ApiResponse.failure("로그인되어 있지 않습니다.", HttpStatus.UNAUTHORIZED, request.getRequestURI());
+            UserInfoResponseDto response = UserInfoResponseDto.builder()
+                    .login(false)
+                    .build();
+            return ApiResponse.success(response, "로그인되어 있지 않습니다.", HttpStatus.OK, request.getRequestURI());
         }
         User user = userRepository.findByUsername(customOAuth2User.getUsername());
         UserInfoResponseDto response = UserInfoResponseDto.builder()
+                .login(true)
                 .googleEmail(user.getGoogleEmail())
                 .nickname(user.getNickname())
                 .build();
