@@ -1,5 +1,12 @@
-environs
-openai
-uvicorn
 fastapi
+uvicorn
 pydantic
+openai
+environs
+
+faiss-cpu
+sentence-transformers
+langchain
+docling
+numpy
+python-multipart
