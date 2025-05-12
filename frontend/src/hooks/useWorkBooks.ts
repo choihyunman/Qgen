@@ -33,10 +33,10 @@ export const useWorkBook = (): UseWorkBookReturn => {
     setIsLoading(true);
     setError(null);
     try {
-      const userId = 1; // 임시
-      const data = await getWorkBooks(userId);
-      console.log('조회된 문제집 목록 : ', data);
-      setWorkbooks(data);
+      userId = 1; // 임시
+      const response = await getWorkBooks(userId);
+      // console.log('1. 조회된 문제집 목록 :::: ', response);
+      setWorkbooks(response);
     } catch (err) {
       setError(
         err instanceof Error ? err : new Error('Failed to fetch workbooks')
@@ -51,7 +51,7 @@ export const useWorkBook = (): UseWorkBookReturn => {
     setIsLoading(true);
     setError(null);
     try {
-      const userId = 1; // 임시
+      userId = 1; // 임시
       const newWorkBook = await createWorkBook(userId, title);
       setWorkbooks((prev) => [...prev, newWorkBook]);
     } catch (err) {

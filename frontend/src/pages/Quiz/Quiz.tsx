@@ -17,7 +17,7 @@ function QuizPage() {
   const numericTestPaperId = testPaperId ? Number(testPaperId) : null;
 
   const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showQuizEnd, setShowQuizEnd] = useState(false); // QuizEnd 표시 여부
 
@@ -26,7 +26,9 @@ function QuizPage() {
   const totalQuestions = problemIds.length;
 
   // 문제별 상태 배열
-  const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    (number | string | null)[]
+  >([]);
   const [isSubmittedArr, setIsSubmittedArr] = useState<boolean[]>([]);
   const [answerStatusArr, setAnswerStatusArr] = useState<AnswerStatus[]>([]);
   const [resultArr, setResultArr] = useState<(TestResult | null)[]>([]);
@@ -89,15 +91,19 @@ function QuizPage() {
     fetchQuestion();
   }, [current, problemIds]);
 
-  const handleSelect = (idx: number) => {
-    if (!isSubmitted) setSelected(idx);
+  const handleSelect = (value: number | string) => {
+    if (!isSubmitted) {
+      if (currentQuestion?.type === 'OXAns') {
+        setSelected(value === 0 ? 'O' : 'X');
+      } else {
+        setSelected(value);
+      }
+    }
   };
 
   const handleSubmit = async () => {
     if (selected !== null && currentQuestion) {
       try {
-        // debugger;
-        // setIsLoading(true);              [제출] 버튼 클릭 시, 리랜더링 되는 코드
         setIsSubmitted(true);
         setIsSubmittedArr((prev) => {
           const updated = [...prev];
@@ -112,7 +118,8 @@ function QuizPage() {
 
         const res = await submitAnswer({
           testId: currentQuestion.testId,
-          userAnswer: (selected + 1).toString(),
+          userAnswer:
+            typeof selected === 'number' ? (selected + 1).toString() : selected,
         });
 
         if (res.success && res.data) {
@@ -196,12 +203,16 @@ function QuizPage() {
             currentNumber={current + 1}
             totalNumber={totalQuestions}
             question={currentQuestion?.question || ''}
-            options={[
-              currentQuestion?.option1 || '',
-              currentQuestion?.option2 || '',
-              currentQuestion?.option3 || '',
-              currentQuestion?.option4 || '',
-            ]}
+            options={
+              currentQuestion?.type === 'OXAns'
+                ? ['O', 'X']
+                : [
+                    currentQuestion?.option1 || '',
+                    currentQuestion?.option2 || '',
+                    currentQuestion?.option3 || '',
+                    currentQuestion?.option4 || '',
+                  ]
+            }
             selectedOption={selected}
             isSubmitted={isSubmitted}
             answerIndex={
@@ -213,6 +224,9 @@ function QuizPage() {
             onSelect={handleSelect}
             onSubmit={handleSubmit}
             onNext={handleNext}
+            questionType={
+              currentQuestion?.type as 'choiceAns' | 'shortAns' | 'OXAns'
+            }
           />
         </div>
         <ExamSidebar

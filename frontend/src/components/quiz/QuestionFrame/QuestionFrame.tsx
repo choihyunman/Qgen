@@ -8,13 +8,14 @@ interface QuestionFrameProps {
   totalNumber: number;
   question: string;
   options: string[];
-  selectedOption: number | null;
+  selectedOption: number | string | null;
   isSubmitted: boolean;
   answerIndex: number;
   explanation: string;
-  onSelect: (index: number) => void;
+  onSelect: (value: number | string) => void;
   onSubmit: () => void;
   onNext: () => void;
+  questionType?: 'choiceAns' | 'shortAns' | 'OXAns';
 }
 
 function QuestionFrame({
@@ -29,13 +30,33 @@ function QuestionFrame({
   onSelect,
   onSubmit,
   onNext,
+  questionType = 'choiceAns',
 }: QuestionFrameProps) {
-  const activeBtnClass =
-    'bg-gray-700 text-white border-gray-700 hover:bg-gray-800 cursor-pointer';
-  const disabledBtnClass =
-    'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed';
   const explanationRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
+
+  // 문제 유형 변환 함수
+  const convertQuestionType = (
+    type: string
+  ): 'choiceAns' | 'shortAns' | 'OXAns' => {
+    switch (type) {
+      case 'TYPE_OX':
+        return 'OXAns';
+      case 'TYPE_CHOICE':
+        return 'choiceAns';
+      case 'TYPE_SHORT':
+        return 'shortAns';
+      default:
+        return 'choiceAns';
+    }
+  };
+
+  useEffect(() => {
+    const convertedType = convertQuestionType(questionType || '');
+    console.log('원본 문제 유형:', questionType);
+    console.log('변환된 문제 유형:', convertedType);
+    console.log('선택된 옵션:', selectedOption);
+  }, [questionType, selectedOption]);
 
   useEffect(() => {
     if (isSubmitted && explanationRef.current) {
@@ -60,6 +81,104 @@ function QuestionFrame({
       }
     };
   }, [question]);
+
+  // OX 문제 렌더링
+  const renderOXQuestion = () => {
+    return (
+      <div className='flex gap-4 justify-center mb-2'>
+        {['O', 'X'].map((option, index) => {
+          let optionStyle = 'border-gray-200';
+          let textStyle = '';
+          if (isSubmitted) {
+            if (index === answerIndex) {
+              optionStyle = 'border-green-500 bg-green-50';
+              textStyle = 'font-bold text-green-700';
+            } else if (selectedOption === index) {
+              optionStyle = 'border-red-400 bg-red-50';
+              textStyle = 'font-bold text-red-500';
+            }
+          } else if (selectedOption === index) {
+            optionStyle = 'border-gray-400 bg-gray-100';
+            textStyle = 'font-bold text-gray-700';
+          }
+          return (
+            <div
+              key={index}
+              onClick={() => !isSubmitted && onSelect(index)}
+              className={`w-[469px] h-[272px] border-2 rounded-[24px] cursor-pointer transition-colors flex items-center justify-center text-6xl font-bold ${optionStyle}`}
+            >
+              <span className={textStyle}>{option}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  // 객관식 문제 렌더링
+  const renderMultipleChoice = () => {
+    return (
+      <div className='space-y-3 mb-2'>
+        {options.map((option, index) => {
+          let optionStyle = 'border-gray-200';
+          let textStyle = '';
+          if (isSubmitted) {
+            if (index === answerIndex) {
+              optionStyle = 'border-green-500 bg-green-50';
+              textStyle = 'font-bold text-green-700';
+            } else if (selectedOption === index) {
+              optionStyle = 'border-red-400 bg-red-50';
+              textStyle = 'font-bold text-red-500';
+            }
+          } else if (selectedOption === index) {
+            optionStyle = 'border-gray-400 bg-gray-100';
+            textStyle = 'font-bold text-gray-700';
+          }
+          return (
+            <div
+              key={index}
+              onClick={() => !isSubmitted && onSelect(index)}
+              className={`p-4 border-2 rounded-[24px] cursor-pointer transition-colors ${optionStyle}`}
+            >
+              <span className={textStyle}>
+                {index + 1}. {option}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  // 주관식 문제 렌더링
+  const renderShortAnswer = () => {
+    return (
+      <div className='mb-2'>
+        <input
+          type='text'
+          className='w-full p-4 border-2 rounded-[24px] focus:outline-none focus:border-purple-500'
+          placeholder='답을 입력하세요'
+          value={(selectedOption as string) || ''}
+          disabled={isSubmitted}
+          onChange={(e) => onSelect(e.target.value)}
+        />
+      </div>
+    );
+  };
+
+  // 문제 유형에 따른 렌더링
+  const renderQuestion = () => {
+    const convertedType = convertQuestionType(questionType || '');
+    switch (convertedType) {
+      case 'OXAns':
+        return renderOXQuestion();
+      case 'shortAns':
+        return renderShortAnswer();
+      case 'choiceAns':
+      default:
+        return renderMultipleChoice();
+    }
+  };
 
   return (
     <div
@@ -92,42 +211,14 @@ function QuestionFrame({
           <h2 className='text-lg font-bold'>{question}</h2>
         </div>
 
-        {/* 보기 목록 */}
-        <div className='space-y-3 mb-2'>
-          {options.map((option, index) => {
-            let optionStyle = 'border-gray-200';
-            let textStyle = '';
-            if (isSubmitted) {
-              if (index === answerIndex) {
-                optionStyle = 'border-green-500 bg-green-50';
-                textStyle = 'font-bold text-green-700';
-              } else if (selectedOption === index) {
-                optionStyle = 'border-red-400 bg-red-50';
-                textStyle = 'font-bold text-red-500';
-              }
-            } else if (selectedOption === index) {
-              optionStyle = 'border-gray-400 bg-gray-100';
-              textStyle = 'font-bold text-gray-700';
-            }
-            return (
-              <div
-                key={index}
-                onClick={() => !isSubmitted && onSelect(index)}
-                className={`p-4 border-2 rounded-[24px] cursor-pointer transition-colors ${optionStyle}`}
-              >
-                <span className={textStyle}>
-                  {index + 1}. {option}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+        {/* 문제 유형에 따른 렌더링 */}
+        {renderQuestion()}
 
         {/* 해설 */}
         <div
           className='transition-all duration-500 ease-in-out overflow-hidden mt-6'
           style={{
-            maxHeight: isSubmitted ? 220 : 0, // 타이틀+SimpleBar 높이 합산
+            maxHeight: isSubmitted ? 220 : 0,
             opacity: isSubmitted ? 1 : 0,
           }}
         >

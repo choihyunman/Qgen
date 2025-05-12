@@ -20,7 +20,7 @@ function QuestionList({
         {Array.from(
           { length: Math.min(totalQuestions, 30) },
           (_, i) => i + 1
-        ).map((number, idx) => {
+        ).map((number) => {
           let btnClass = '';
           let dotClass = '';
           if (answerStatus[number - 1] === 'correct') {

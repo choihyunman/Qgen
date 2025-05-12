@@ -27,7 +27,7 @@ export const fetchDocumentsByWorkBook = async (
     `/api/document/workbook/${workBookId}`
   );
   console.log('문제집', workBookId, '의 조회된 파일 목록', response.data);
-  return response.data;
+  return response.data.data;
 };
 
 // 파일 삭제 API

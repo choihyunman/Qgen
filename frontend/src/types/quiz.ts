@@ -11,7 +11,7 @@ export interface ApiResponse<T> {
 // 단일 문제 조회 응답 타입
 export interface TestQuestion {
   testId: number;
-  type: string;
+  type: 'choiceAns' | 'shortAns' | 'OXAns' | 'wordAns';
   question: string;
   option1: string;
   option2: string;
