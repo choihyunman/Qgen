@@ -18,6 +18,11 @@ spring:
     hibernate:
       ddl-auto: update
     defer-datasource-initialization: true
+  sql:
+    init:
+      data-locations: classpath*:db/data.sql
+      mode: always
+      platform: all
 
   security:
     oauth2:
