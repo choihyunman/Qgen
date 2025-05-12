@@ -1,0 +1,167 @@
+import { useRef, useEffect, useState } from 'react';
+import { NoteProps } from '@/types/note';
+import Button from '@/components/common/Button/Button';
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
+import type { NoteTestHistory } from '@/types/note';
+
+function Test({
+  currentNumber,
+  totalNumber,
+  test,
+  options,
+  selectedOption,
+  isSubmitted,
+  answerIndex,
+  explanation,
+  incorrectCount,
+  onNext,
+  testHistoryList,
+  answer,
+}: NoteProps & { testHistoryList: NoteTestHistory[]; answer: string }) {
+  const explanationRef = useRef<HTMLDivElement>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (isSubmitted && explanationRef.current) {
+      explanationRef.current.style.maxHeight =
+        explanationRef.current.scrollHeight + 'px';
+      explanationRef.current.style.opacity = '1';
+    } else if (explanationRef.current) {
+      explanationRef.current.style.maxHeight = '0px';
+      explanationRef.current.style.opacity = '0';
+    }
+  }, [isSubmitted]);
+
+  // 날짜 포맷 함수: '2024-06-07T12:34:56' -> '24.06.07'
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
+    const yy = d.getFullYear().toString().slice(-2);
+    const mm = (d.getMonth() + 1).toString().padStart(2, '0');
+    const dd = d.getDate().toString().padStart(2, '0');
+    return `${yy}.${mm}.${dd}`;
+  };
+
+  return (
+    <div className='w-full h-full min-h-0 bg-white rounded-3xl p-6 shadow-sm'>
+      <div>
+        <div className='flex justify-between'>
+          {/* 문제 번호 */}
+          <div className='mb-4 flex items-center gap-4'>
+            <p className='text-base font-bold'>
+              문제 {currentNumber}/{totalNumber}
+            </p>
+            <Button
+              variant='small'
+              className='py-1 px-2 bg-rose-400 text-white hover:bg-rose-500'
+              onClick={() => setModalOpen(true)}
+            >
+              {incorrectCount}회
+            </Button>
+          </div>
+          <div className='flex justify-start'>
+            <Button onClick={onNext} variant='small' className='my-1 text-xs'>
+              다음
+            </Button>
+          </div>
+        </div>
+        {/* 문제 내용 */}
+        <div className='mb-6'>
+          <h2 className='text-lg font-bold'>{test}</h2>
+        </div>
+
+        {/* 보기 목록 */}
+        <div className='space-y-3 mb-2'>
+          {options.map((option, index) => {
+            let optionStyle = 'border-gray-200 py-3';
+            let textStyle = 'flex items-center';
+            if (isSubmitted) {
+              if (index === answerIndex) {
+                optionStyle = 'border-green-300 bg-green-100 py-3';
+                textStyle = 'font-bold';
+              } else if (selectedOption === index) {
+                optionStyle = 'border-rose-300 bg-rose-100 py-3';
+                textStyle = 'font-bold';
+              }
+            }
+            return (
+              <div
+                key={index}
+                className={`p-4 border-1 rounded-2xl transition-colors ${optionStyle}`}
+              >
+                <span className={textStyle}>
+                  <span className='mr-4'>{index + 1}</span>
+                  <span>{option}</span>
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* 해설 */}
+        <SimpleBar className='my-6 h-full min-h-0 bg-[#CAC7FC]/20 rounded-3xl max-h-52 flex flex-col p-6'>
+          <div className='font-semibold mb-2 text-gray-700'>해설</div>
+          <div className='text-gray-700'>{explanation}</div>
+        </SimpleBar>
+      </div>
+      {/* Modal for test history */}
+      {modalOpen && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center'>
+          <div
+            className='absolute inset-0 bg-black/30'
+            onClick={() => setModalOpen(false)}
+          />
+          <div className='relative bg-white rounded-2xl w-[420px] max-h-[80vh] p-8 flex flex-col items-center shadow-lg z-10'>
+            <div className='w-full flex items-center justify-between mb-6'>
+              <h2 className='text-xl font-bold'>제출 이력</h2>
+              <button
+                onClick={() => setModalOpen(false)}
+                className='text-gray-400 hover:text-gray-600 text-2xl'
+              >
+                ×
+              </button>
+            </div>
+            <div className='w-full flex flex-col gap-2 overflow-y-auto'>
+              <div className='grid grid-cols-3 gap-2 px-2 py-1 border-b text-sm font-semibold text-gray-600 rounded-t-lg'>
+                <div>제출일</div>
+                <div className='text-center'>내 답안</div>
+                <div className='text-center'>정오답</div>
+              </div>
+              {testHistoryList.length === 0 ? (
+                <div className='text-center text-gray-500 py-8'>
+                  이력이 없습니다.
+                </div>
+              ) : (
+                testHistoryList.map((history) => (
+                  <div
+                    key={history.testHistoryId}
+                    className={`grid grid-cols-3 gap-2 px-2 py-2 items-center border-b last:border-b-0 text-sm ${history.correct ? 'bg-green-50' : 'bg-rose-50'}`}
+                  >
+                    <div className='truncate text-xs text-gray-400'>
+                      {formatDate(history.createAt)}
+                    </div>
+                    <div
+                      className={`text-center font-semibold ${history.correct ? 'text-green-700' : 'text-rose-600'}`}
+                    >
+                      {history.userAnswer}
+                    </div>
+                    <div className='text-center'>
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${history.correct ? 'bg-green-200 text-green-800' : 'bg-rose-200 text-rose-800'}`}
+                      >
+                        {history.correct ? '정답' : '오답'}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Test;
