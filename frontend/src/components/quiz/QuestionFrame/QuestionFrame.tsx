@@ -15,7 +15,7 @@ interface QuestionFrameProps {
   onSelect: (value: number | string) => void;
   onSubmit: () => void;
   onNext: () => void;
-  questionType?: 'choiceAns' | 'shortAns' | 'OXAns';
+  questionType?: 'choiceAns' | 'shortAns' | 'oxAns';
 }
 
 function QuestionFrame({
@@ -38,10 +38,11 @@ function QuestionFrame({
   // 문제 유형 변환 함수
   const convertQuestionType = (
     type: string
-  ): 'choiceAns' | 'shortAns' | 'OXAns' => {
+  ): 'choiceAns' | 'shortAns' | 'oxAns' => {
     switch (type) {
       case 'TYPE_OX':
-        return 'OXAns';
+      case 'oxAns':
+        return 'oxAns';
       case 'TYPE_CHOICE':
         return 'choiceAns';
       case 'TYPE_SHORT':
@@ -170,7 +171,7 @@ function QuestionFrame({
   const renderQuestion = () => {
     const convertedType = convertQuestionType(questionType || '');
     switch (convertedType) {
-      case 'OXAns':
+      case 'oxAns':
         return renderOXQuestion();
       case 'shortAns':
         return renderShortAnswer();
@@ -183,7 +184,7 @@ function QuestionFrame({
   return (
     <div
       ref={frameRef}
-      className='transition-opacity duration-300 opacity-100 w-full h-[537px] bg-white rounded-[24px] p-6 shadow-sm'
+      className='transition-opacity duration-300 opacity-100 w-full h-[537px] bg-white rounded-[24px] p-6 shadow-sm overflow-y-auto'
     >
       <div>
         {/* 문제 번호 */}
@@ -224,7 +225,7 @@ function QuestionFrame({
         >
           <div className='font-semibold mb-2'>해설</div>
           <SimpleBar style={{ maxHeight: 180 }}>
-            <div className='bg-purple-50 rounded-lg text-gray-700 p-4'>
+            <div className='bg-purple-50 rounded-lg text-gray-700 p-4 max-h-[180px] overflow-y-auto'>
               {explanation}
             </div>
           </SimpleBar>

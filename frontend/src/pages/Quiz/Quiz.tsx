@@ -93,7 +93,7 @@ function QuizPage() {
 
   const handleSelect = (value: number | string) => {
     if (!isSubmitted) {
-      if (currentQuestion?.type === 'OXAns') {
+      if (currentQuestion?.type === 'oxAns') {
         setSelected(value === 0 ? 'O' : 'X');
       } else {
         setSelected(value);
@@ -204,7 +204,7 @@ function QuizPage() {
             totalNumber={totalQuestions}
             question={currentQuestion?.question || ''}
             options={
-              currentQuestion?.type === 'OXAns'
+              currentQuestion?.type === 'oxAns'
                 ? ['O', 'X']
                 : [
                     currentQuestion?.option1 || '',
@@ -225,7 +225,7 @@ function QuizPage() {
             onSubmit={handleSubmit}
             onNext={handleNext}
             questionType={
-              currentQuestion?.type as 'choiceAns' | 'shortAns' | 'OXAns'
+              currentQuestion?.type as 'choiceAns' | 'shortAns' | 'oxAns'
             }
           />
         </div>
