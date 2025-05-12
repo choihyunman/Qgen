@@ -1,4 +1,4 @@
-import { TestListProps } from '@/types/incorrect';
+import { TestListProps } from '@/types/note';
 import Button from '@/components/common/Button/Button';
 
 function TestList({ currentNumber, totalTests, onTestClick }: TestListProps) {
@@ -11,9 +11,11 @@ function TestList({ currentNumber, totalTests, onTestClick }: TestListProps) {
             <Button
               key={number}
               onClick={() => onTestClick(number)}
-              variant='small'
+              variant={number === currentNumber ? 'filled' : 'basic'}
               className={
-                number === currentNumber ? 'primary shadow-sm' : 'secondary'
+                number === currentNumber
+                  ? 'px-4 py-2 text-sm shadow-sm'
+                  : 'px-4 py-2 text-sm bg-white text-gray-600 border border-gray-200 hover:bg-[#754AFF]/10 hover:border-[#754AFF]/80'
               }
             >
               {number}
