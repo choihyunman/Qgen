@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class Request(BaseModel):
     choiceAns: int
-    OXAns: int
+    oxAns: int
     shortAns: int
 
 MAX_RETRY = 3  # 최대 재시도 횟수
@@ -23,7 +23,7 @@ MAX_RETRY = 3  # 최대 재시도 횟수
 @router.post("/chatgpt/{testPaperId}/", status_code=status.HTTP_200_OK)
 async def chatgpt_api(testPaperId: int, request: Request):
     client = OpenAI(api_key=env.str("OPENAI_API_KEY"))
-    total = request.choiceAns + request.OXAns + request.shortAns
+    total = request.choiceAns + request.oxAns + request.shortAns
 
     for attempt in range(1, MAX_RETRY + 1):
         try:
@@ -35,7 +35,7 @@ async def chatgpt_api(testPaperId: int, request: Request):
                     {
                         "role": "system",
                         "content": load_prompt(
-                            request.choiceAns, request.OXAns, request.shortAns
+                            request.choiceAns, request.oxAns, request.shortAns
                         )
                     },
                     {
@@ -59,7 +59,7 @@ async def chatgpt_api(testPaperId: int, request: Request):
             if len(parsed) != total:
                 raise ValueError(f"요청 문제 수({total})와 응답 문제 수({len(parsed)})가 다름")
 
-            # ✅ 문제 유형별 개수 검증 로직 추가
+            # ✅ 문제 유형별 개수 검증 로직
             type_counts = {
                 "TYPE_CHOICE": 0,
                 "TYPE_OX": 0,
@@ -73,8 +73,8 @@ async def chatgpt_api(testPaperId: int, request: Request):
 
             if type_counts["TYPE_CHOICE"] != request.choiceAns:
                 raise ValueError(f"선다형 문제 수 불일치: 요청={request.choiceAns}, 응답={type_counts['TYPE_CHOICE']}")
-            if type_counts["TYPE_OX"] != request.OXAns:
-                raise ValueError(f"OX 문제 수 불일치: 요청={request.OXAns}, 응답={type_counts['TYPE_OX']}")
+            if type_counts["TYPE_OX"] != request.oxAns:
+                raise ValueError(f"OX 문제 수 불일치: 요청={request.oxAns}, 응답={type_counts['TYPE_OX']}")
             if type_counts["TYPE_SHORT"] != request.shortAns:
                 raise ValueError(f"주관식 문제 수 불일치: 요청={request.shortAns}, 응답={type_counts['TYPE_SHORT']}")
 
