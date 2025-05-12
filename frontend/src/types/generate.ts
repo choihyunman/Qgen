@@ -8,7 +8,7 @@ export interface GenerateRequest {
   title: string;
   choiceAns: number;
   shortAns: number;
-  OXAns: number;
+  oxAns: number;
   wordAns: number;
   quantity: number;
 }
@@ -25,7 +25,7 @@ export interface GenerateResponse {
     wordAns: number;
     quantity: number;
     createAt: string;
-    oxans: number;
+    oxAns: number;
   } | null;
   timestamp: string;
   path: string;

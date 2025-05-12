@@ -156,7 +156,7 @@ const Generate = () => {
       title: testName || '제목없는 시험지',
       choiceAns: testTypes.find((t) => t.name === '객관식')?.count || 0,
       shortAns: testTypes.find((t) => t.name === '주관식')?.count || 0,
-      OXAns: 0,
+      oxAns: 0,
       wordAns: testTypes.find((t) => t.name === '서술형')?.count || 0,
       quantity: totalProblems,
     };

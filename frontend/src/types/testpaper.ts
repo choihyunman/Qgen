@@ -6,7 +6,7 @@ export interface TestPaper {
   wordAns: number;
   quantity: number;
   createAt: string;
-  oxans: number;
+  oxAns: number;
 }
 
 export interface TestPaperListResponse {
@@ -23,7 +23,7 @@ export interface CreateTestPaperRequest {
   title: string;
   choiceAns: number;
   shortAns: number;
-  OXAns: number;
+  oxAns: number;
   wordAns: number;
   quantity: number;
 }

@@ -10,7 +10,7 @@ interface TestPaper {
   createAt: string;
   quantity: number;
   types: string;
-  oxans: number;
+  oxAns: number;
   choiceAns: number;
   shortAns: number;
   onPdfClick?: () => void;
@@ -29,7 +29,7 @@ function TestPaperList({ papers, onAddClick }: TestPaperListProps) {
   const getTypeLabels = (paper: TestPaper) => {
     const types: string[] = [];
     if (paper.choiceAns > 0) types.push('객관식');
-    if (paper.oxans > 0) types.push('OX선택');
+    if (paper.oxAns > 0) types.push('OX선택');
     if (paper.shortAns > 0) types.push('주관식');
     return types.join(', ');
   };
