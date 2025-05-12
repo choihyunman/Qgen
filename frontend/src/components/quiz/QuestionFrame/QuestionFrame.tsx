@@ -10,7 +10,7 @@ interface QuestionFrameProps {
   options: string[];
   selectedOption: number | string | null;
   isSubmitted: boolean;
-  answerIndex: number;
+  answerIndex: string | number;
   explanation: string;
   onSelect: (value: number | string) => void;
   onSubmit: () => void;
@@ -87,25 +87,40 @@ function QuestionFrame({
   const renderOXQuestion = () => {
     return (
       <div className='flex gap-4 justify-center mb-2'>
-        {['O', 'X'].map((option, index) => {
+        {['O', 'X'].map((option) => {
+          // 디버깅용 콘솔 로그
+          console.log(
+            'option:',
+            option,
+            'answerIndex:',
+            answerIndex,
+            'selectedOption:',
+            selectedOption
+          );
           let optionStyle = 'border-gray-200';
           let textStyle = '';
           if (isSubmitted) {
-            if (index === answerIndex) {
+            if (selectedOption === option && option === answerIndex) {
+              // 내가 선택했고, 정답이면 초록색
               optionStyle = 'border-green-500 bg-green-50';
               textStyle = 'font-bold text-green-700';
-            } else if (selectedOption === index) {
+            } else if (selectedOption === option) {
+              // 내가 선택했지만 오답이면 빨간색
               optionStyle = 'border-red-400 bg-red-50';
               textStyle = 'font-bold text-red-500';
+            } else if (option === answerIndex) {
+              // 정답(내가 선택하지 않은) 초록색
+              optionStyle = 'border-green-500 bg-green-50';
+              textStyle = 'font-bold text-green-700';
             }
-          } else if (selectedOption === index) {
+          } else if (selectedOption === option) {
             optionStyle = 'border-gray-400 bg-gray-100';
             textStyle = 'font-bold text-gray-700';
           }
           return (
             <div
-              key={index}
-              onClick={() => !isSubmitted && onSelect(index)}
+              key={option}
+              onClick={() => !isSubmitted && onSelect(option)}
               className={`w-[469px] h-[272px] border-2 rounded-[24px] cursor-pointer transition-colors flex items-center justify-center text-6xl font-bold ${optionStyle}`}
             >
               <span className={textStyle}>{option}</span>

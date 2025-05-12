@@ -216,9 +216,11 @@ function QuizPage() {
             selectedOption={selected}
             isSubmitted={isSubmitted}
             answerIndex={
-              resultArr[current]?.correctAnswer
-                ? parseInt(resultArr[current]!.correctAnswer, 10) - 1
-                : -1
+              currentQuestion?.type === 'oxAns'
+                ? resultArr[current]?.correctAnswer || ''
+                : resultArr[current]?.correctAnswer
+                  ? parseInt(resultArr[current]!.correctAnswer, 10) - 1
+                  : -1
             }
             explanation={resultArr[current]?.comment || ''}
             onSelect={handleSelect}
