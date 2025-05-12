@@ -135,7 +135,7 @@ const Note = () => {
       <div style={{ flex: 3 }} className='flex flex-col h-full min-h-0'>
         {loading ? (
           <div className='flex items-center justify-center h-full'>
-            로딩중...
+            불러오는 중...
           </div>
         ) : error ? (
           <div className='flex items-center justify-center h-full text-red-500'>
@@ -162,8 +162,11 @@ const Note = () => {
                 isSubmitted={isSubmitted}
                 answerIndex={answerIndex}
                 explanation={currentTestDetail.comment}
+                incorrectCount={currentTestDetail.incorrectCount}
                 onSelect={handleOptionSelect}
                 onNext={handleNext}
+                testHistoryList={currentTestDetail.testHistoryList}
+                answer={currentTestDetail.answer}
               />
             );
           })()
@@ -176,7 +179,14 @@ const Note = () => {
 
       {/* Note (1/5) */}
       <div style={{ flex: 1 }} className='flex flex-col h-full min-h-0'>
-        <Memo />
+        {currentTestDetail ? (
+          <Memo
+            testId={currentTestDetail.testId}
+            initialMemo={currentTestDetail.memo}
+          />
+        ) : (
+          <Memo testId={0} initialMemo={null} />
+        )}
       </div>
     </div>
   );

@@ -41,6 +41,7 @@ const RAW_RUNTIME_STATE =
           ["@tailwindcss/vite", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:4.1.5"],\
           ["@types/canvas-confetti", "npm:1.9.0"],\
           ["@types/draft-js", "npm:0.11.18"],\
+          ["@types/lodash.debounce", "npm:4.0.9"],\
           ["@types/node", "npm:22.15.14"],\
           ["@types/react", "npm:19.1.3"],\
           ["@types/react-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:19.1.3"],\
@@ -61,6 +62,7 @@ const RAW_RUNTIME_STATE =
           ["frontend", "workspace:."],\
           ["globals", "npm:16.1.0"],\
           ["immutable", "npm:5.1.2"],\
+          ["lodash.debounce", "npm:4.0.8"],\
           ["lottie-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:2.4.1"],\
           ["prettier", "npm:3.5.3"],\
           ["react", "npm:18.3.1"],\
@@ -2825,6 +2827,25 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/lodash", [\
+      ["npm:4.17.16", {\
+        "packageLocation": "./.yarn/cache/@types-lodash-npm-4.17.16-edc964ca5b-cf017901b8.zip/node_modules/@types/lodash/",\
+        "packageDependencies": [\
+          ["@types/lodash", "npm:4.17.16"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/lodash.debounce", [\
+      ["npm:4.0.9", {\
+        "packageLocation": "./.yarn/cache/@types-lodash.debounce-npm-4.0.9-dcafdcd4bd-9fbb24e5e5.zip/node_modules/@types/lodash.debounce/",\
+        "packageDependencies": [\
+          ["@types/lodash", "npm:4.17.16"],\
+          ["@types/lodash.debounce", "npm:4.0.9"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/mdx", [\
       ["npm:2.0.13", {\
         "packageLocation": "./.yarn/cache/@types-mdx-npm-2.0.13-52981f86f6-5edf109950.zip/node_modules/@types/mdx/",\
@@ -5548,6 +5569,7 @@ const RAW_RUNTIME_STATE =
           ["@tailwindcss/vite", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:4.1.5"],\
           ["@types/canvas-confetti", "npm:1.9.0"],\
           ["@types/draft-js", "npm:0.11.18"],\
+          ["@types/lodash.debounce", "npm:4.0.9"],\
           ["@types/node", "npm:22.15.14"],\
           ["@types/react", "npm:19.1.3"],\
           ["@types/react-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:19.1.3"],\
@@ -5568,6 +5590,7 @@ const RAW_RUNTIME_STATE =
           ["frontend", "workspace:."],\
           ["globals", "npm:16.1.0"],\
           ["immutable", "npm:5.1.2"],\
+          ["lodash.debounce", "npm:4.0.8"],\
           ["lottie-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:2.4.1"],\
           ["prettier", "npm:3.5.3"],\
           ["react", "npm:18.3.1"],\
@@ -6756,6 +6779,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/lodash-es-npm-4.17.21-b45832dfce-fb407355f7.zip/node_modules/lodash-es/",\
         "packageDependencies": [\
           ["lodash-es", "npm:4.17.21"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["lodash.debounce", [\
+      ["npm:4.0.8", {\
+        "packageLocation": "./.yarn/cache/lodash.debounce-npm-4.0.8-f1d6e09799-762998a63e.zip/node_modules/lodash.debounce/",\
+        "packageDependencies": [\
+          ["lodash.debounce", "npm:4.0.8"]\
         ],\
         "linkType": "HARD"\
       }]\

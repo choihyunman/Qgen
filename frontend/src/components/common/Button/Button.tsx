@@ -28,24 +28,9 @@ const Button: React.FC<ButtonProps> = ({
     small: 'bg-[#754AFF] text-white px-4 py-2 text-sm hover:bg-[#6642E6]',
   };
 
-  const getButtonClasses = () => {
-    let classes = `${baseStyles} ${variantStyles[variant]}`;
-
-    if (variant === 'small') {
-      if (className?.includes('primary')) {
-        classes += ' bg-[#754AFF] text-white hover:bg-[#6642E6]';
-      } else if (className?.includes('secondary')) {
-        classes +=
-          ' bg-white text-gray-700 border border-gray-300 hover:bg-[#754AFF]/10 hover:border-[#754AFF]/80';
-      }
-    }
-
-    return twMerge(classes, className);
-  };
-
   return (
     <button
-      className={getButtonClasses()}
+      className={twMerge(baseStyles, variantStyles[variant], className)}
       onClick={onClick}
       disabled={disabled}
     >

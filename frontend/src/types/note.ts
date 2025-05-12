@@ -7,6 +7,7 @@ export interface NoteProps {
   isSubmitted: boolean;
   answerIndex: number;
   explanation: string;
+  incorrectCount: number;
   onSelect: (index: number) => void;
   onNext: () => void;
 }
