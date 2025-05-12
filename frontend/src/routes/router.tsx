@@ -45,6 +45,10 @@ export const router = createBrowserRouter([
         path: '/login',
         element: <Login />,
       },
+      // {
+      //   path: '/note/:workBookId',
+      //   element: <Note />,
+      // },
     ],
   },
 ]);

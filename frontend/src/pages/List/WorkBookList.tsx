@@ -13,12 +13,16 @@ interface WorkBookListProps {
   workbooks: WorkBook[];
   onWorkBookClick?: (id: string) => void;
   onAddClick?: () => void;
+  onWorkBookDelete?: (id: string) => void;
+  onWorkBookEdit?: (id: string) => void;
 }
 
 function WorkBookList({
   workbooks,
   onWorkBookClick,
   onAddClick,
+  onWorkBookDelete,
+  onWorkBookEdit,
 }: WorkBookListProps) {
   const navigate = useNavigate();
 
@@ -27,6 +31,18 @@ function WorkBookList({
     navigate(`/list/${id}`);
     // 필요하다면 onWorkBookClick도 호출
     onWorkBookClick?.(id);
+  };
+
+  const handleWorkBookDelete = (id: string) => {
+    if (onWorkBookDelete) {
+      onWorkBookDelete(id);
+    }
+  };
+
+  const handleWorkBookEdit = (id: string) => {
+    if (onWorkBookEdit) {
+      onWorkBookEdit(id);
+    }
   };
 
   return (
@@ -38,15 +54,18 @@ function WorkBookList({
         {workbooks.map((workbook) => (
           <WorkBookCard
             key={workbook.id}
+            selectedId={Number(workbook.id)}
             title={workbook.title}
             date={workbook.date}
             onClick={() => handleCardClick(workbook.id)}
+            onDelete={() => handleWorkBookDelete(workbook.id)}
+            onEdit={() => handleWorkBookEdit(workbook.id)}
           />
         ))}
 
         <div
           onClick={onAddClick}
-          className='flex-1 h-[260px] border-2 border-dashed border-gray-300 rounded-[20px] 
+          className='flex-1 h-[260px] border-1 border-gray-300 rounded-[20px] 
                      flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors'
         >
           <div className='flex flex-col items-center gap-2'>

@@ -1,12 +1,15 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '@/components/common/Button/Button';
 import UploadedList from '@/components/upload/UploadedList/UploadedList';
 import FileUploader from '@/components/upload/FileUpload/FileUploader';
 import { TestType } from '@/types/generate';
-import { UploadedFile } from '@/types/upload';
+import { UploadedFile } from '@/types/document';
 import { useGeneration } from '@/hooks/useGeneration';
 import { useGenerateStore } from '@/stores/generateStore';
+import ProblemTypeSelector from './ProblemTypeSelector';
+import GradientTitle from '@/components/common/GradientTitle/GradientTitle';
+import { useDocuments } from '@/hooks/useDocument';
 
 const Generate = () => {
   const { workBookId } = useParams();
@@ -17,16 +20,45 @@ const Generate = () => {
   const [testTypes, setTestTypes] = useState<TestType[]>([
     { name: '객관식', count: 0 },
     { name: '주관식', count: 0 },
-    { name: '서술형', count: 0 },
+    { name: 'OX퀴즈', count: 0 },
   ]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>([]);
 
   const totalProblems = useMemo(() => {
     return testTypes.reduce((sum, type) => sum + type.count, 0);
   }, [testTypes]);
 
   const { isLoading, error, generatePaper } = useGeneration();
+  // const { isLoading: isUploading, handleUpload, handleDelete } = useUpload();
+  const {
+    getDocuments,
+    deleteDocument,
+    uploadDocument,
+    isLoading: isDocumentLoading,
+  } = useDocuments();
   const setGenerated = useGenerateStore((state) => state.setGenerated);
+
+  const fetchDocuments = useCallback(async () => {
+    if (numericWorkBookId) {
+      try {
+        const docs = await getDocuments(numericWorkBookId);
+        const convertedFiles: UploadedFile[] = docs.map((doc) => ({
+          id: doc.documentId.toString(),
+          title: doc.documentName,
+          type: doc.documentType,
+        }));
+        setUploadedFiles(convertedFiles);
+      } catch (err) {
+        console.error('파일 목록 조회 실패:', err);
+      }
+    }
+  }, [numericWorkBookId, getDocuments]);
+
+  // 컴포넌트 마운트 시 파일 목록 조회
+  useEffect(() => {
+    fetchDocuments();
+  }, [numericWorkBookId]); // workBookId가 변경될 때만 실행
 
   const handleTypeClick = (typeName: string) => {
     setTestTypes((prev) =>
@@ -62,13 +94,16 @@ const Generate = () => {
     );
   };
 
-  const handleFileUpload = (file: File) => {
-    const newFile: UploadedFile = {
-      id: Date.now().toString(),
-      title: file.name,
-      type: file.type,
-    };
-    setUploadedFiles((prev) => [...prev, newFile]);
+  const handleFileUpload = async (file: File) => {
+    if (!numericWorkBookId) return;
+
+    try {
+      await uploadDocument(file, numericWorkBookId);
+      await fetchDocuments();
+    } catch (err) {
+      console.error('파일 업로드 실패:', err);
+      alert('파일 업로드에 실패했습니다.');
+    }
   };
 
   const handleLinkSubmit = (url: string) => {
@@ -89,8 +124,25 @@ const Generate = () => {
     setUploadedFiles((prev) => [...prev, newFile]);
   };
 
-  const handleFileDelete = (id: string) => {
-    setUploadedFiles((prev) => prev.filter((file) => file.id !== id));
+  const handleFileDelete = async (id: string) => {
+    if (!numericWorkBookId) return;
+
+    try {
+      await deleteDocument(Number(id));
+      await fetchDocuments();
+    } catch (err) {
+      console.error('파일 삭제 실패:', err);
+      alert('파일 삭제에 실패했습니다.');
+    }
+  };
+
+  const handleTestNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    if (newValue.length > 100) {
+      alert('시험지 이름은 100자를 초과할 수 없어요🥲');
+      return;
+    }
+    setTestName(newValue);
   };
 
   const handleGenerate = async () => {
@@ -120,180 +172,93 @@ const Generate = () => {
     }
   };
 
+  // 문서 선택 핸들러
+  const handleDocumentSelect = (id: string) => {
+    setSelectedDocumentIds((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((docId) => docId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  };
+
   return (
     <div>
-      <div className='flex flex-col items-start justify-center min-h-screen  w-full mx-auto gap-6'>
-        {/* Title Section */}
-        <div className='flex justify-between items-center'>
-          <h1 className='text-2xl font-bold text-[#754AFF]'>시험지 생성하기</h1>
+      <div className='flex flex-col items-start justify-start min-h-screen w-full mx-auto gap-6'>
+        {/* Title Section + Button */}
+        <div className='flex justify-between items-center w-full'>
+          <GradientTitle highlight='시험지' after='생성하기' />
+          <div className='flex gap-3'>
+            <Button
+              variant='outlined'
+              className='px-8 py-3 text-lg font-semibold relative overflow-hidden'
+              onClick={() => navigate(`/list/${numericWorkBookId}`)}
+            >
+              취소
+            </Button>
+            <Button
+              onClick={handleGenerate}
+              variant='filled'
+              className={`px-8 py-3 text-lg font-semibold relative overflow-hidden
+              ${totalProblems !== 0 && uploadedFiles.length !== 0 && !isLoading ? 'btn-gradient-move text-white' : ''}
+            `}
+              disabled={
+                totalProblems === 0 || uploadedFiles.length === 0 || isLoading
+              }
+            >
+              {isLoading ? '생성 중...' : '시험지 생성하기'}
+            </Button>
+          </div>
         </div>
 
         {/* Test Name Input Section */}
         <div className='w-full bg-white rounded-3xl shadow-sm p-6 md:col-span-2'>
-          <h2 className='text-xl font-semibold mb-5'>시험지 이름</h2>
+          <div className='flex justify-start gap-2 items-end mb-5'>
+            <h2 className='text-xl font-semibold'>시험지 이름</h2>
+            <span className='text-lg text-gray-400'>{testName.length}/100</span>
+          </div>
           <div className='border-b-1 border-gray-300 pb-2 transition-colors focus-within:border-[#754AFF]'>
             <input
               type='text'
               placeholder='제목없는 시험지'
               value={testName}
-              onChange={(e) => setTestName(e.target.value)}
+              onChange={handleTestNameChange}
               className='w-full bg-transparent border-none outline-none text-lg text-gray-800 placeholder-gray-400'
             />
           </div>
         </div>
 
         {/* File Upload and List Section */}
-        <div className='w-full grid grid-cols-1 md:grid-cols-3 gap-6'>
-          <UploadedList
-            files={uploadedFiles}
-            maxFiles={10}
-            onDelete={handleFileDelete}
-            className='md:col-span-1'
-          />
-          <FileUploader
-            onFileUpload={handleFileUpload}
-            onLinkSubmit={handleLinkSubmit}
-            onTextSubmit={handleTextSubmit}
-            className='md:col-span-2'
-            workBookId={numericWorkBookId ?? 0}
-          />
-          {/* Problem Types and Count Selection Section */}
-          <div className='bg-white rounded-3xl shadow-sm p-6 w-full md:col-span-1'>
-            <div className='flex justify-between items-center mb-5'>
-              <h2 className='text-xl font-semibold'>문제 유형 및 개수 선택</h2>
-              <span className='text-lg font-medium text-[#754AFF]'>
-                총 {totalProblems}문제
-              </span>
-            </div>
-
-            <div className='flex justify-between mb-4 w-full'>
-              {testTypes.map((type) => (
-                <div
-                  key={type.name}
-                  className='relative flex flex-col items-center'
-                >
-                  {/* Type Button Container */}
-                  <div className='relative mb-4'>
-                    {/* Bottom shape */}
-                    <div
-                      className={`
-                      absolute w-[130px] h-[65px] 
-                      rounded-[30px]
-                      ${
-                        type.count > 0
-                          ? 'bg-gradient-to-br from-[#754AFF] via-[#8B65FF] to-[#B3ADFF] shadow-[0_0_15px_rgba(117,74,255,0.3)]'
-                          : 'bg-[#B3ADFF]'
-                      }
-                      backdrop-blur-[50%]
-                      shadow-[0_1.2px_30px_rgba(69,42,124,0.1)]
-                      transition-all duration-300 ease-in-out
-                      `}
-                    />
-
-                    {/* Type Button */}
-                    <button
-                      onClick={() => handleTypeClick(type.name)}
-                      className={`
-                      relative w-[127px] h-[66px] 
-                      rounded-[30px] 
-                      translate-x-[4px]
-                      cursor-pointer
-                      ${
-                        type.count > 0
-                          ? 'bg-gradient-to-br from-white/20 via-white/15 to-white/5'
-                          : 'bg-gradient-to-b from-white/10 via-white/5 to-transparent'
-                      }
-                      text-white font-pretendard font-bold text-xl leading-8 text-center
-                      transition-all duration-300 ease-in-out
-                      hover:scale-[1.02] active:scale-[0.98]
-                      overflow-hidden
-                      ${type.count > 0 ? 'shadow-[inset_0_0_10px_rgba(255,255,255,0.2)]' : ''}
-                      `}
-                    >
-                      {/* Glass effect layer */}
-                      <div
-                        className={`
-                        absolute inset-0
-                        rounded-[30px]
-                        ${
-                          type.count > 0
-                            ? 'bg-gradient-to-br from-white/60 via-white/30 to-transparent'
-                            : 'bg-gradient-to-b from-white/50 to-transparent'
-                        }
-                        blur-[70%]
-                        border-[1.5px] 
-                        ${
-                          type.count > 0
-                            ? 'border-white/90 shadow-[0_0_10px_rgba(255,255,255,0.3)]'
-                            : 'border-white/75'
-                        }
-                        transition-all duration-300 ease-in-out
-                        `}
-                      />
-                      <span
-                        className={`
-                        relative z-10 
-                        transition-all duration-300
-                        ${type.count > 0 ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : ''}
-                        `}
-                      >
-                        {type.name}
-                      </span>
-                    </button>
-                  </div>
-
-                  {/* Count Controls - Only shown when type is selected */}
-                  <div
-                    className={`
-                    flex items-center justify-center space-x-3
-                    transition-all duration-300
-                    ${type.count > 0 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}
-                    `}
-                  >
-                    <button
-                      onClick={() =>
-                        handleCountChange(type.name, type.count - 1)
-                      }
-                      className='w-7 h-7 rounded-full bg-[#764EFF]/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-[#764EFF]/70 transition-colors'
-                      disabled={type.count === 0}
-                    >
-                      -
-                    </button>
-                    <span className='w-8 text-center text-black font-semibold'>
-                      {type.count}
-                    </span>
-                    <button
-                      onClick={() =>
-                        handleCountChange(type.name, type.count + 1)
-                      }
-                      className='w-7 h-7 rounded-full bg-[#764EFF]/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-[#764EFF]/70 transition-colors'
-                      disabled={totalProblems >= 30}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className='text-sm text-gray-500 mb-4 text-left'>
-              최대 30문제까지 생성 가능합니다.
-            </p>
+        <div className='w-full grid grid-cols-1 md:grid-cols-3 gap-6 '>
+          <div className='flex md:col-span-2 p-6 bg-white rounded-3xl shadow-sm'>
+            <FileUploader
+              onFileUpload={handleFileUpload}
+              onLinkSubmit={handleLinkSubmit}
+              onTextSubmit={handleTextSubmit}
+              className='md:col-span-2'
+              workBookId={numericWorkBookId ?? 0}
+            />
+          </div>
+          <div className='flex flex-col gap-6'>
+            <UploadedList
+              files={uploadedFiles}
+              maxFiles={10}
+              onDelete={handleFileDelete}
+              className='md:col-span-1'
+              showAddButton={false}
+              selectedIds={selectedDocumentIds}
+              onSelect={handleDocumentSelect}
+            />
+            <ProblemTypeSelector
+              testTypes={testTypes}
+              totalProblems={totalProblems}
+              onTypeClick={handleTypeClick}
+              onCountChange={handleCountChange}
+              className='md:col-span-1'
+            />
           </div>
         </div>
-      </div>
-
-      {/* Generate Button Section */}
-      <div className='w-full flex flex-col items-center'>
-        {error && <p className='text-red-500 mb-2'>{error}</p>}
-        <Button
-          onClick={handleGenerate}
-          className='px-8 py-3 my-6 text-lg font-semibold'
-          disabled={
-            totalProblems === 0 || uploadedFiles.length === 0 || isLoading
-          }
-        >
-          {isLoading ? '생성 중...' : '시험지 생성하기'}
-        </Button>
       </div>
     </div>
   );

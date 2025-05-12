@@ -16,6 +16,8 @@ import text from '@/assets/icons/text.svg';
 import x from '@/assets/icons/x.svg';
 import check from '@/assets/icons/check.svg';
 import trash from '@/assets/icons/trash.svg';
+import colDots from '@/assets/icons/colDots.svg';
+import checkW from '@/assets/icons/check-w.svg';
 
 // 아이콘 이미지 매핑 객체
 const ICON_IMAGES = {
@@ -31,6 +33,8 @@ const ICON_IMAGES = {
   x,
   check,
   trash,
+  colDots,
+  checkW,
 } as const;
 
 // 아이콘 이름 타입
@@ -54,7 +58,6 @@ interface IconBoxProps {
 export default function IconBox({
   name,
   size = 24,
-  // color,
   className,
   onClick,
   rotate,
@@ -84,15 +87,7 @@ export default function IconBox({
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
     >
-      <img
-        src={iconSrc}
-        alt={`${name} icon`}
-        width={size}
-        height={size}
-        // style={{
-        //   filter: color ? `color(${color})` : undefined,
-        // }}
-      />
+      <img src={iconSrc} alt={`${name} icon`} width={size} height={size} />
     </div>
   );
 }

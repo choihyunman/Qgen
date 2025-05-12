@@ -10,14 +10,15 @@ import {
 
 interface UseWorkBookReturn {
   workbooks: WorkBook[];
+  setWorkbooks: (workbooks: WorkBook[]) => void;
   isLoading: boolean;
   error: Error | null;
   fetchWorkBooks: (userId: number) => Promise<void>;
   createNewWorkBook: (userId: number, title: string) => Promise<void>;
   removeWorkBook: (
-    userId: number,
-    workBookId: number,
-    title: string
+    // userId: number,
+    workBookId: number
+    // title: string
   ) => Promise<void>;
   editWorkBook: (workBookId: number, title: string) => Promise<void>;
 }
@@ -65,15 +66,15 @@ export const useWorkBook = (): UseWorkBookReturn => {
 
   // 문제집 삭제
   const removeWorkBook = async (
-    userId: number,
-    workBookId: number,
-    title: string
+    // userId: number,
+    workBookId: number
+    // title: string
   ) => {
     setIsLoading(true);
     setError(null);
     try {
-      const userId = 1; // 임시
-      await deleteWorkBook(userId, workBookId, title);
+      // const userId = 1; // 임시
+      await deleteWorkBook(workBookId);
       setWorkbooks((prev) => prev.filter((wb) => wb.workBookId !== workBookId));
     } catch (err) {
       setError(
@@ -90,7 +91,7 @@ export const useWorkBook = (): UseWorkBookReturn => {
     setIsLoading(true);
     setError(null);
     try {
-      const userId = 1; // 임시
+      // const userId = 1; // 임시
       await updateWorkBook(workBookId, title);
       setWorkbooks((prev) =>
         prev.map((wb) => (wb.workBookId === workBookId ? { ...wb, title } : wb))
@@ -107,6 +108,7 @@ export const useWorkBook = (): UseWorkBookReturn => {
 
   return {
     workbooks,
+    setWorkbooks,
     isLoading,
     error,
     fetchWorkBooks,
