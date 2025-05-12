@@ -1,11 +1,14 @@
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter
+from pydantic import BaseModel
+from typing import List
+import requests
+import tempfile
+import re
 from docling.document_converter import DocumentConverter
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
-import tempfile
-import re
 
 router = APIRouter()
 
@@ -16,23 +19,25 @@ text_splitter = RecursiveCharacterTextSplitter(
     separators=["\n\n", "\n", " "]
 )
 
-# 임베딩 모델 설정
+# 임베딩 모델 및 벡터 인덱스 초기화
 model = SentenceTransformer("intfloat/multilingual-e5-large-instruct")
 dim = 1024
 index = faiss.IndexFlatL2(dim)
 document_store = []
 
+# ✅ camelCase 그대로 받는 Pydantic 모델
+class S3UploadRequest(BaseModel):
+    s3Urls: List[str]
+
+# 텍스트 정제 함수
 def clean_text(text):
     text = "".join(text)
     text = re.sub(r"[^\w\s]", "", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
-def extract_text(file: UploadFile, content: bytes) -> list[str]:
-    if file.filename.endswith(".txt") or file.content_type == "text/plain":
-        text = content.decode("utf-8", errors="ignore")
-        return [text]
-
+# PDF/TXT 콘텐츠에서 텍스트 추출 함수
+def extract_text_from_bytes(content: bytes) -> list[str]:
     try:
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             temp_file.write(content)
@@ -53,58 +58,51 @@ def extract_text(file: UploadFile, content: bytes) -> list[str]:
         print(f"문서 변환 오류: {e}")
         return []
 
-@router.post("/upload")
-async def upload_file(file: UploadFile, workbook_id: str, document_id: str):
-    content = await file.read()
-    raw_texts = extract_text(file, content)
+# S3 링크 기반 업로드 + 검색 통합 API
+@router.post("/search")
+async def search_with_uploaded_file(request: S3UploadRequest, indexId: str = "questions"):
+    index_path = f"./data/indexes/{indexId}.faiss"
+    doc_path = f"./data/indexes/{indexId}.json"
 
-    if not raw_texts:
-        return {"message": "텍스트 추출 실패"}
+    if not os.path.exists(index_path) or not os.path.exists(doc_path):
+        raise HTTPException(status_code=404, detail=f"Index '{indexId}' not found")
 
-    full_text = " ".join(raw_texts)
-    cleaned_text = clean_text(full_text)
-    chunks = text_splitter.split_text(cleaned_text)
+    index = faiss.read_index(index_path)
 
-    if not chunks:
-        return {"message": "청크 생성 실패"}
+    with open(doc_path, "r", encoding="utf-8") as f:
+        document_store = json.load(f)
 
-    vectors = model.encode(chunks)
+    all_chunks = []
+    for url in request.s3Urls:
+        try:
+            res = requests.get(url)
+            res.raise_for_status()
+            content = res.content
+            raw_texts = extract_text_from_bytes(content)
+            cleaned = clean_text(" ".join(raw_texts))
+            chunks = text_splitter.split_text(cleaned)
+            all_chunks.extend(chunks)
+        except Exception as e:
+            continue
 
-    for idx, (chunk, vector) in enumerate(zip(chunks, vectors)):
-        vector_np = np.array(vector).astype(np.float32).reshape(1, -1)
-        index.add(vector_np)
+    if not all_chunks:
+        return {"message": "사용자 파일에서 텍스트 추출 실패"}
 
-        metadata = {
-            "workbook_id": workbook_id,
-            "document_id": document_id,
-        }
+    query_text = " ".join(all_chunks)
+    query_vec = model.encode([query_text])[0]
+    query_np = np.array(query_vec).astype(np.float32).reshape(1, -1)
 
-        document_store.append({
-            "id": str(len(document_store)),
-            "content": chunk,
-            "metadata": metadata
-        })
-
-    return {"message": f"File {file.filename} processed successfully", "chunk_count": len(chunks)}
-
-@router.get("/search")
-async def search(query: str, workbook_id: str):
-    query_vector = model.encode([query])[0]
-    query_vector_np = np.array(query_vector).astype(np.float32).reshape(1, -1)
-    D, I = index.search(query_vector_np, k=3)
+    D, I = index.search(query_np, k=3)
 
     results = []
     for i in I[0]:
         if 0 <= i < len(document_store):
-            doc = document_store[i]
-            if doc.get("metadata", {}).get("workbook_id") == workbook_id:
-                results.append({
-                    "id": doc["id"],
-                    "content": doc["content"]
-                })
+            results.append({
+                "content": document_store[i]
+            })
 
-    return {"query": query, "results": results}
+    return {
+        "message": f"Index '{indexId}'에서 검색 완료",
+        "results": results
+    }
 
-@router.get("/debug/document_store")
-async def debug_document_store():
-    return document_store
