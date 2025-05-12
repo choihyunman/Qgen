@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import BlurBackground from '../../components/layout/Background/BlurBackground';
-import Button from '../../components/common/Button/Button';
+import Button from '@/components/common/Button/Button';
 import UploadedList from '@/components/upload/UploadedList/UploadedList';
 import FileUploader from '@/components/upload/FileUpload/FileUploader';
 import { TestType } from '@/types/generate';

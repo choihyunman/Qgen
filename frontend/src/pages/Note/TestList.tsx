@@ -1,4 +1,4 @@
-import { TestListProps } from '@/types/incorrect';
+import { TestListProps } from '@/types/note';
 import Button from '@/components/common/Button/Button';
 
 function TestList({ currentNumber, totalTests, onTestClick }: TestListProps) {

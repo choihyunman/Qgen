@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Test from './Test';
 import TestList from './TestList';
 import Button from '@/components/common/Button/Button';
-import Note from './Note';
-// import SimpleBar from 'simplebar-react';
+import Memo from './Memo';
+import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
+import { getNoteTestPapers } from '@/apis/note/note';
+import type { TestPaper } from '@/types/note';
 
-const Incorrect = () => {
+const Note = () => {
   const [currentNumber, setCurrentNumber] = useState(1);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [testPapers, setTestPapers] = useState<TestPaper[]>([]);
+  const [activeTestPaperIndex, setActiveTestPaperIndex] = useState(0);
 
   // 임시 데이터 - 실제 데이터로 교체 필요
   const mockTest = {
@@ -37,18 +41,18 @@ const Incorrect = () => {
 4번 일방적X  양방향O          `,
   };
 
-  const mockExams = [
-    { id: '250424', name: '정보처리기사 시험지 1', isActive: true },
-    { id: '250424-2', name: '정보처리기사 시험지 2', isActive: false },
-    { id: '250424-3', name: '정보처리기사 시험지 3', isActive: false },
-    { id: '250424-4', name: '정보처리기사 시험지 4', isActive: false },
-    { id: '250424-5', name: '정보처리기사 시험지 5', isActive: false },
-    { id: '250424-6', name: '정보처리기사 시험지 6', isActive: false },
-    { id: '250424-7', name: '정보처리기사 시험지 7', isActive: false },
-    { id: '250424-8', name: '정보처리기사 시험지 8', isActive: false },
-    { id: '250424-9', name: '정보처리기사 시험지 9', isActive: false },
-    { id: '250424-10', name: '정보처리기사 시험지 10', isActive: false },
-  ];
+  useEffect(() => {
+    const fetchTestPapers = async () => {
+      try {
+        const res = await getNoteTestPapers(1);
+        setTestPapers(res.data);
+      } catch (e) {
+        // TODO: 에러 처리
+        setTestPapers([]);
+      }
+    };
+    fetchTestPapers();
+  }, []);
 
   const handleOptionSelect = (index: number) => {
     setSelectedOption(index);
@@ -66,33 +70,42 @@ const Incorrect = () => {
     setIsSubmitted(false);
   };
 
-  const totalTests = 30; // API 호출 후 받아오는 데이터로 변경 필요
+  const totalTests = testPapers[activeTestPaperIndex].quantity;
 
   return (
     <div className='flex gap-4 h-full'>
       {/* TestList (1/5) */}
-      <div className='flex  flex-col overflow-scroll rounded-3xl shadow-sm  gap-4 h-full min-h-0'>
-        <div className='flex-1 p-6 bg-white '>
-          <h3 className='text-lg font-bold mb-4 '>내가 푼 시험지 List</h3>
+      <div style={{ flex: 1 }} className='flex flex-col gap-4 h-full min-h-0'>
+        <SimpleBar
+          style={{ flex: 3.3, height: '0', minHeight: 0 }}
+          className='bg-white rounded-3xl p-6 shadow-sm'
+        >
+          <h3 className='text-lg font-bold mb-4'>내가 푼 시험지 List</h3>
+
           <div className='flex flex-col gap-3'>
-            {mockExams.map((exam) => (
+            {testPapers.map((exam, idx) => (
               <Button
-                key={exam.id}
+                key={exam.testPaperId}
                 variant='filled'
-                className={`w-full py-3 px-6 rounded-2xl transition-colors${exam.isActive ? '' : ' bg-white border-1 border-gray-200 text-gray-900 hover:bg-[#754AFF]/10 hover:border-[#754AFF]/80'}`}
+                className={`w-full py-3 px-6 rounded-2xl transition-colors${idx === activeTestPaperIndex ? '' : ' bg-white border-1 border-gray-200 text-gray-900 hover:bg-[#754AFF]/10 hover:border-[#754AFF]/80'}`}
+                onClick={() => setActiveTestPaperIndex(idx)}
               >
-                {exam.name}
+                {exam.title}
               </Button>
             ))}
           </div>
-        </div>
-        <div className='flex-1'>
+        </SimpleBar>
+
+        <SimpleBar
+          style={{ flex: 1.7, height: '0', minHeight: 0 }}
+          className='bg-white rounded-3xl p-6 shadow-sm'
+        >
           <TestList
             currentNumber={currentNumber}
             totalTests={totalTests}
             onTestClick={handleTestClick}
           />
-        </div>
+        </SimpleBar>
       </div>
 
       {/* Test (3/5) */}
@@ -113,10 +126,10 @@ const Incorrect = () => {
 
       {/* Note (1/5) */}
       <div style={{ flex: 1 }} className='flex flex-col h-full min-h-0'>
-        <Note />
+        <Memo />
       </div>
     </div>
   );
 };
 
-export default Incorrect;
+export default Note;

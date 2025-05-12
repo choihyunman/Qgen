@@ -1,8 +1,10 @@
 import { useRef, useEffect } from 'react';
-import { IncorrectTestProps } from '@/types/incorrect';
+import { NoteProps } from '@/types/note';
 import Button from '@/components/common/Button/Button';
 import SimpleBar from 'simplebar-react';
-function IncorrectTest({
+import 'simplebar-react/dist/simplebar.min.css';
+
+function Test({
   currentNumber,
   totalNumber,
   test,
@@ -12,7 +14,7 @@ function IncorrectTest({
   answerIndex,
   explanation,
   onNext,
-}: IncorrectTestProps) {
+}: NoteProps) {
   const explanationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,13 +33,19 @@ function IncorrectTest({
       <div>
         <div className='flex justify-between'>
           {/* 문제 번호 */}
-          <div className='mb-4'>
+          <div className='mb-4 flex items-center gap-4'>
             <p className='text-base font-bold'>
               문제 {currentNumber}/{totalNumber}
             </p>
+            <Button
+              variant='small'
+              className='py-1 px-2 bg-rose-400 text-white hover:bg-rose-500'
+            >
+              회
+            </Button>
           </div>
           <div className='flex justify-end'>
-            <Button onClick={onNext} variant='small'>
+            <Button onClick={onNext} variant='small' className='my-1 text-xs'>
               다음
             </Button>
           </div>
@@ -85,4 +93,4 @@ function IncorrectTest({
   );
 }
 
-export default IncorrectTest;
+export default Test;
