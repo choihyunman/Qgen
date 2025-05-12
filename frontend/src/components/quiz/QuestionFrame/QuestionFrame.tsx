@@ -8,11 +8,11 @@ interface QuestionFrameProps {
   totalNumber: number;
   question: string;
   options: string[];
-  selectedOption: number | string | null;
+  selectedOption: string | null;
   isSubmitted: boolean;
-  answerIndex: string | number;
+  answerIndex: string;
   explanation: string;
-  onSelect: (value: number | string) => void;
+  onSelect: (value: string) => void;
   onSubmit: () => void;
   onNext: () => void;
   questionType?: 'choiceAns' | 'shortAns' | 'oxAns';
@@ -83,33 +83,38 @@ function QuestionFrame({
     };
   }, [question]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        if (!isSubmitted && selectedOption) {
+          onSubmit();
+        } else if (isSubmitted) {
+          onNext();
+        }
+      }
+    };
+    const ref = frameRef.current;
+    if (ref) ref.addEventListener('keydown', handleKeyDown);
+    return () => {
+      if (ref) ref.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isSubmitted, selectedOption, onSubmit, onNext]);
+
   // OX 문제 렌더링
   const renderOXQuestion = () => {
     return (
       <div className='flex gap-4 justify-center mb-2'>
         {['O', 'X'].map((option) => {
-          // 디버깅용 콘솔 로그
-          console.log(
-            'option:',
-            option,
-            'answerIndex:',
-            answerIndex,
-            'selectedOption:',
-            selectedOption
-          );
           let optionStyle = 'border-gray-200';
           let textStyle = '';
           if (isSubmitted) {
             if (selectedOption === option && option === answerIndex) {
-              // 내가 선택했고, 정답이면 초록색
               optionStyle = 'border-green-500 bg-green-50';
               textStyle = 'font-bold text-green-700';
             } else if (selectedOption === option) {
-              // 내가 선택했지만 오답이면 빨간색
               optionStyle = 'border-red-400 bg-red-50';
               textStyle = 'font-bold text-red-500';
             } else if (option === answerIndex) {
-              // 정답(내가 선택하지 않은) 초록색
               optionStyle = 'border-green-500 bg-green-50';
               textStyle = 'font-bold text-green-700';
             }
@@ -139,21 +144,21 @@ function QuestionFrame({
           let optionStyle = 'border-gray-200';
           let textStyle = '';
           if (isSubmitted) {
-            if (index === answerIndex) {
+            if ((index + 1).toString() === answerIndex) {
               optionStyle = 'border-green-500 bg-green-50';
               textStyle = 'font-bold text-green-700';
-            } else if (selectedOption === index) {
+            } else if (selectedOption === (index + 1).toString()) {
               optionStyle = 'border-red-400 bg-red-50';
               textStyle = 'font-bold text-red-500';
             }
-          } else if (selectedOption === index) {
+          } else if (selectedOption === (index + 1).toString()) {
             optionStyle = 'border-gray-400 bg-gray-100';
             textStyle = 'font-bold text-gray-700';
           }
           return (
             <div
               key={index}
-              onClick={() => !isSubmitted && onSelect(index)}
+              onClick={() => !isSubmitted && onSelect((index + 1).toString())}
               className={`p-4 border-2 rounded-[24px] cursor-pointer transition-colors ${optionStyle}`}
             >
               <span className={textStyle}>
@@ -174,7 +179,7 @@ function QuestionFrame({
           type='text'
           className='w-full p-4 border-2 rounded-[24px] focus:outline-none focus:border-purple-500'
           placeholder='답을 입력하세요'
-          value={(selectedOption as string) || ''}
+          value={selectedOption || ''}
           disabled={isSubmitted}
           onChange={(e) => onSelect(e.target.value)}
         />
@@ -199,6 +204,7 @@ function QuestionFrame({
   return (
     <div
       ref={frameRef}
+      tabIndex={0}
       className='transition-opacity duration-300 opacity-100 w-full h-[537px] bg-white rounded-[24px] p-6 shadow-sm overflow-y-auto'
     >
       <div>
