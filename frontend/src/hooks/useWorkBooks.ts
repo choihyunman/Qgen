@@ -34,9 +34,9 @@ export const useWorkBook = (): UseWorkBookReturn => {
     setError(null);
     try {
       userId = 1; // 임시
-      const data = await getWorkBooks(userId);
-      console.log('조회된 문제집 목록 : ', data);
-      setWorkbooks(data);
+      const response = await getWorkBooks(userId);
+      // console.log('1. 조회된 문제집 목록 :::: ', response);
+      setWorkbooks(response);
     } catch (err) {
       setError(
         err instanceof Error ? err : new Error('Failed to fetch workbooks')

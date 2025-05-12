@@ -16,11 +16,9 @@ import { useDocuments } from '@/hooks/useDocument';
 import { TestPaper } from '@/types/testpaper';
 import PdfModal from '@/components/testpaper/PdfModal';
 import QuizStartModal from '@/components/testpaper/QuizStartModal';
-import { formatDateTime } from '@/utils/dateFormat';
 import WorkBookTitleModal from '@/components/workbook/WorkBookTitleModal/WorkBookTitleModal';
 import GradientTitle from '@/components/common/GradientTitle/GradientTitle';
 
-// 예시: 실제 로그인 유저의 id를 받아와야 함
 const userId = 1;
 
 export default function List() {
@@ -58,7 +56,7 @@ export default function List() {
 
   // 기타 상태
   const [selectedWorkbook, setSelectedWorkbook] = useState<number | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingTitle, setEditingTitle] = useState('');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -88,21 +86,13 @@ export default function List() {
   useEffect(() => {
     fetchWorkBooks(userId);
   }, []);
+  // console.log('3. 문제집 목록 불러오기 :::: ', workbooks);
 
   // 선택된 워크북 정보
-  const selectedWorkbookData = workbooks?.find(
-    (wb) => wb.workBookId === numericWorkBookId
-  );
-
-  // 모달 열기/닫기
-  // const handleOpenModal = () => setIsModalOpen(true);
-  // const handleCloseModal = () => setIsModalOpen(false);
-
-  // 새 워크북 추가
-  // const handleAddWorkBook = async (title: string) => {
-  //   await createNewWorkBook(userId, title);
-  //   setIsModalOpen(false);
-  // };
+  const selectedWorkbookData =
+    workbooks && Array.isArray(workbooks)
+      ? workbooks.find((wb) => wb.workBookId === numericWorkBookId)
+      : undefined;
 
   // 수정 모드 시작
   const handleStartEdit = () => {
@@ -286,19 +276,19 @@ export default function List() {
   };
 
   // 문제집 이름 수정
-  const handleWorkBookEdit = async (workBookId: string) => {
-    if (!workBookId) return;
-    const newTitle = window.prompt('새로운 문제집 이름을 입력하세요.');
-    if (!newTitle || !newTitle.trim()) return;
-    try {
-      await editWorkBook(Number(workBookId), newTitle.trim());
-      // 수정 후 목록 새로고침
-      await fetchWorkBooks(userId);
-      setMiniModalOpen(false);
-    } catch (error) {
-      alert('문제집 이름 수정에 실패했습니다.');
-    }
-  };
+  // const handleWorkBookEdit = async (workBookId: string) => {
+  //   if (!workBookId) return;
+  //   const newTitle = window.prompt('새로운 문제집 이름을 입력하세요.');
+  //   if (!newTitle || !newTitle.trim()) return;
+  //   try {
+  //     await editWorkBook(Number(workBookId), newTitle.trim());
+  //     // 수정 후 목록 새로고침
+  //     await fetchWorkBooks(userId);
+  //     setMiniModalOpen(false);
+  //   } catch (error) {
+  //     alert('문제집 이름 수정에 실패했습니다.');
+  //   }
+  // };
 
   // 문제집 추가 버튼 클릭 시
   const handleOpenAddModal = () => {
@@ -319,12 +309,6 @@ export default function List() {
   // 모달에서 submit 시
   const handleTitleModalSubmit = async (title: string) => {
     if (titleModalMode === 'add') {
-      // const tempWorkBook = {
-      //   workBookId: 0,
-      //   title: title,
-      //   createAt: new Date().toISOString(),
-      // };
-      // setWorkbooks([...workbooks, tempWorkBook]);
       setIsTitleModalOpen(false);
       await createNewWorkBook(userId, title);
       await fetchWorkBooks(userId);
@@ -492,18 +476,14 @@ export default function List() {
                   )
                 ) : (
                   <WorkBookList
-                    workbooks={workbooks.map((wb) => ({
-                      id: String(wb.workBookId),
-                      title: wb.title,
-                      date: formatDateTime(wb.createAt), // 날짜 포맷팅 적용
-                    }))}
+                    workbooks={workbooks}
                     onWorkBookClick={(id) => handleWorkBookClick(Number(id))}
                     onAddClick={handleOpenAddModal}
                     onWorkBookDelete={handleWorkBookDelete}
                     onWorkBookEdit={(id) => {
-                      const target = workbooks.find(
-                        (wb) => String(wb.workBookId) === id
-                      );
+                      const target = Array.isArray(workbooks)
+                        ? workbooks.find((wb) => String(wb.workBookId) === id)
+                        : undefined;
                       handleOpenEditModal(id, target?.title ?? '');
                     }}
                   />
@@ -548,6 +528,7 @@ export default function List() {
         isOpen={isPdfModalOpen}
         onClose={() => setIsPdfModalOpen(false)}
         onDownload={(option) => {
+          console.log(option);
           setIsPdfModalOpen(false);
         }}
       />
