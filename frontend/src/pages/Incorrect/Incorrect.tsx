@@ -11,6 +11,9 @@ const Incorrect = () => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  console.log(selectedOption);
+  console.log(isSubmitted);
+
   // 임시 데이터 - 실제 데이터로 교체 필요
   const mockTest = {
     test: '임시 문제입니다.',

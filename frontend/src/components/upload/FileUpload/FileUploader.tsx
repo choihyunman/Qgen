@@ -12,7 +12,6 @@ interface FileUploaderProps {
   onLinkSubmit: (url: string) => void;
   onTextSubmit: (text: string) => void;
   className?: string;
-  workBookId: number;
 }
 
 const pulseAnimation = `
@@ -33,11 +32,10 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   onLinkSubmit,
   onTextSubmit,
   className = '',
-  workBookId,
 }) => {
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [showTextModal, setShowTextModal] = useState(false);
-  const { isLoading, uploadDocument } = useDocuments();
+  const { isLoading } = useDocuments();
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragEnter = (e: React.DragEvent) => {

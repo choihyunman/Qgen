@@ -30,10 +30,10 @@ function QuestionFrame({
   onSubmit,
   onNext,
 }: QuestionFrameProps) {
-  const activeBtnClass =
-    'bg-gray-700 text-white border-gray-700 hover:bg-gray-800 cursor-pointer';
-  const disabledBtnClass =
-    'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed';
+  // const activeBtnClass =
+  //   'bg-gray-700 text-white border-gray-700 hover:bg-gray-800 cursor-pointer';
+  // const disabledBtnClass =
+  //   'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed';
   const explanationRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
 

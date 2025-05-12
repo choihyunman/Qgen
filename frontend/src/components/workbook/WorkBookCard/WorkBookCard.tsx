@@ -56,7 +56,7 @@ function WorkBookCard({
             <div ref={modalRef} className='absolute right-0 top-0 z-50'>
               <MiniModal
                 isOpen={modalOpen}
-                onClose={() => setModalOpen(false)}
+                // onClose={() => setModalOpen(false)}
                 actions={[
                   { text: '삭제', href: '#', onClick: onDelete },
                   { text: '이름 수정', href: '#', onClick: onEdit },
