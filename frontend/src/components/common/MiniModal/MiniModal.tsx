@@ -6,12 +6,12 @@ interface MiniModalAction {
 
 interface MiniModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  // onClose: () => void;
   actions: MiniModalAction[];
   selectedId: number | null;
 }
 
-function MiniModal({ isOpen, onClose, actions, selectedId }: MiniModalProps) {
+function MiniModal({ isOpen, actions, selectedId }: MiniModalProps) {
   if (!isOpen) return null;
 
   return (

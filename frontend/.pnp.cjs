@@ -67,7 +67,7 @@ const RAW_RUNTIME_STATE =
           ["react-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:18.3.1"],\
           ["react-router-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:7.5.3"],\
           ["simplebar", "npm:6.3.0"],\
-          ["simplebar-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:3.3.0"],\
+          ["simplebar-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:3.3.1"],\
           ["storybook", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:8.6.12"],\
           ["tailwind-merge", "npm:3.2.0"],\
           ["tailwind-scrollbar", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:4.0.2"],\
@@ -5574,7 +5574,7 @@ const RAW_RUNTIME_STATE =
           ["react-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:18.3.1"],\
           ["react-router-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:7.5.3"],\
           ["simplebar", "npm:6.3.0"],\
-          ["simplebar-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:3.3.0"],\
+          ["simplebar-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:3.3.1"],\
           ["storybook", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:8.6.12"],\
           ["tailwind-merge", "npm:3.2.0"],\
           ["tailwind-scrollbar", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:4.0.2"],\
@@ -6747,6 +6747,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/lodash-npm-4.17.21-6382451519-d8cbea072b.zip/node_modules/lodash/",\
         "packageDependencies": [\
           ["lodash", "npm:4.17.21"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["lodash-es", [\
+      ["npm:4.17.21", {\
+        "packageLocation": "./.yarn/cache/lodash-es-npm-4.17.21-b45832dfce-fb407355f7.zip/node_modules/lodash-es/",\
+        "packageDependencies": [\
+          ["lodash-es", "npm:4.17.21"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -8373,23 +8382,32 @@ const RAW_RUNTIME_STATE =
           ["simplebar-core", "npm:1.3.0"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:1.3.1", {\
+        "packageLocation": "./.yarn/cache/simplebar-core-npm-1.3.1-bfbdfd991a-15b18c1bbd.zip/node_modules/simplebar-core/",\
+        "packageDependencies": [\
+          ["lodash", "npm:4.17.21"],\
+          ["lodash-es", "npm:4.17.21"],\
+          ["simplebar-core", "npm:1.3.1"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["simplebar-react", [\
-      ["npm:3.3.0", {\
-        "packageLocation": "./.yarn/cache/simplebar-react-npm-3.3.0-87d783a96f-ad07ac2b23.zip/node_modules/simplebar-react/",\
+      ["npm:3.3.1", {\
+        "packageLocation": "./.yarn/cache/simplebar-react-npm-3.3.1-8c50ecc7bd-c3e1cc2b98.zip/node_modules/simplebar-react/",\
         "packageDependencies": [\
-          ["simplebar-react", "npm:3.3.0"]\
+          ["simplebar-react", "npm:3.3.1"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:3.3.0", {\
-        "packageLocation": "./.yarn/__virtual__/simplebar-react-virtual-4f787d78bd/0/cache/simplebar-react-npm-3.3.0-87d783a96f-ad07ac2b23.zip/node_modules/simplebar-react/",\
+      ["virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:3.3.1", {\
+        "packageLocation": "./.yarn/__virtual__/simplebar-react-virtual-e8ece6ee45/0/cache/simplebar-react-npm-3.3.1-8c50ecc7bd-c3e1cc2b98.zip/node_modules/simplebar-react/",\
         "packageDependencies": [\
           ["@types/react", "npm:19.1.3"],\
           ["react", "npm:18.3.1"],\
-          ["simplebar-core", "npm:1.3.0"],\
-          ["simplebar-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:3.3.0"]\
+          ["simplebar-core", "npm:1.3.1"],\
+          ["simplebar-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:3.3.1"]\
         ],\
         "packagePeers": [\
           "@types/react",\

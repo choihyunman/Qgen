@@ -29,13 +29,13 @@ const Generate = () => {
     return testTypes.reduce((sum, type) => sum + type.count, 0);
   }, [testTypes]);
 
-  const { isLoading, error, generatePaper } = useGeneration();
+  const { isLoading, generatePaper } = useGeneration();
   // const { isLoading: isUploading, handleUpload, handleDelete } = useUpload();
   const {
     getDocuments,
     deleteDocument,
     uploadDocument,
-    isLoading: isDocumentLoading,
+    // isLoading: isDocumentLoading,
   } = useDocuments();
   const setGenerated = useGenerateStore((state) => state.setGenerated);
 
@@ -156,7 +156,7 @@ const Generate = () => {
       title: testName || '제목없는 시험지',
       choiceAns: testTypes.find((t) => t.name === '객관식')?.count || 0,
       shortAns: testTypes.find((t) => t.name === '주관식')?.count || 0,
-      OXAns: 0,
+      oxAns: 0,
       wordAns: testTypes.find((t) => t.name === '서술형')?.count || 0,
       quantity: totalProblems,
     };
@@ -237,7 +237,7 @@ const Generate = () => {
               onLinkSubmit={handleLinkSubmit}
               onTextSubmit={handleTextSubmit}
               className='md:col-span-2'
-              workBookId={numericWorkBookId ?? 0}
+              // workBookId={numericWorkBookId ?? 0}
             />
           </div>
           <div className='flex flex-col gap-6'>

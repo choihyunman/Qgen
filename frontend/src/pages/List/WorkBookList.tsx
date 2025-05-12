@@ -1,13 +1,8 @@
 // src/components/WorkBookList/WorkBookList.tsx
 
 import WorkBookCard from '@/components/workbook/WorkBookCard/WorkBookCard';
+import { WorkBook } from '@/types/workbook';
 import { useNavigate } from 'react-router-dom';
-
-interface WorkBook {
-  id: string;
-  title: string;
-  date: string;
-}
 
 interface WorkBookListProps {
   workbooks: WorkBook[];
@@ -53,13 +48,13 @@ function WorkBookList({
         {/* 문제집 카드 리스트 */}
         {workbooks.map((workbook) => (
           <WorkBookCard
-            key={workbook.id}
-            selectedId={Number(workbook.id)}
+            key={workbook.workBookId}
+            selectedId={Number(workbook.workBookId)}
             title={workbook.title}
-            date={workbook.date}
-            onClick={() => handleCardClick(workbook.id)}
-            onDelete={() => handleWorkBookDelete(workbook.id)}
-            onEdit={() => handleWorkBookEdit(workbook.id)}
+            date={workbook.createAt}
+            onClick={() => handleCardClick(String(workbook.workBookId))}
+            onDelete={() => handleWorkBookDelete(String(workbook.workBookId))}
+            onEdit={() => handleWorkBookEdit(String(workbook.workBookId))}
           />
         ))}
 
