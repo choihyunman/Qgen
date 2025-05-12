@@ -39,7 +39,7 @@ public class TestResult {
     private int correctedAnswer;
 
     @Column(nullable = false)
-    private int incorrectedAnswer;
+    private int inCorrectedAnswer;
 
     @Column(nullable = false)
     private int totalAnswer;

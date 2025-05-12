@@ -24,7 +24,7 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public List<DocumentDto> getDocumentsByWorkBookId(Long workBookId) {
-        return documentRepository.findByWorkBook_WorkBookId(workBookId)
+        return documentRepository.findAllByWorkBook_WorkBookId(workBookId)
                 .stream()
                 .map(DocumentDto::new)
                 .collect(Collectors.toList());

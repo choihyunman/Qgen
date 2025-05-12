@@ -44,14 +44,14 @@ public class TestPaperService {
                 createTestPaperRequestDto.getTitle(),
                 createTestPaperRequestDto.getChoiceAns(),
                 createTestPaperRequestDto.getShortAns(),
-                createTestPaperRequestDto.getOXAns(),
+                createTestPaperRequestDto.getOxAns(),
                 createTestPaperRequestDto.getWordAns(),
                 createTestPaperRequestDto.getQuantity());
         testPaper = testPaperRepository.save(testPaper);
 
         CreateTestResponseDto createTest = webClient.post()
                 .uri("/api/ai/chatgpt/{testPaperId}/", testPaper.getTestPaperId())
-                .bodyValue(new CreateTestRequestDto(testPaper.getChoiceAns(), testPaper.getOXAns(), testPaper.getShortAns()))
+                .bodyValue(new CreateTestRequestDto(testPaper.getChoiceAns(), testPaper.getOxAns(), testPaper.getShortAns()))
                 .retrieve()
                 .bodyToMono(CreateTestResponseDto.class)
                 .timeout(Duration.ofMinutes(5))

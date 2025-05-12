@@ -14,8 +14,7 @@ import lombok.ToString;
 public class CreateTestRequestDto {
     private int choiceAns;
 
-    @JsonProperty("OXAns")
-    private int OXAns;
+    private int oxAns;
 
     private int shortAns;
 }
