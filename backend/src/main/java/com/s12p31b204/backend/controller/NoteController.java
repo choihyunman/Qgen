@@ -40,11 +40,12 @@ public class NoteController {
             @AuthenticationPrincipal CustomOAuth2User user,
             HttpServletRequest request) {
         try {
-            if (authorizationService.checkWorkBookAuthorization(user.getUserId(), workBookId)) {
-                return ApiResponse.success(noteService.getNoteTestPaperByWorkBookId(workBookId), "success", HttpStatus.OK, request.getRequestURI());
-            } else {
-                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
-            }
+//            if (authorizationService.checkWorkBookAuthorization(user.getUserId(), workBookId)) {
+//                return ApiResponse.success(noteService.getNoteTestPaperByWorkBookId(workBookId), "success", HttpStatus.OK, request.getRequestURI());
+//            } else {
+//                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+//            }
+            return ApiResponse.success(noteService.getNoteTestPaperByWorkBookId(workBookId), "success", HttpStatus.OK, request.getRequestURI());
         } catch (Exception e) {
             return ApiResponse.failure(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
         }
@@ -56,11 +57,12 @@ public class NoteController {
             @AuthenticationPrincipal CustomOAuth2User user,
             HttpServletRequest request) {
         try {
-            if (authorizationService.checkTestAuthorization(user.getUserId(), testId)) {
-                return ApiResponse.success(noteService.getNoteTest(testId), "success", HttpStatus.OK, request.getRequestURI());
-            } else {
-                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
-            }
+//            if (authorizationService.checkTestAuthorization(user.getUserId(), testId)) {
+//                return ApiResponse.success(noteService.getNoteTest(testId), "success", HttpStatus.OK, request.getRequestURI());
+//            } else {
+//                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+//            }
+            return ApiResponse.success(noteService.getNoteTest(testId), "success", HttpStatus.OK, request.getRequestURI());
         } catch (Exception e) {
             return ApiResponse.failure(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
         }
@@ -73,12 +75,14 @@ public class NoteController {
             @AuthenticationPrincipal CustomOAuth2User user,
             HttpServletRequest request) {
         try {
-            if(authorizationService.checkTestAuthorization(user.getUserId(), testId)) {
-                noteService.updateNoteMemo(testId, memoRequest);
-                return ApiResponse.success(null, "success", HttpStatus.OK, request.getRequestURI());
-            } else {
-                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
-            }
+//            if(authorizationService.checkTestAuthorization(user.getUserId(), testId)) {
+//                noteService.updateNoteMemo(testId, memoRequest);
+//                return ApiResponse.success(null, "success", HttpStatus.OK, request.getRequestURI());
+//            } else {
+//                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+//            }
+            noteService.updateNoteMemo(testId, memoRequest);
+            return ApiResponse.success(null, "success", HttpStatus.OK, request.getRequestURI());
         } catch (Exception e) {
             return ApiResponse.failure(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
         }
@@ -90,12 +94,14 @@ public class NoteController {
             @AuthenticationPrincipal CustomOAuth2User user,
             HttpServletRequest request) {
         try {
-            if(authorizationService.checkTestAuthorization(user.getUserId(), testId)) {
-                noteService.removeNoteMemo(testId);
-                return ApiResponse.success(null, "success", HttpStatus.OK, request.getRequestURI());
-            } else {
-                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
-            }
+//            if(authorizationService.checkTestAuthorization(user.getUserId(), testId)) {
+//                noteService.removeNoteMemo(testId);
+//                return ApiResponse.success(null, "success", HttpStatus.OK, request.getRequestURI());
+//            } else {
+//                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+//            }
+            noteService.removeNoteMemo(testId);
+            return ApiResponse.success(null, "success", HttpStatus.OK, request.getRequestURI());
         } catch (Exception e) {
             return ApiResponse.failure(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
         }

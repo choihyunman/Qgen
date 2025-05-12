@@ -60,13 +60,16 @@ public class TestController {
             @AuthenticationPrincipal CustomOAuth2User user,
              HttpServletRequest request) {
         try {
-            if (authorizationService.checkTestPaperAuthorization(user.getUserId(), testPaperId)) {
-                log.info("getting testIds...");
-                List<Long> testIds = testService.findTestAll(testPaperId);
-                return ApiResponse.success(testIds, "전체 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
-            } else {
-                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
-            }
+//            if (authorizationService.checkTestPaperAuthorization(user.getUserId(), testPaperId)) {
+//                log.info("getting testIds...");
+//                List<Long> testIds = testService.findTestAll(testPaperId);
+//                return ApiResponse.success(testIds, "전체 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
+//            } else {
+//                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+//            }
+            log.info("getting testIds...");
+            List<Long> testIds = testService.findTestAll(testPaperId);
+            return ApiResponse.success(testIds, "전체 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
         } catch (NoSuchElementException e) {
             return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
@@ -101,13 +104,16 @@ public class TestController {
              @AuthenticationPrincipal CustomOAuth2User user,
              HttpServletRequest request) {
         try {
-            if(authorizationService.checkTestAuthorization(user.getUserId(), testId)) {
-                log.info("getting test...");
-                FindTestResponseDto response = testService.findTestOne(testId);
-                return ApiResponse.success(response, "단일 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
-            } else {
-                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
-            }
+//            if(authorizationService.checkTestAuthorization(user.getUserId(), testId)) {
+//                log.info("getting test...");
+//                FindTestResponseDto response = testService.findTestOne(testId);
+//                return ApiResponse.success(response, "단일 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
+//            } else {
+//                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+//            }
+            log.info("getting test...");
+            FindTestResponseDto response = testService.findTestOne(testId);
+            return ApiResponse.success(response, "단일 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
         } catch (NoSuchElementException e) {
             return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
@@ -150,13 +156,16 @@ public class TestController {
              @AuthenticationPrincipal CustomOAuth2User user,
              HttpServletRequest request) {
         try {
-            if(authorizationService.checkTestAuthorization(user.getUserId(), solvingTestRequestDto.getTestId())) {
-                log.info("solving test...");
-                SolvingTestResponseDto response = testService.solvingTest(solvingTestRequestDto);
-                return ApiResponse.success(response, "답안 제출 성공", HttpStatus.OK, request.getRequestURI());
-            } else {
-                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
-            }
+//            if(authorizationService.checkTestAuthorization(user.getUserId(), solvingTestRequestDto.getTestId())) {
+//                log.info("solving test...");
+//                SolvingTestResponseDto response = testService.solvingTest(solvingTestRequestDto);
+//                return ApiResponse.success(response, "답안 제출 성공", HttpStatus.OK, request.getRequestURI());
+//            } else {
+//                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+//            }
+            log.info("solving test...");
+            SolvingTestResponseDto response = testService.solvingTest(solvingTestRequestDto);
+            return ApiResponse.success(response, "답안 제출 성공", HttpStatus.OK, request.getRequestURI());
         } catch (NoSuchElementException e) {
             return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
