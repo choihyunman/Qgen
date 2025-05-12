@@ -2,8 +2,10 @@ package com.s12p31b204.backend.service;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,26 +51,46 @@ public class TestPaperService {
                 createTestPaperRequestDto.getQuantity());
         testPaper = testPaperRepository.save(testPaper);
 
-        CreateTestResponseDto createTest = webClient.post()
-                .uri("/api/ai/chatgpt/{testPaperId}/", testPaper.getTestPaperId())
-                .bodyValue(new CreateTestRequestDto(testPaper.getChoiceAns(), testPaper.getOxAns(), testPaper.getShortAns()))
-                .retrieve()
-                .bodyToMono(CreateTestResponseDto.class)
-                .timeout(Duration.ofMinutes(5))
-                .block();
 
-        List<Test> tests = new ArrayList<>();
-        for(CreateTestResponseDto.Data data : createTest.getData()) {
-            if(data.getType() == Test.Type.TYPE_CHOICE) {
-                tests.add(new Test(testPaper, data.getType(), data.getQuestion(),
-                        data.getOption().get(0), data.getOption().get(1),
-                        data.getOption().get(2), data.getOption().get(3),
-                        data.getAnswer(), data.getComment()));
-            } else {
-                tests.add(new Test(testPaper, data.getType(), data.getQuestion(),
-                        data.getAnswer(), data.getComment()));
+        List<Test> tests = Collections.synchronizedList(new ArrayList<>());
+
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        int choiceAns = testPaper.getChoiceAns();
+        int oxAns = testPaper.getOxAns();
+        int shortAns = testPaper.getShortAns();
+
+        while(choiceAns + oxAns + shortAns >= 10) {
+            int rqQuantity = 10;
+            int rqChoice = 0;
+            int rqOx = 0;
+            int rqShort = 0;
+
+            if(choiceAns > 0) {
+                rqChoice = Math.min(choiceAns, rqQuantity);
+                choiceAns -= rqChoice;
+                rqQuantity -= rqChoice;
             }
+
+            if(oxAns > 0 && rqQuantity > 0) {
+                rqOx = Math.min(oxAns, rqQuantity);
+                oxAns -= rqOx;
+                rqQuantity -= rqOx;
+            }
+
+            if(shortAns > 0 && rqQuantity > 0) {
+                rqShort = Math.min(shortAns, rqQuantity);
+                shortAns -= rqShort;
+                rqQuantity -= rqShort;
+            }
+
+            futures.add(createTest(testPaper, tests, rqChoice, rqOx, rqShort));
         }
+        if(choiceAns + oxAns + shortAns > 0) {
+            futures.add(createTest(testPaper, tests, choiceAns, oxAns, shortAns));
+        }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
         testRepository.saveAll(tests);
 
         return TestPaperResponseDto.from(testPaper);
@@ -97,5 +119,29 @@ public class TestPaperService {
                 .orElseThrow(() -> new NoSuchElementException("시험지를 찾을 수 없습니다."));
         testPaper.updateTestPaper(updateTestPaperRequestDto.getTitle());
         return TestPaperResponseDto.from(testPaper);
+    }
+
+    public CompletableFuture<Void> createTest(TestPaper testPaper, List<Test> tests, int choiceAns, int oxAns, int shortAns) {
+        return CompletableFuture.runAsync(() -> {
+            log.info("Test Generate Request");
+            CreateTestResponseDto response = webClient.post()
+                    .uri("/api/ai/chatgpt/{testPaperId}/", testPaper.getTestPaperId())
+                    .bodyValue(new CreateTestRequestDto(choiceAns, oxAns, shortAns))
+                    .retrieve()
+                    .bodyToMono(CreateTestResponseDto.class)
+                    .timeout(Duration.ofMinutes(5))
+                    .block();
+            for(CreateTestResponseDto.Data data : response.getData()) {
+                if(data.getType() == Test.Type.TYPE_CHOICE) {
+                    tests.add(new Test(testPaper, data.getType(), data.getQuestion(),
+                            data.getOption().get(0), data.getOption().get(1),
+                            data.getOption().get(2), data.getOption().get(3),
+                            data.getAnswer(), data.getComment()));
+                } else {
+                    tests.add(new Test(testPaper, data.getType(), data.getQuestion(),
+                            data.getAnswer(), data.getComment()));
+                }
+            }
+        });
     }
 }
