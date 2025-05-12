@@ -9,7 +9,7 @@ export interface GenerateRequest {
   choiceAns: number;
   shortAns: number;
   oxAns: number;
-  wordAns: number;
+  // wordAns: number;
   quantity: number;
 }
 

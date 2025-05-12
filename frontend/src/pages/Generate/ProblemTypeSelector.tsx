@@ -62,14 +62,14 @@ function ProblemTypeSelector({
               />
               <button
                 onClick={() => onCountChange(type.name, type.count - 1)}
-                className='absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200'
+                className='absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 cursor-pointer'
                 disabled={type.count === 0}
               >
                 -
               </button>
               <button
                 onClick={() => onCountChange(type.name, type.count + 1)}
-                className='absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200'
+                className='absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 cursor-pointer'
                 disabled={totalProblems >= 30}
               >
                 +
