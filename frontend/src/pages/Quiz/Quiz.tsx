@@ -17,7 +17,7 @@ function QuizPage() {
   const numericTestPaperId = testPaperId ? Number(testPaperId) : null;
 
   const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState<number | string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showQuizEnd, setShowQuizEnd] = useState(false); // QuizEnd 표시 여부
 
@@ -26,9 +26,7 @@ function QuizPage() {
   const totalQuestions = problemIds.length;
 
   // 문제별 상태 배열
-  const [selectedAnswers, setSelectedAnswers] = useState<
-    (number | string | null)[]
-  >([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [isSubmittedArr, setIsSubmittedArr] = useState<boolean[]>([]);
   const [answerStatusArr, setAnswerStatusArr] = useState<AnswerStatus[]>([]);
   const [resultArr, setResultArr] = useState<(TestResult | null)[]>([]);
@@ -91,13 +89,9 @@ function QuizPage() {
     fetchQuestion();
   }, [current, problemIds]);
 
-  const handleSelect = (value: number | string) => {
+  const handleSelect = (value: string) => {
     if (!isSubmitted) {
-      if (currentQuestion?.type === 'OXAns') {
-        setSelected(value === 0 ? 'O' : 'X');
-      } else {
-        setSelected(value);
-      }
+      setSelected(value);
     }
   };
 
@@ -118,14 +112,16 @@ function QuizPage() {
 
         const res = await submitAnswer({
           testId: currentQuestion.testId,
-          userAnswer:
-            typeof selected === 'number' ? (selected + 1).toString() : selected,
+          userAnswer: selected,
         });
 
         if (res.success && res.data) {
           setResultArr((prev) => {
             const updated = [...prev];
             updated[current] = res.data;
+            if (res.data) {
+              console.log('정답 correctAnswer:', res.data.correctAnswer);
+            }
             return updated;
           });
 
@@ -204,7 +200,7 @@ function QuizPage() {
             totalNumber={totalQuestions}
             question={currentQuestion?.question || ''}
             options={
-              currentQuestion?.type === 'OXAns'
+              currentQuestion?.type === 'oxAns'
                 ? ['O', 'X']
                 : [
                     currentQuestion?.option1 || '',
@@ -215,17 +211,13 @@ function QuizPage() {
             }
             selectedOption={selected}
             isSubmitted={isSubmitted}
-            answerIndex={
-              resultArr[current]?.correctAnswer
-                ? parseInt(resultArr[current]!.correctAnswer, 10) - 1
-                : -1
-            }
+            answerIndex={resultArr[current]?.correctAnswer || ''}
             explanation={resultArr[current]?.comment || ''}
             onSelect={handleSelect}
             onSubmit={handleSubmit}
             onNext={handleNext}
             questionType={
-              currentQuestion?.type as 'choiceAns' | 'shortAns' | 'OXAns'
+              currentQuestion?.type as 'choiceAns' | 'shortAns' | 'oxAns'
             }
           />
         </div>

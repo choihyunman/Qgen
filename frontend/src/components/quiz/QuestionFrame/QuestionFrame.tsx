@@ -8,14 +8,14 @@ interface QuestionFrameProps {
   totalNumber: number;
   question: string;
   options: string[];
-  selectedOption: number | string | null;
+  selectedOption: string | null;
   isSubmitted: boolean;
-  answerIndex: number;
+  answerIndex: string;
   explanation: string;
-  onSelect: (value: number | string) => void;
+  onSelect: (value: string) => void;
   onSubmit: () => void;
   onNext: () => void;
-  questionType?: 'choiceAns' | 'shortAns' | 'OXAns';
+  questionType?: 'choiceAns' | 'shortAns' | 'oxAns';
 }
 
 function QuestionFrame({
@@ -38,10 +38,11 @@ function QuestionFrame({
   // 문제 유형 변환 함수
   const convertQuestionType = (
     type: string
-  ): 'choiceAns' | 'shortAns' | 'OXAns' => {
+  ): 'choiceAns' | 'shortAns' | 'oxAns' => {
     switch (type) {
       case 'TYPE_OX':
-        return 'OXAns';
+      case 'oxAns':
+        return 'oxAns';
       case 'TYPE_CHOICE':
         return 'choiceAns';
       case 'TYPE_SHORT':
@@ -82,29 +83,49 @@ function QuestionFrame({
     };
   }, [question]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        if (!isSubmitted && selectedOption) {
+          onSubmit();
+        } else if (isSubmitted) {
+          onNext();
+        }
+      }
+    };
+    const ref = frameRef.current;
+    if (ref) ref.addEventListener('keydown', handleKeyDown);
+    return () => {
+      if (ref) ref.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isSubmitted, selectedOption, onSubmit, onNext]);
+
   // OX 문제 렌더링
   const renderOXQuestion = () => {
     return (
       <div className='flex gap-4 justify-center mb-2'>
-        {['O', 'X'].map((option, index) => {
+        {['O', 'X'].map((option) => {
           let optionStyle = 'border-gray-200';
           let textStyle = '';
           if (isSubmitted) {
-            if (index === answerIndex) {
+            if (selectedOption === option && option === answerIndex) {
               optionStyle = 'border-green-500 bg-green-50';
               textStyle = 'font-bold text-green-700';
-            } else if (selectedOption === index) {
+            } else if (selectedOption === option) {
               optionStyle = 'border-red-400 bg-red-50';
               textStyle = 'font-bold text-red-500';
+            } else if (option === answerIndex) {
+              optionStyle = 'border-green-500 bg-green-50';
+              textStyle = 'font-bold text-green-700';
             }
-          } else if (selectedOption === index) {
+          } else if (selectedOption === option) {
             optionStyle = 'border-gray-400 bg-gray-100';
             textStyle = 'font-bold text-gray-700';
           }
           return (
             <div
-              key={index}
-              onClick={() => !isSubmitted && onSelect(index)}
+              key={option}
+              onClick={() => !isSubmitted && onSelect(option)}
               className={`w-[469px] h-[272px] border-2 rounded-[24px] cursor-pointer transition-colors flex items-center justify-center text-6xl font-bold ${optionStyle}`}
             >
               <span className={textStyle}>{option}</span>
@@ -123,21 +144,21 @@ function QuestionFrame({
           let optionStyle = 'border-gray-200';
           let textStyle = '';
           if (isSubmitted) {
-            if (index === answerIndex) {
+            if ((index + 1).toString() === answerIndex) {
               optionStyle = 'border-green-500 bg-green-50';
               textStyle = 'font-bold text-green-700';
-            } else if (selectedOption === index) {
+            } else if (selectedOption === (index + 1).toString()) {
               optionStyle = 'border-red-400 bg-red-50';
               textStyle = 'font-bold text-red-500';
             }
-          } else if (selectedOption === index) {
+          } else if (selectedOption === (index + 1).toString()) {
             optionStyle = 'border-gray-400 bg-gray-100';
             textStyle = 'font-bold text-gray-700';
           }
           return (
             <div
               key={index}
-              onClick={() => !isSubmitted && onSelect(index)}
+              onClick={() => !isSubmitted && onSelect((index + 1).toString())}
               className={`p-4 border-2 rounded-[24px] cursor-pointer transition-colors ${optionStyle}`}
             >
               <span className={textStyle}>
@@ -158,7 +179,7 @@ function QuestionFrame({
           type='text'
           className='w-full p-4 border-2 rounded-[24px] focus:outline-none focus:border-purple-500'
           placeholder='답을 입력하세요'
-          value={(selectedOption as string) || ''}
+          value={selectedOption || ''}
           disabled={isSubmitted}
           onChange={(e) => onSelect(e.target.value)}
         />
@@ -170,7 +191,7 @@ function QuestionFrame({
   const renderQuestion = () => {
     const convertedType = convertQuestionType(questionType || '');
     switch (convertedType) {
-      case 'OXAns':
+      case 'oxAns':
         return renderOXQuestion();
       case 'shortAns':
         return renderShortAnswer();
@@ -183,7 +204,8 @@ function QuestionFrame({
   return (
     <div
       ref={frameRef}
-      className='transition-opacity duration-300 opacity-100 w-full h-[537px] bg-white rounded-[24px] p-6 shadow-sm'
+      tabIndex={0}
+      className='transition-opacity duration-300 opacity-100 w-full h-[537px] bg-white rounded-[24px] p-6 shadow-sm overflow-y-auto'
     >
       <div>
         {/* 문제 번호 */}
@@ -224,7 +246,7 @@ function QuestionFrame({
         >
           <div className='font-semibold mb-2'>해설</div>
           <SimpleBar style={{ maxHeight: 180 }}>
-            <div className='bg-purple-50 rounded-lg text-gray-700 p-4'>
+            <div className='bg-purple-50 rounded-lg text-gray-700 p-4 max-h-[180px] overflow-y-auto'>
               {explanation}
             </div>
           </SimpleBar>
