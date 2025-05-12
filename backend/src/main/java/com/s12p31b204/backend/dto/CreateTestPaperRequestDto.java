@@ -16,10 +16,7 @@ public class CreateTestPaperRequestDto {
     private String title;
     private int choiceAns;
     private int shortAns;
-
-    @JsonProperty("OXAns")
-    private int OXAns;
-
+    private int oxAns;
     private int wordAns;
     private int quantity;
 }

@@ -14,5 +14,5 @@ public interface DocumentRepository extends JpaRepository<Document, Long>{
     @Query("SELECT d.workBook.user.userId FROM Document d")
     Long findUserIdByDocumentId(Long documentId);
 
-    List<Document> findByWorkBook_WorkBookId(Long workBookId);
+    List<Document> findAllByWorkBook_WorkBookId(Long workBookId);
 } 

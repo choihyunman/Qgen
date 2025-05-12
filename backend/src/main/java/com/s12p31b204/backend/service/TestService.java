@@ -43,7 +43,6 @@ public class TestService {
         for(Test t : tests) {
             testIds.add(t.getTestId());
         }
-        Collections.shuffle(testIds);
         return testIds;
     }
 

@@ -21,7 +21,7 @@ public class TestPaperResponseDto {
 
     private int choiceAns;
     private int shortAns;
-    private int OXAns;
+    private int oxAns;
     private int wordAns;
 
     private int quantity;
@@ -34,7 +34,7 @@ public class TestPaperResponseDto {
                 .title(testPaper.getTitle())
                 .choiceAns(testPaper.getChoiceAns())
                 .shortAns(testPaper.getShortAns())
-                .OXAns(testPaper.getOXAns())
+                .oxAns(testPaper.getOxAns())
                 .wordAns(testPaper.getWordAns())
                 .quantity(testPaper.getQuantity())
                 .createAt(testPaper.getCreateAt())
