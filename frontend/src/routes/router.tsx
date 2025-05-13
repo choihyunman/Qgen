@@ -38,17 +38,13 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: '/note/:workBookId',
+        path: '/note/:workBookId/:testPaperId',
         element: <Note />,
       },
       {
         path: '/login',
         element: <Login />,
       },
-      // {
-      //   path: '/note/:workBookId',
-      //   element: <Note />,
-      // },
     ],
   },
 ]);

@@ -16,9 +16,13 @@ function Test({
   explanation,
   incorrectCount,
   onNext,
+  onPrev,
   testHistoryList,
   answer,
-}: NoteProps & { testHistoryList: NoteTestHistory[]; answer: string }) {
+}: Omit<NoteProps, 'onSelect'> & {
+  testHistoryList: NoteTestHistory[];
+  answer: string;
+}) {
   const explanationRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -46,21 +50,30 @@ function Test({
   return (
     <div className='w-full h-full min-h-0 bg-white rounded-3xl p-6 shadow-sm'>
       <div>
-        <div className='flex justify-between'>
+        <div className='flex justify-between mb-4'>
           {/* 문제 번호 */}
-          <div className='mb-4 flex items-center gap-4'>
+          <div className='flex items-center gap-2'>
             <p className='text-base font-bold'>
               문제 {currentNumber}/{totalNumber}
             </p>
+            <div className='flex items-center gap-1 px-2 py-1'>
+              <p className='text-sm'>틀린횟수</p>
+              <div className='bg-rose-400 text-white text-sm rounded-lg px-2 py-1'>
+                {incorrectCount}회
+              </div>
+            </div>
             <Button
-              variant='small'
-              className='py-1 px-2 bg-rose-400 text-white hover:bg-rose-500'
+              variant='filled'
+              className='py-1 px-2 text-sm'
               onClick={() => setModalOpen(true)}
             >
-              {incorrectCount}회
+              제출이력
             </Button>
           </div>
-          <div className='flex justify-start'>
+          <div className='flex items-center gap-2'>
+            <Button onClick={onPrev} variant='small' className='my-1 text-xs'>
+              이전
+            </Button>
             <Button onClick={onNext} variant='small' className='my-1 text-xs'>
               다음
             </Button>
@@ -78,10 +91,10 @@ function Test({
             let textStyle = 'flex items-center';
             if (isSubmitted) {
               if (index === answerIndex) {
-                optionStyle = 'border-green-300 bg-green-100 py-3';
+                optionStyle = 'border-[#009d77]/20 bg-[#009d77]/10 py-3';
                 textStyle = 'font-bold';
-              } else if (selectedOption === index) {
-                optionStyle = 'border-rose-300 bg-rose-100 py-3';
+              } else if (index === selectedOption) {
+                optionStyle = 'border-[#ff4339]/20 bg-[#ff4339]/10 py-3';
                 textStyle = 'font-bold';
               }
             }
@@ -123,7 +136,7 @@ function Test({
               </button>
             </div>
             <div className='w-full flex flex-col gap-2 overflow-y-auto'>
-              <div className='grid grid-cols-3 gap-2 px-2 py-1 border-b text-sm font-semibold text-gray-600 rounded-t-lg'>
+              <div className='grid grid-cols-3 gap-2 px-2 py-1 border-b border-gray-700 text-sm font-semibold text-gray-700 rounded-t-lg'>
                 <div>제출일</div>
                 <div className='text-center'>내 답안</div>
                 <div className='text-center'>정오답</div>
@@ -136,19 +149,19 @@ function Test({
                 testHistoryList.map((history) => (
                   <div
                     key={history.testHistoryId}
-                    className={`grid grid-cols-3 gap-2 px-2 py-2 items-center border-b last:border-b-0 text-sm ${history.correct ? 'bg-green-50' : 'bg-rose-50'}`}
+                    className={`grid grid-cols-3 gap-2 px-2 py-2 items-center text-sm rounded-lg ${history.correct ? 'bg-green-50' : 'bg-rose-50'}`}
                   >
-                    <div className='truncate text-xs text-gray-400'>
+                    <div className='truncate text-xs text-gray-700'>
                       {formatDate(history.createAt)}
                     </div>
                     <div
-                      className={`text-center font-semibold ${history.correct ? 'text-green-700' : 'text-rose-600'}`}
+                      className={`text-center font-semibold ${history.correct ? 'text-[#009d77]/80' : 'text-[#ff4339]/80'}`}
                     >
                       {history.userAnswer}
                     </div>
                     <div className='text-center'>
                       <span
-                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${history.correct ? 'bg-green-200 text-green-800' : 'bg-rose-200 text-rose-800'}`}
+                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${history.correct ? 'bg-green-200 text-[#009d77]/80' : 'bg-rose-200 text-[#ff4339]/80'}`}
                       >
                         {history.correct ? '정답' : '오답'}
                       </span>

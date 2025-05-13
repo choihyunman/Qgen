@@ -10,11 +10,13 @@ export interface NoteProps {
   incorrectCount: number;
   onSelect: (index: number) => void;
   onNext: () => void;
+  onPrev: () => void;
 }
 
 export interface TestListProps {
   currentNumber: number;
   totalTests: number;
+  testDetails?: NoteTestDetail[];
   onTestClick: (testNumber: number) => void;
 }
 
@@ -46,6 +48,7 @@ export interface NoteTestHistory {
 export interface NoteTestDetail {
   testId: number;
   question: string;
+  // type 추가
   option1: string | null;
   option2: string | null;
   option3: string | null;
