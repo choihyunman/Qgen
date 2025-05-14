@@ -68,6 +68,12 @@ pipeline {
 
                         mkdir -p frontend
                         cp \$ENV_FILE .env
+
+                        mkdir -p ai
+                        cp \$ENV_FILE ai/.env
+
+                        mkdir -p backend
+                        cp \$ENV_FILE backend/.env
                     """
                 }
             }
