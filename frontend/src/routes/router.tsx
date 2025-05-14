@@ -42,17 +42,13 @@ export const router = createBrowserRouter([
         element: <QuizEnd />,
       },
       {
-        path: '/note/:workBookId',
+        path: '/note/:workBookId/:testPaperId',
         element: <Note />,
       },
       {
         path: '/login',
         element: <Login />,
       },
-      // {
-      //   path: '/note/:workBookId',
-      //   element: <Note />,
-      // },
     ],
   },
 ]);

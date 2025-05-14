@@ -11,8 +11,11 @@ import {
   getNoteTestDetail,
 } from '@/apis/note/note';
 import type { TestPaper, NoteTestDetail } from '@/types/note';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Note = () => {
+  const { workBookId, testPaperId } = useParams();
+  const navigate = useNavigate();
   const [currentNumber, setCurrentNumber] = useState(1);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -23,12 +26,13 @@ const Note = () => {
     useState<NoteTestDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [testDetails, setTestDetails] = useState<NoteTestDetail[]>([]);
 
   // 시험지 목록 불러오기
   useEffect(() => {
     const fetchTestPapers = async () => {
       try {
-        const res = await getNoteTestPapers(1);
+        const res = await getNoteTestPapers(Number(workBookId));
         setTestPapers(res.data);
       } catch (e) {
         setTestPapers([]);
@@ -37,6 +41,15 @@ const Note = () => {
     };
     fetchTestPapers();
   }, []);
+
+  // 시험지 목록 불러온 후, testPaperId에 맞는 시험지 자동 선택
+  useEffect(() => {
+    if (!testPapers.length || !testPaperId) return;
+    const idx = testPapers.findIndex(
+      (paper) => String(paper.testPaperId) === String(testPaperId)
+    );
+    if (idx !== -1) setActiveTestPaperIndex(idx);
+  }, [testPapers, testPaperId]);
 
   // 시험지 선택 시 문제 ID 리스트 불러오기
   useEffect(() => {
@@ -49,8 +62,14 @@ const Note = () => {
         );
         setTestIdList(ids);
         setCurrentNumber(1); // 시험지 바뀌면 1번 문제로 초기화
+        // Fetch all details in parallel
+        const details = await Promise.all(
+          ids.map((id) => getNoteTestDetail(id).then((res) => res.data))
+        );
+        setTestDetails(details);
       } catch (e) {
         setTestIdList([]);
+        setTestDetails([]);
         setError('문제 ID 리스트를 불러오지 못했습니다.');
       } finally {
         setLoading(false);
@@ -59,23 +78,11 @@ const Note = () => {
     fetchTestIdList();
   }, [testPapers, activeTestPaperIndex]);
 
-  // 문제 번호 변경 시 문제 상세 불러오기
+  // 문제 번호 변경 시 문제 상세 불러오기 (이제 캐시 사용)
   useEffect(() => {
-    if (testIdList.length === 0) return;
-    const fetchTestDetail = async () => {
-      setLoading(true);
-      try {
-        const detail = await getNoteTestDetail(testIdList[currentNumber - 1]);
-        setCurrentTestDetail(detail.data);
-      } catch (e) {
-        setCurrentTestDetail(null);
-        setError('문제 상세를 불러오지 못했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTestDetail();
-  }, [testIdList, currentNumber]);
+    if (testDetails.length === 0) return;
+    setCurrentTestDetail(testDetails[currentNumber - 1] || null);
+  }, [testDetails, currentNumber]);
 
   const handleOptionSelect = (index: number) => {
     setSelectedOption(index);
@@ -83,6 +90,12 @@ const Note = () => {
 
   const handleNext = () => {
     setCurrentNumber((prev) => Math.min(prev + 1, testIdList.length));
+    setSelectedOption(null);
+    setIsSubmitted(false);
+  };
+
+  const handlePrev = () => {
+    setCurrentNumber((prev) => Math.max(prev - 1, 1));
     setSelectedOption(null);
     setIsSubmitted(false);
   };
@@ -111,7 +124,10 @@ const Note = () => {
                 key={exam.testPaperId}
                 variant='filled'
                 className={`w-full py-3 px-6 rounded-2xl transition-colors${idx === activeTestPaperIndex ? '' : ' bg-white border-1 border-gray-200 text-gray-900 hover:bg-[#754AFF]/10 hover:border-[#754AFF]/80'}`}
-                onClick={() => setActiveTestPaperIndex(idx)}
+                onClick={() => {
+                  setActiveTestPaperIndex(idx);
+                  navigate(`/note/${workBookId}/${exam.testPaperId}`);
+                }}
               >
                 {exam.title}
               </Button>
@@ -127,6 +143,7 @@ const Note = () => {
             currentNumber={currentNumber}
             totalTests={totalTests}
             onTestClick={handleTestClick}
+            testDetails={testDetails}
           />
         </SimpleBar>
       </div>
@@ -149,9 +166,39 @@ const Note = () => {
               currentTestDetail.option3,
               currentTestDetail.option4,
             ].filter(Boolean) as string[];
-            const answerIndex = options.findIndex(
-              (opt) => opt === currentTestDetail.answer
-            );
+
+            // answer가 "1", "2" 등 숫자 string일 때와 보기 내용일 때 모두 대응
+            let answerIndex = -1;
+            if (
+              currentTestDetail.answer &&
+              /^\d+$/.test(currentTestDetail.answer.trim()) &&
+              Number(currentTestDetail.answer) >= 1 &&
+              Number(currentTestDetail.answer) <= options.length
+            ) {
+              answerIndex = Number(currentTestDetail.answer) - 1;
+            } else {
+              answerIndex = options.findIndex(
+                (opt) => opt === currentTestDetail.answer
+              );
+            }
+
+            const lastHistory = currentTestDetail.testHistoryList?.slice(-1)[0];
+            let selectedOption = -1;
+            if (lastHistory) {
+              if (
+                lastHistory.userAnswer &&
+                /^\d+$/.test(lastHistory.userAnswer.trim()) &&
+                Number(lastHistory.userAnswer) >= 1 &&
+                Number(lastHistory.userAnswer) <= options.length
+              ) {
+                selectedOption = Number(lastHistory.userAnswer) - 1;
+              } else {
+                selectedOption = options.findIndex(
+                  (opt) => opt === lastHistory.userAnswer
+                );
+              }
+            }
+            const isSubmitted = true;
             return (
               <Test
                 currentNumber={currentNumber}
@@ -163,8 +210,8 @@ const Note = () => {
                 answerIndex={answerIndex}
                 explanation={currentTestDetail.comment}
                 incorrectCount={currentTestDetail.incorrectCount}
-                onSelect={handleOptionSelect}
                 onNext={handleNext}
+                onPrev={handlePrev}
                 testHistoryList={currentTestDetail.testHistoryList}
                 answer={currentTestDetail.answer}
               />
