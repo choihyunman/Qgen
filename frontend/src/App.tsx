@@ -4,6 +4,7 @@ import Header from './components/layout/Header/Header';
 import Footer from './components/layout/Footer/Footer';
 import ArcBackground from './components/layout/Background/ArcBackground';
 import BlurBackground from './components/layout/Background/BlurBackground';
+import ScrollToTop from './components/Scroll/ScrollToTop';
 
 function App() {
   const arcPages = ['/quiz', '/incorrect'];
@@ -14,6 +15,7 @@ function App() {
 
   return (
     <div className='flex flex-col w-full'>
+      <ScrollToTop />
       <BackgroundComponent>
         <div className='flex flex-col max-w-[1400px] mx-auto flex-1 pb-4'>
           <Header />

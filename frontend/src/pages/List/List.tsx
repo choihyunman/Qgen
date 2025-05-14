@@ -223,8 +223,8 @@ export default function List() {
   };
 
   // 이력 확인 핸들러
-  const handleHistoryClick = (testPaperId: string | number) => {
-    navigate(`/note/${testPaperId}`);
+  const handleHistoryClick = (paper: TestPaper) => {
+    navigate(`/note/${numericWorkBookId}/${paper.testPaperId}`);
   };
 
   // 퀴즈 모드 시작 핸들러

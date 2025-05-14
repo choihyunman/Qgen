@@ -1,17 +1,22 @@
 import App from '@/App';
 import Generate from '@/pages/Generate/Generate';
 import List from '@/pages/List/List';
-import Incorrect from '@/pages/Incorrect/Incorrect';
+import Note from '@/pages/Note/Note';
 import { createBrowserRouter } from 'react-router-dom';
 import Quiz from '@/pages/Quiz/Quiz';
 import QuizEnd from '@/pages/Quiz/QuizEnd';
 import Login from '@/pages/Login/Login';
+import Landing from '@/pages/Landing/Landing';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
     children: [
+      {
+        index: true,
+        element: <Landing />,
+      },
       {
         path: '/generate/:workBookId',
         element: <Generate />,
@@ -33,17 +38,17 @@ export const router = createBrowserRouter([
         element: <List />,
       },
       {
-        path: '/incorrect',
-        element: <Incorrect />,
+        path: '/quiz-end',
+        element: <QuizEnd />,
+      },
+      {
+        path: '/note/:workBookId/:testPaperId',
+        element: <Note />,
       },
       {
         path: '/login',
         element: <Login />,
       },
-      // {
-      //   path: '/note/:workBookId',
-      //   element: <Note />,
-      // },
     ],
   },
 ]);

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import QuestionFrame from '../../components/quiz/QuestionFrame/QuestionFrame';
+import QuestionFrame from './QuestionFrame';
 import ExamSidebar from './ExamSidebar';
 import {
   getTestQuestion,
@@ -17,7 +17,7 @@ function QuizPage() {
   const numericTestPaperId = testPaperId ? Number(testPaperId) : null;
 
   const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showQuizEnd, setShowQuizEnd] = useState(false); // QuizEnd 표시 여부
 
@@ -26,7 +26,7 @@ function QuizPage() {
   const totalQuestions = problemIds.length;
 
   // 문제별 상태 배열
-  const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [isSubmittedArr, setIsSubmittedArr] = useState<boolean[]>([]);
   const [answerStatusArr, setAnswerStatusArr] = useState<AnswerStatus[]>([]);
   const [resultArr, setResultArr] = useState<(TestResult | null)[]>([]);
@@ -76,10 +76,11 @@ function QuizPage() {
     const fetchQuestion = async () => {
       if (!problemIds.length) return;
       try {
-        // setIsLoading(true);                      [다음] 버튼 클릭 시, 리랜더링되는 코드
         const response = await getTestQuestion(problemIds[current]);
         setCurrentQuestion(response.data);
         setIsLoading(false);
+        // 문제 로드 후 스크롤 최상단으로
+        window.scrollTo(0, 0);
       } catch (error) {
         setCurrentQuestion(null);
       } finally {
@@ -89,15 +90,15 @@ function QuizPage() {
     fetchQuestion();
   }, [current, problemIds]);
 
-  const handleSelect = (idx: number) => {
-    if (!isSubmitted) setSelected(idx);
+  const handleSelect = (value: string) => {
+    if (!isSubmitted) {
+      setSelected(value);
+    }
   };
 
   const handleSubmit = async () => {
     if (selected !== null && currentQuestion) {
       try {
-        // debugger;
-        // setIsLoading(true);              [제출] 버튼 클릭 시, 리랜더링 되는 코드
         setIsSubmitted(true);
         setIsSubmittedArr((prev) => {
           const updated = [...prev];
@@ -112,13 +113,16 @@ function QuizPage() {
 
         const res = await submitAnswer({
           testId: currentQuestion.testId,
-          userAnswer: (selected + 1).toString(),
+          userAnswer: selected,
         });
 
         if (res.success && res.data) {
           setResultArr((prev) => {
             const updated = [...prev];
             updated[current] = res.data;
+            if (res.data) {
+              console.log('정답 correctAnswer:', res.data.correctAnswer);
+            }
             return updated;
           });
 
@@ -181,40 +185,45 @@ function QuizPage() {
   }
 
   return (
-    <div className='w-full'>
-      <div className='flex gap-[40px] items-start'>
-        <div className='w-[1315px]'>
-          <div className='flex items-center gap-2 mb-4'>
-            <img
-              src='/src/assets/images/chart.png'
-              alt='시험 아이콘'
-              className='w-11 h-11'
-            />
-            <h1 className='text-2xl font-bold'>정보처리기사 필기 1회</h1>
-          </div>
-          <QuestionFrame
-            currentNumber={current + 1}
-            totalNumber={totalQuestions}
-            question={currentQuestion?.question || ''}
-            options={[
-              currentQuestion?.option1 || '',
-              currentQuestion?.option2 || '',
-              currentQuestion?.option3 || '',
-              currentQuestion?.option4 || '',
-            ]}
-            selectedOption={selected}
-            isSubmitted={isSubmitted}
-            answerIndex={
-              resultArr[current]?.correctAnswer
-                ? parseInt(resultArr[current]!.correctAnswer, 10) - 1
-                : -1
-            }
-            explanation={resultArr[current]?.comment || ''}
-            onSelect={handleSelect}
-            onSubmit={handleSubmit}
-            onNext={handleNext}
+    <div className='flex gap-4 h-full'>
+      {/* QuestionFrame (4/5) */}
+      <div style={{ flex: 4 }} className='flex flex-col h-full min-h-0'>
+        {/* <div className='flex items-center mb-4'>
+          <img
+            src='/src/assets/images/chart.png'
+            alt='시험 아이콘'
+            className='w-11 h-11'
           />
-        </div>
+          <h1 className='text-2xl font-bold'>정보처리기사 필기 1회</h1>
+        </div> */}
+        <QuestionFrame
+          currentNumber={current + 1}
+          totalNumber={totalQuestions}
+          question={currentQuestion?.question || ''}
+          options={
+            currentQuestion?.type === 'oxAns'
+              ? ['O', 'X']
+              : [
+                  currentQuestion?.option1 || '',
+                  currentQuestion?.option2 || '',
+                  currentQuestion?.option3 || '',
+                  currentQuestion?.option4 || '',
+                ]
+          }
+          selectedOption={selected}
+          isSubmitted={isSubmitted}
+          answerIndex={resultArr[current]?.correctAnswer || ''}
+          explanation={resultArr[current]?.comment || ''}
+          onSelect={handleSelect}
+          onSubmit={handleSubmit}
+          onNext={handleNext}
+          questionType={
+            currentQuestion?.type as 'choiceAns' | 'shortAns' | 'oxAns'
+          }
+        />
+      </div>
+      {/* ExamSidebar (1/5) */}
+      <div style={{ flex: 1 }} className='flex flex-col h-full min-h-0'>
         <ExamSidebar
           currentNumber={current + 1}
           totalQuestions={totalQuestions}
