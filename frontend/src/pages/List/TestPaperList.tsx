@@ -22,6 +22,7 @@ interface TestPaperListProps {
   onPdfClick?: (testPaperId: string | number) => void;
   onSolveClick?: (testPaperId: string | number) => void;
   onHistoryClick?: (testPaperId: string | number) => void;
+  onNoteClick?: (testPaperId: string | number) => void;
   onDelete?: (testPaperId: string | number) => void;
 }
 
