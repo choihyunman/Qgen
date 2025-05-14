@@ -35,14 +35,24 @@ public class NoteService {
         List<FindNoteTestPaperResponseDto> response = new ArrayList<>();
         for(TestPaperResponseDto testPaper : testPapers) {
             response.add(FindNoteTestPaperResponseDto.builder()
-                    .testPaperId(testPaper.getTestPaperId())
-                    .title(testPaper.getTitle())
-                    .quantity(testPaper.getQuantity())
-                    .build());
+            .testPaperId(testPaper.getTestPaperId())
+            .title(testPaper.getTitle())
+            .quantity(testPaper.getQuantity())
+            .build());
         }
         return response;
     }
-
+    
+    @Transactional(readOnly = true)
+    public List<Long> getTestIdsByTestPaperId(Long testPaperId) {
+        List<Test> tests = testRepository.findAllByTestPaper_TestPaperId(testPaperId);
+        List<Long> testIds = new ArrayList<>();
+        for (Test test : tests) {
+            testIds.add(test.getTestId());
+        }
+        return testIds;
+    }
+    
     @Transactional(readOnly = true)
     public FindNoteTestResponseDto getNoteTest(Long testId) {
         Test test = testRepository.findById(testId).orElseThrow(() -> new RuntimeException("문제를 찾을 수 없습니다."));
@@ -71,4 +81,5 @@ public class NoteService {
         test.removeMemo();
         testRepository.save(test);
     }
+
 }

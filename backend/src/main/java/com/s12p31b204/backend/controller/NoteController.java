@@ -107,5 +107,23 @@ public class NoteController {
         }
     }
 
-    
+    @GetMapping("/list/{testPaperId}")
+    public ResponseEntity<ResponseData<List<Long>>> getNoteTestIdsByTestPaperId(
+            @PathVariable Long testPaperId,
+            @AuthenticationPrincipal CustomOAuth2User user,
+            HttpServletRequest request) {
+        try {
+//            if (authorizationService.checkTestPaperAuthorization(user.getUserId(), testPaperId)) {
+//                List<Long> testIds = noteService.getTestIdsByTestPaperId(testPaperId);
+//                return ApiResponse.success(testIds, "문제 ID 리스트 조회 성공", HttpStatus.OK, request.getRequestURI());
+//            } else {
+//                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+//            }
+            List<Long> testIds = noteService.getTestIdsByTestPaperId(testPaperId);
+            return ApiResponse.success(testIds, "문제 ID 리스트 조회 성공", HttpStatus.OK, request.getRequestURI());
+        } catch (Exception e) {
+            return ApiResponse.failure(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
+        }
+    }
+
 }
