@@ -2,6 +2,7 @@
 
 import Button from '@/components/common/Button/Button';
 import IconBox from '@/components/common/IconBox/IconBox';
+import { MouseEvent } from 'react';
 
 interface TestPaper {
   workbookId: string | number;
@@ -23,9 +24,21 @@ interface TestPaper {
 interface TestPaperListProps {
   papers: TestPaper[];
   onAddClick?: () => void;
+  onPdfClick?: (testPaperId: string | number) => void;
+  onSolveClick?: (testPaperId: string | number) => void;
+  onHistoryClick?: (testPaperId: string | number) => void;
+  onNoteClick?: (testPaperId: string | number) => void;
+  onDelete?: (testPaperId: string | number) => void;
 }
 
-function TestPaperList({ papers, onAddClick }: TestPaperListProps) {
+function TestPaperList({
+  papers,
+  onAddClick,
+  onPdfClick,
+  onSolveClick,
+  onHistoryClick,
+  onDelete,
+}: TestPaperListProps) {
   // 문제 유형 텍스트 생성 함수
   const getTypeLabels = (paper: TestPaper) => {
     const types: string[] = [];
@@ -46,6 +59,7 @@ function TestPaperList({ papers, onAddClick }: TestPaperListProps) {
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
         {papers.map((paper) => (
           <div
+            onClick={() => onHistoryClick?.(paper.testPaperId)}
             key={paper.testPaperId}
             className={`relative bg-white rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100 ${paper.isCreating ? 'pointer-events-none' : ''}`}
           >

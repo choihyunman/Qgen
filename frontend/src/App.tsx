@@ -7,11 +7,21 @@ import BlurBackground from './components/layout/Background/BlurBackground';
 import ScrollToTop from './components/Scroll/ScrollToTop';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { twMerge } from 'tailwind-merge';
 
 function App() {
-  const arcPages = ['/quiz', '/incorrect'];
+  const arcPages = ['/quiz', '/note'];
   const location = useLocation();
   const isArcPage = arcPages.some((path) => location.pathname.startsWith(path));
+
+  // mainPageType: 'default' | 'fixed' 두 가지 타입만 사용
+  let mainPageType: 'default' | 'fixed' = 'default';
+  if (
+    location.pathname.startsWith('/quiz') ||
+    location.pathname.startsWith('/note')
+  ) {
+    mainPageType = 'fixed';
+  }
 
   const BackgroundComponent = isArcPage ? ArcBackground : BlurBackground;
 
@@ -19,13 +29,24 @@ function App() {
     <div className='flex flex-col w-full'>
       <ScrollToTop />
       <BackgroundComponent>
-        <div className='flex flex-col max-w-[1400px] mx-auto flex-1 pb-4'>
+        <div
+          className={twMerge(
+            'flex flex-col flex-1 pb-4',
+            mainPageType === 'fixed' ? 'h-screen' : ''
+          )}
+        >
           <Header />
-          <main className='flex-1 py-10 min-h-0'>
+
+          <main
+            className={twMerge(
+              'flex-1 py-4 min-h-0',
+              mainPageType === 'fixed' ? 'h-full' : ''
+            )}
+          >
             <Outlet />
           </main>
-          <Footer />
         </div>
+        <Footer />
       </BackgroundComponent>
       <ToastContainer
         position='top-center'
