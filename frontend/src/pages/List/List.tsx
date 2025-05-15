@@ -28,6 +28,7 @@ export default function List() {
   const { workBookId } = useParams(); // URL 파라미터에서 workBookId 추출
   const numericWorkBookId = workBookId ? Number(workBookId) : null;
 
+  console.log('Hi');
   // 커스텀 훅 사용
   const {
     workbooks,
