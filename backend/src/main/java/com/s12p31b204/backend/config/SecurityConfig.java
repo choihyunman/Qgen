@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.s12p31b204.backend.filter.JWTFilter;
+import com.s12p31b204.backend.oauth2.CustomAuthenticationEntryPoint;
 import com.s12p31b204.backend.oauth2.CustomSuccessHandler;
 import com.s12p31b204.backend.service.CustomOAuth2UserService;
 import com.s12p31b204.backend.util.JWTUtil;
@@ -44,7 +45,7 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173/", "https://q-generator.com/"));
+                        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://q-generator.com"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
@@ -56,13 +57,15 @@ public class SecurityConfig {
                 })) // CORS 설정
                 .formLogin((auth) -> auth.disable()) // Form 로그인 방식 비활성화
                 .httpBasic((auth) -> auth.disable()) // HTTP Basic 인증 방식 비활성화
+                .exceptionHandling((exception) -> exception
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService)) // OAuth2 기반 로그인 설정
                         .successHandler(customSuccessHandler)) // 성공 핸들러 설정(JWT 발급)
                 .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class) // JWT 필터 적용
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/oauth2/**", "/api/userinfo").permitAll() // 메인, 로그인 페이지 대상 요청 인증 없이 허용
+                        .requestMatchers("/", "/login", "/oauth2/**", "/api/userinfo", "/actuator/**").permitAll() // 메인, 로그인 페이지 대상 요청 인증 없이 허용
                         .anyRequest().authenticated()) // 그 외 요청 인증 필요
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
