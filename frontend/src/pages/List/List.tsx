@@ -18,6 +18,9 @@ import PdfModal from '@/components/testpaper/PdfModal';
 import QuizStartModal from '@/components/testpaper/QuizStartModal';
 import WorkBookTitleModal from '@/components/workbook/WorkBookTitleModal/WorkBookTitleModal';
 import GradientTitle from '@/components/common/GradientTitle/GradientTitle';
+import { useTestPaperCreationStore } from '@/stores/testPaperCreationStore';
+import { connectSSE } from '@/utils/sse';
+import { useAuth } from '@/hooks/useAuth';
 
 const userId = 1;
 
@@ -82,10 +85,18 @@ export default function List() {
   const [editTargetId, setEditTargetId] = useState<number | null>(null);
   const [editTargetTitle, setEditTargetTitle] = useState('');
 
+  const creatingTestPaperIds = useTestPaperCreationStore(
+    (s) => s.creatingTestPaperIds
+  );
+
+  const { isLoggedIn, userId } = useAuth();
+
   // 문제집 목록 불러오기
   useEffect(() => {
-    fetchWorkBooks(userId);
-  }, []);
+    if (userId !== null) {
+      fetchWorkBooks(userId);
+    }
+  }, [userId]);
   // console.log('3. 문제집 목록 불러오기 :::: ', workbooks);
 
   // 선택된 워크북 정보
@@ -263,7 +274,7 @@ export default function List() {
 
   // 문제집 삭제
   const handleWorkBookDelete = async (workBookId: string) => {
-    if (!workBookId) return;
+    if (!workBookId || userId === null) return;
     if (!window.confirm('이 문제집을 삭제하시겠습니까?')) return;
     try {
       await removeWorkBook(Number(workBookId));
@@ -308,6 +319,7 @@ export default function List() {
 
   // 모달에서 submit 시
   const handleTitleModalSubmit = async (title: string) => {
+    if (userId === null) return;
     if (titleModalMode === 'add') {
       setIsTitleModalOpen(false);
       await createNewWorkBook(userId, title);
@@ -318,6 +330,20 @@ export default function List() {
     }
     setIsTitleModalOpen(false);
   };
+
+  useEffect(() => {
+    if (isLoggedIn && userId) {
+      console.log(
+        '🔥 List 페이지 마운트, SSE 연결 시도! (userId:',
+        userId,
+        ')'
+      );
+      const eventSource = connectSSE(userId);
+      return () => {
+        eventSource?.close();
+      };
+    }
+  }, [isLoggedIn, userId]);
 
   return (
     <div className='pb-8 flex flex-col gap-8'>
@@ -461,14 +487,28 @@ export default function List() {
                     <div className='text-red-500'>{papersError.message}</div>
                   ) : (
                     <TestPaperList
-                      papers={testPapers.map((paper) => ({
-                        ...paper,
-                        onPdfClick: () => handlePdfClick(paper),
-                        onSolveClick: () => handleQuizStart(paper),
-                        onDelete: (testPaperId) =>
-                          handleDeleteTestPaper(testPaperId),
-                        onHistoryClick: () => handleHistoryClick(paper),
-                      }))}
+                      papers={testPapers.map((paper) => {
+                        const isCreating = creatingTestPaperIds.includes(
+                          paper.testPaperId
+                        );
+                        console.log(
+                          '카드:',
+                          paper.testPaperId,
+                          'isCreating:',
+                          isCreating,
+                          '전체:',
+                          creatingTestPaperIds
+                        );
+                        return {
+                          ...paper,
+                          isCreating,
+                          onPdfClick: () => handlePdfClick(paper),
+                          onSolveClick: () => handleQuizStart(paper),
+                          onDelete: (testPaperId) =>
+                            handleDeleteTestPaper(testPaperId),
+                          onHistoryClick: () => handleHistoryClick(paper),
+                        };
+                      })}
                       onAddClick={() =>
                         navigate(`/generate/${numericWorkBookId}`)
                       }
