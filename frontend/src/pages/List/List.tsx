@@ -20,12 +20,13 @@ import WorkBookTitleModal from '@/components/workbook/WorkBookTitleModal/WorkBoo
 import GradientTitle from '@/components/common/GradientTitle/GradientTitle';
 import { useTestPaperCreationStore } from '@/stores/testPaperCreationStore';
 import { connectSSE } from '@/utils/sse';
-import { useAuth } from '@/hooks/useAuth';
+import { useUserStore } from '@/stores/userStore';
 
 export default function List() {
   const { workBookId } = useParams(); // URL 파라미터에서 workBookId 추출
   const numericWorkBookId = workBookId ? Number(workBookId) : null;
-  const { isLoggedIn, userId } = useAuth();
+  const userId = useUserStore((s) => s.userId);
+  const isLoggedIn = userId !== null;
   const navigate = useNavigate();
 
   // 커스텀 훅 사용
