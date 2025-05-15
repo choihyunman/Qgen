@@ -58,6 +58,17 @@ dependencies {
     // Jsoup
     implementation 'org.jsoup:jsoup:1.17.2'
 
+
+    // Thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
+    implementation 'org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE'
+
+    // OpenHTMLtoPDF (HTML → PDF 변환)
+    implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10'
+    implementation 'com.openhtmltopdf:openhtmltopdf-slf4j:1.0.10'
+
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -65,7 +76,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.646'
-    implementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
