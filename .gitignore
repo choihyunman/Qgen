@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.env
+ai/yes
 
 # Gradle
 backend/.gradle/
@@ -44,3 +45,13 @@ jenkins_home/
 *.log
 
 **/application.properties
+
+#그 외
+Miniconda3-latest-Linux-x86_64.sh
+*.faiss
+*.index
+info.txt
+ipe-we-sub1.txt
+questions.txt
+info.json
+questions.json
