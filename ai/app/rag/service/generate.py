@@ -22,11 +22,11 @@ def call_openai(client: OpenAI, prompt: str, context: str, total: int, q_type: s
 
     if q_type == "choice":
         user_message = (
-            f"반드시 JSON 문자열로만 응답해야 돼. 아래 내용과 유사하지만 다르게 정보처리기사 **객관식** 문제를 {total}개 만들어줘:\n\n{context}"
+            f"반드시 JSON 문자열로만 응답해야 돼. 아래 내용과 유사한 변형 문제를 만들어줘:\n\n{context}"
         )
     elif q_type == "oxshort":
         user_message = (
-            f"반드시 JSON 문자열로만 응답해야 돼. 아래 내용을 바탕으로 **OX 또는 주관식** 문제를 총 {total}개 만들어줘:\n\n{context}"
+            f"반드시 JSON 문자열로만 응답해야 돼. 다음 내용을 근거로 문제를 만들어줘:\n\n{context}"
         )
     else:
         raise ValueError(f"알 수 없는 문제 유형: {q_type}")
