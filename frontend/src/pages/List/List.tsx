@@ -21,6 +21,8 @@ import GradientTitle from '@/components/common/GradientTitle/GradientTitle';
 import { useTestPaperCreationStore } from '@/stores/testPaperCreationStore';
 import { connectSSE } from '@/utils/sse';
 import { useUserStore } from '@/stores/userStore';
+import { convertToPdf } from '@/apis/testpaper/testpaper';
+import { downloadPdf } from '@/utils/file';
 
 export default function List() {
   const { workBookId } = useParams(); // URL 파라미터에서 workBookId 추출
@@ -336,6 +338,22 @@ export default function List() {
     }
   }, [isLoggedIn, userId]);
 
+  // PDF 다운로드 핸들러 추가
+  const handlePdfDownload = async (option: '문제만' | '정답/해설포함') => {
+    if (!selectedPaper) return;
+
+    try {
+      const blob = await convertToPdf(
+        selectedPaper.testPaperId,
+        option === '정답/해설포함'
+      );
+      downloadPdf(blob, `${selectedPaper.title}.pdf`);
+      setIsPdfModalOpen(false);
+    } catch (error) {
+      alert('PDF 변환에 실패했습니다.');
+    }
+  };
+
   return (
     <div className='pb-8 flex flex-col gap-0'>
       {/* 인사 및 알림 카드 */}
@@ -570,10 +588,7 @@ export default function List() {
       <PdfModal
         isOpen={isPdfModalOpen}
         onClose={() => setIsPdfModalOpen(false)}
-        onDownload={(option) => {
-          console.log(option);
-          setIsPdfModalOpen(false);
-        }}
+        onDownload={handlePdfDownload}
       />
 
       <QuizStartModal
