@@ -13,7 +13,7 @@ export const connectSSE = (userId: number) => {
   console.log('🔥 EventSource 생성됨!');
 
   // 시험지 생성 관련 이벤트
-  eventSource.addEventListener('testpaper', (event: MessageEvent) => {
+  eventSource.addEventListener('testpaper created', (event: MessageEvent) => {
     console.log('SSE 이벤트 수신:', event);
     try {
       const data = JSON.parse(event.data);
