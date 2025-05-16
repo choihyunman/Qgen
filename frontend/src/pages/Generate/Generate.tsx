@@ -23,7 +23,7 @@ const Generate = () => {
     { name: 'OX퀴즈', count: 0 },
   ]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>([]);
+  const [selectedDocumentIds, setSelectedDocumentIds] = useState<number[]>([]);
 
   const totalProblems = useMemo(() => {
     return testTypes.reduce((sum, type) => sum + type.count, 0);
@@ -161,8 +161,8 @@ const Generate = () => {
       choiceAns: testTypes.find((t) => t.name === '객관식')?.count || 0,
       shortAns: testTypes.find((t) => t.name === '주관식')?.count || 0,
       oxAns: testTypes.find((t) => t.name === 'OX퀴즈')?.count || 0,
-      // wordAns: testTypes.find((t) => t.name === '서술형')?.count || 0,
       quantity: totalProblems,
+      documentIds: selectedDocumentIds.map(Number),
     };
 
     try {
@@ -179,10 +179,10 @@ const Generate = () => {
   // 문서 선택 핸들러
   const handleDocumentSelect = (id: string) => {
     setSelectedDocumentIds((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((docId) => docId !== id);
+      if (prev.includes(Number(id))) {
+        return prev.filter((docId) => docId !== Number(id));
       } else {
-        return [...prev, id];
+        return [...prev, Number(id)];
       }
     });
   };
@@ -251,7 +251,7 @@ const Generate = () => {
               onDelete={handleFileDelete}
               className='md:col-span-1'
               showAddButton={false}
-              selectedIds={selectedDocumentIds}
+              selectedIds={selectedDocumentIds.map(String)}
               onSelect={handleDocumentSelect}
             />
             <ProblemTypeSelector

@@ -9,8 +9,8 @@ export interface GenerateRequest {
   choiceAns: number;
   shortAns: number;
   oxAns: number;
-  // wordAns: number;
   quantity: number;
+  documentIds: number[];
 }
 
 export interface GenerateResponse {
@@ -18,11 +18,10 @@ export interface GenerateResponse {
   status: number;
   message: string;
   data: {
-    Id: number;
+    testPaperId: number;
     title: string;
     choiceAns: number;
     shortAns: number;
-    wordAns: number;
     quantity: number;
     createAt: string;
     oxAns: number;

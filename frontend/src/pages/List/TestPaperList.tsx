@@ -3,6 +3,7 @@
 import Button from '@/components/common/Button/Button';
 import IconBox from '@/components/common/IconBox/IconBox';
 import { MouseEvent } from 'react';
+import CreatingLoader from '@/components/Animation/CreatingLoader';
 
 interface TestPaper {
   workbookId: string | number;
@@ -28,6 +29,7 @@ interface TestPaperListProps {
   onSolveClick?: (testPaperId: string | number) => void;
   onHistoryClick?: (testPaperId: string | number) => void;
   onDelete?: (testPaperId: string | number) => void;
+  workBookId: number;
 }
 
 function TestPaperList({
@@ -37,6 +39,7 @@ function TestPaperList({
   onSolveClick,
   onHistoryClick,
   onDelete,
+  workBookId,
 }: TestPaperListProps) {
   // 문제 유형 텍스트 생성 함수
   const getTypeLabels = (paper: TestPaper) => {
@@ -58,9 +61,8 @@ function TestPaperList({
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
         {papers.map((paper) => (
           <div
-            onClick={() => onHistoryClick?.(paper.testPaperId)}
             key={paper.testPaperId}
-            className={`relative bg-white rounded-2xl p-4 flex flex-col gap-0 shadow border border-gray-100 ${paper.isCreating ? 'pointer-events-none' : ''}`}
+            className={`relative bg-white rounded-2xl p-4 flex flex-col gap-0 shadow border border-gray-100 transition-all duration-200 ${paper.isCreating ? 'pointer-events-none opacity-50' : ''}`}
           >
             {/* 블러 처리 */}
             <div className={paper.isCreating ? 'blur-sm' : ''}>
@@ -72,6 +74,7 @@ function TestPaperList({
                   <Button
                     onClick={(e: MouseEvent) => {
                       e.stopPropagation();
+                      if (paper.isCreating) return;
                       onHistoryClick?.(paper.testPaperId);
                     }}
                     variant='filled'
@@ -100,6 +103,7 @@ function TestPaperList({
                   className='flex items-end p-1'
                   onClick={(e: MouseEvent) => {
                     e.stopPropagation();
+                    if (paper.isCreating) return;
                     if (window.confirm('이 시험지를 삭제하시겠습니까?')) {
                       onDelete?.(paper.testPaperId);
                     }
@@ -115,6 +119,7 @@ function TestPaperList({
                   <Button
                     onClick={(e: MouseEvent) => {
                       e.stopPropagation();
+                      if (paper.isCreating) return;
                       onPdfClick?.(paper.testPaperId);
                     }}
                     variant='outlined'
@@ -126,6 +131,7 @@ function TestPaperList({
                   <Button
                     onClick={(e: MouseEvent) => {
                       e.stopPropagation();
+                      if (paper.isCreating) return;
                       onSolveClick?.(paper.testPaperId);
                     }}
                     variant='filled'
@@ -141,9 +147,7 @@ function TestPaperList({
             {paper.isCreating && (
               <div className='absolute inset-0 flex items-center justify-center z-10'>
                 <div className='bg-white/60 w-full h-full absolute top-0 left-0 rounded-2xl' />
-                <span className='z-10 text-purple-600 font-bold'>
-                  생성 중...
-                </span>
+                <CreatingLoader />
               </div>
             )}
           </div>
@@ -155,7 +159,7 @@ function TestPaperList({
           className='flex-1 border-1 border border-gray-200 rounded-2xl 
                      flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors'
         >
-          <div className='flex flex-col items-center justify-center gap-2 min-h-[100px]'>
+          <div className='flex flex-col items-center justify-center gap-2 min-h-[132px]'>
             <div className='rounded-full flex items-center justify-center'>
               <span className='text-2xl text-gray-400'>+</span>
             </div>
