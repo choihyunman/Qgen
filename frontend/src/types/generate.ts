@@ -9,8 +9,8 @@ export interface GenerateRequest {
   choiceAns: number;
   shortAns: number;
   oxAns: number;
-  // wordAns: number;
   quantity: number;
+  documentIds: number[];
 }
 
 export interface GenerateResponse {

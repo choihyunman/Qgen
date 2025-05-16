@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import uploadGlassIcon from '@/assets/icons/upload-glass.png';
 import linkGlassIcon from '@/assets/icons/link-glass.png';
 import textGlassIcon from '@/assets/icons/text-glass.png';
-import LinkUploadModal from './LinkUploadModal';
 import TextUploadModal from './TextUploadModal';
 import { useDocuments } from '@/hooks/useDocument';
 import GlobalSpinner from '@/components/common/GlobalSpinner/GlobalSpinner';
 import { useParams } from 'react-router-dom';
+import LinkUploadModal from './LinkUploadModal';
 
 interface FileUploaderProps {
   onFileUpload: (file: File) => void;
@@ -194,13 +194,14 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       </div>
 
       {/* Link Upload Modal */}
-      {showLinkModal && (
+      {showLinkModal && numericWorkBookId !== undefined && (
         <LinkUploadModal
           onClose={() => setShowLinkModal(false)}
           onSubmit={(url: string) => {
             if (onLinkSubmit) onLinkSubmit(url);
             setShowLinkModal(false);
           }}
+          workBookId={numericWorkBookId}
         />
       )}
       {/* Text Upload Modal */}
