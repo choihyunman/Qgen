@@ -61,6 +61,11 @@ function TestPaperList({
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
         {papers.map((paper) => (
           <div
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+              if (paper.isCreating) return;
+              onHistoryClick?.(paper.testPaperId);
+            }}
             key={paper.testPaperId}
             className={`relative bg-white rounded-2xl p-4 flex flex-col gap-0 shadow border border-gray-100 transition-all duration-200 ${paper.isCreating ? 'pointer-events-none opacity-50' : ''}`}
           >
