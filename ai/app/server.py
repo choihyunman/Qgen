@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI
 from app.problem_generator.chatgpt import router as chatgpt_router
 from app.health_check.health_check import router as health_router
