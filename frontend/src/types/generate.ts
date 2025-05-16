@@ -22,7 +22,6 @@ export interface GenerateResponse {
     title: string;
     choiceAns: number;
     shortAns: number;
-    wordAns: number;
     quantity: number;
     createAt: string;
     oxAns: number;
