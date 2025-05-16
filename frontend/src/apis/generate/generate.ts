@@ -7,7 +7,7 @@ export const generate = async (
 ): Promise<GenerateResponse> => {
   try {
     const response = await axiosInstance.post<GenerateResponse>(
-      '/api/testpaper',
+      '/api/testpaper/generate',
       request
     );
     return response.data;
@@ -21,7 +21,7 @@ export const generate = async (
       message: '시험지 생성 중 오류 발생',
       data: null,
       timestamp: new Date().toISOString(),
-      path: '/api/',
+      path: '/api/testpaper/generate',
     };
   }
 };
