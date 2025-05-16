@@ -9,7 +9,8 @@ export const connectSSE = (userId: number) => {
     eventSource.close();
   }
 
-  eventSource = new EventSource(`http://localhost:8080/api/sse/${userId}`);
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  eventSource = new EventSource(`${baseUrl}/api/sse/${userId}`);
   console.log('🔥 EventSource 생성됨!');
 
   // 시험지 생성 관련 이벤트
