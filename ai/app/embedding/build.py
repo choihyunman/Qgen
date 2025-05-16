@@ -44,9 +44,9 @@ text_splitter = RecursiveCharacterTextSplitter(
 
 # 텍스트 정제 (--- 구분자 보존)
 def clean_text(text: str) -> str:
-    # 대부분의 특수문자 포함 허용: 수학기호, 기호문자, 괄호 등도 유지
-    # 단, 일부 필요 없는 제어 문자나 이모지 등만 제거
-    text = re.sub(r"[^\w\s\n\-~!@#$%^&*()_+`=\[\]{};:'\",.<>/?\\|❶-❿Ⓐ-Ⓩ①-⑳㉠-㉿]", "", text)
+    # 이모지나 제어문자 제거, 허용 문자만 남기되 ❶-❿ 등은 제거
+    text = re.sub(r"[❶-❿Ⓐ-Ⓩ①-⑳㉠-㉿]", "", text)  # ← 이 범위 제거
+    text = re.sub(r"[^\w\s\n\-~!@#$%^&*()_+`=\[\]{};:'\",.<>/?\\|]", "", text)
     return re.sub(r"[ \t]+", " ", text).strip()
 
 @router.post("/build")
