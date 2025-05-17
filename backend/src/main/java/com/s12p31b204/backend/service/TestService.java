@@ -33,7 +33,7 @@ public class TestService {
                 () -> new NoSuchElementException("문제를 찾을 수 없습니다."));
         List<String> explanations = null;
         if(test.getExplanations() != null) {
-            String[] split = test.getExplanations().split(",");
+            String[] split = test.getExplanations().split("///");
             explanations = new ArrayList<>();
             for(String ex : split) {
                 explanations.add(ex);
@@ -73,7 +73,7 @@ public class TestService {
 
         List<String> explanations = null;
         if(test.getExplanations() != null) {
-            String[] split = test.getExplanations().split(",");
+            String[] split = test.getExplanations().split("///");
             explanations = new ArrayList<>();
             for(String ex : split) {
                 explanations.add(ex);

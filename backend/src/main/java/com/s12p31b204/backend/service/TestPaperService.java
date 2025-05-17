@@ -90,7 +90,7 @@ public class TestPaperService {
                             String ex = data.getExplanation().get(i);
                             explanation += ex;
                             if(i != data.getExplanation().size() - 1) {
-                                explanation += ",";
+                                explanation += "///";
                             }
                         }
                     }
@@ -233,7 +233,7 @@ public class TestPaperService {
                             String ex = data.getExplanation().get(i);
                             explanation += ex;
                             if(i != data.getExplanation().size() - 1) {
-                                explanation += ",";
+                                explanation += "///";
                             }
                         }
                     }
