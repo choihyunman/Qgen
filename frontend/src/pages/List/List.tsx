@@ -517,7 +517,7 @@ export default function List() {
                     <div className='text-red-500'>{papersError.message}</div>
                   ) : (
                     <TestPaperList
-                      workBookId={numericWorkBookId}
+                      workBookId={numericWorkBookId || 0}
                       papers={testPapers.map((paper) => {
                         const isCreating = creatingTestPaperIds.includes(
                           paper.testPaperId
