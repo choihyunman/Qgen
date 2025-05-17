@@ -7,7 +7,7 @@ export const generate = async (
 ): Promise<GenerateResponse> => {
   try {
     const response = await axiosInstance.post<GenerateResponse>(
-      '/api/testpaper',
+      '/api/testpaper/generate',
       request
     );
     return response.data;
