@@ -21,7 +21,7 @@ export const generate = async (
       message: '시험지 생성 중 오류 발생',
       data: null,
       timestamp: new Date().toISOString(),
-      path: '/api/',
+      path: '/api/testpaper/generate',
     };
   }
 };

@@ -29,6 +29,7 @@ interface TestPaperListProps {
   onSolveClick?: (testPaperId: string | number) => void;
   onHistoryClick?: (testPaperId: string | number) => void;
   onDelete?: (testPaperId: string | number) => void;
+  workBookId: number;
 }
 
 function TestPaperList({
@@ -38,6 +39,7 @@ function TestPaperList({
   onSolveClick,
   onHistoryClick,
   onDelete,
+  workBookId,
 }: TestPaperListProps) {
   // 문제 유형 텍스트 생성 함수
   const getTypeLabels = (paper: TestPaper) => {
@@ -59,6 +61,11 @@ function TestPaperList({
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
         {papers.map((paper) => (
           <div
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+              if (paper.isCreating) return;
+              onHistoryClick?.(paper.testPaperId);
+            }}
             key={paper.testPaperId}
             className={`relative bg-white rounded-2xl p-4 flex flex-col gap-0 shadow border border-gray-100 transition-all duration-200 ${paper.isCreating ? 'pointer-events-none opacity-50' : ''}`}
           >
@@ -157,7 +164,7 @@ function TestPaperList({
           className='flex-1 border-1 border border-gray-200 rounded-2xl 
                      flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors'
         >
-          <div className='flex flex-col items-center justify-center gap-2 min-h-[100px]'>
+          <div className='flex flex-col items-center justify-center gap-2 min-h-[132px]'>
             <div className='rounded-full flex items-center justify-center'>
               <span className='text-2xl text-gray-400'>+</span>
             </div>
