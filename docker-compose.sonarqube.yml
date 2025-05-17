@@ -16,3 +16,7 @@ services:
 volumes:
   sonarqube_data:
   sonarqube_logs:
+
+networks:
+  app_network:
+    external: true
