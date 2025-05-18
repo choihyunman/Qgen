@@ -14,6 +14,7 @@ function Test({
   isSubmitted,
   answerIndex,
   explanation,
+  explanationBox,
   incorrectCount,
   onNext,
   onPrev,
@@ -24,6 +25,7 @@ function Test({
   testHistoryList: NoteTestHistory[];
   answer: string;
   type: 'choiceAns' | 'shortAns' | 'oxAns';
+  explanationBox?: string[];
 }) {
   const explanationRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,7 +53,7 @@ function Test({
 
   // OX 문제 렌더링
   const renderOXQuestion = () => (
-    <div className='flex gap-4 justify-center h-full'>
+    <div className='flex gap-4 justify-center mb-2'>
       {['O', 'X'].map((option, idx) => {
         let optionStyle = 'border-gray-200 py-20';
         let textStyle = '';
@@ -75,7 +77,7 @@ function Test({
         return (
           <div
             key={option}
-            className={`w-full border-1 rounded-3xl cursor-pointer transition-colors flex items-center justify-center text-8xl font-base ${optionStyle}`}
+            className={`w-full h-[259px] border-1 rounded-3xl cursor-pointer transition-colors flex items-center justify-center text-8xl font-base ${optionStyle}`}
           >
             <span className={textStyle}>{option}</span>
           </div>
@@ -166,31 +168,43 @@ function Test({
                 오답 {incorrectCount}회
               </div>
             </div>
-            <Button
-              variant='filled'
-              className='py-1 px-2 text-sm'
-              onClick={() => setModalOpen(true)}
-            >
-              제출이력
-            </Button>
           </div>
-          <div className='flex items-center gap-2'>
-            <Button onClick={onPrev} variant='small' className='my-1 text-xs'>
-              이전
-            </Button>
-            <Button onClick={onNext} variant='small' className='my-1 text-xs'>
-              다음
-            </Button>
+          <Button
+            variant='filled'
+            className='py-1 px-2 text-sm'
+            onClick={() => setModalOpen(true)}
+          >
+            제출이력
+          </Button>
+        </div>
+        <div className='flex items-center gap-2'>
+          <Button onClick={onPrev} variant='small' className='my-1 text-xs'>
+            이전
+          </Button>
+          <Button onClick={onNext} variant='small' className='my-1 text-xs'>
+            다음
+          </Button>
+        </div>
+      </div>
+      {/* 문제 내용 */}
+      <div className='mb-4'>
+        <h2 className='text-lg font-bold'>{test}</h2>
+        {explanationBox && explanationBox.length > 0 && (
+          <div className='border border-gray-200 p-4 rounded-lg bg-white mt-4 mb-0'>
+            {explanationBox.map((exp, idx) => (
+              <div key={idx} className='flex items-center'>
+                <span className='mr-2 text-gray-700'>•</span>
+                {exp}
+              </div>
+            ))}
           </div>
-        </div>
-        {/* 문제 내용 */}
-        <div className='mb-6'>
-          <h2 className='text-lg font-bold'>{test}</h2>
-        </div>
+        )}
+      </div>
+      <div className='flex-1 min-h-0 flex flex-col'>
         {/* 문제 유형에 따른 렌더링 */}
         {renderQuestion()}
         {/* 해설 */}
-        <SimpleBar className='my-4 h-full min-h-0 bg-[#CAC7FC]/20 rounded-3xl max-h-52 flex flex-col p-6'>
+        <SimpleBar className='mt-2 mb-0 bg-[#CAC7FC]/20 rounded-3xl max-h-52 flex flex-col p-6 w-full overflow-auto'>
           <div className='font-semibold mb-2 text-gray-700'>해설</div>
           <div className='text-gray-700'>{explanation}</div>
         </SimpleBar>
