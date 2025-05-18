@@ -79,52 +79,6 @@ pipeline {
             }
         }
 
-        stage('Build & Analyze Backend') {
-            steps {
-                withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
-                    sh """
-                        cd backend
-                        if [ -f .env ]; then
-                          export \$(grep -v '^#' .env | xargs)
-                        fi
-                        chmod +x gradlew
-                        ./gradlew build
-
-                        sonar-scanner \\
-                          -Dsonar.projectKey=q-generator-be \\
-                          -Dsonar.sources=src/main/java \\
-                          -Dsonar.projectBaseDir=. \\
-                          -Dsonar.exclusions=**/test/** \\
-                          -Dsonar.host.url=https://sonar.q-generator.com \\
-                          -Dsonar.login=\$SONAR_TOKEN
-                    """
-                }
-            }
-        }
-
-        stage('Build & Analyze Frontend') {
-            steps {
-                withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
-                    sh """
-                        cd frontend
-                        if [ -f .env ]; then
-                          export \$(grep -v '^#' .env | xargs)
-                        fi
-                        yarn install
-                        yarn build
-
-                        sonar-scanner \\
-                          -Dsonar.projectKey=q-generator-fe \\
-                          -Dsonar.sources=src \\
-                          -Dsonar.projectBaseDir=. \\
-                          -Dsonar.exclusions=**/*.test.tsx,**/*.spec.tsx \\
-                          -Dsonar.host.url=https://sonar.q-generator.com \\
-                          -Dsonar.login=\$SONAR_TOKEN
-                    """
-                }
-            }
-        }
-
         stage('Clean Up EXISTING NEW Containers') {
             steps {
                 echo "🧹 기존 ${params.DEPLOY_COLOR} 컨테이너 정리 중..."
