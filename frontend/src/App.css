@@ -9,8 +9,8 @@
 .simplebar-track.simplebar-vertical {
   width: 8px !important;
   background: transparent !important;
-  top: 25px !important;
-  bottom: 25px !important;
+  top: 11px !important;
+  bottom: 11px !important;
 }
 .simplebar-scrollbar.simplebar-visible:before {
   opacity: 1 !important;
@@ -37,4 +37,25 @@
 }
 .hide-spin {
   -moz-appearance: textfield;
+}
+
+/* List 돌고래, 말풍선 애니메이션 */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-dolphin {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-speech-bubble {
+  animation: fadeInUp 0.8s ease-out 0.5s forwards;
+  opacity: 0;
 }

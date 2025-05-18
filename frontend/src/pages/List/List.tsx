@@ -17,12 +17,13 @@ import { TestPaper } from '@/types/testpaper';
 import PdfModal from '@/components/testpaper/PdfModal';
 import QuizStartModal from '@/components/testpaper/QuizStartModal';
 import WorkBookTitleModal from '@/components/workbook/WorkBookTitleModal/WorkBookTitleModal';
-import GradientTitle from '@/components/common/GradientTitle/GradientTitle';
 import { useTestPaperCreationStore } from '@/stores/testPaperCreationStore';
 import { connectSSE } from '@/utils/sse';
 import { useUserStore } from '@/stores/userStore';
 import { convertToPdf } from '@/apis/testpaper/testpaper';
 import { downloadPdf } from '@/utils/file';
+import Swal from 'sweetalert2';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function List() {
   const { workBookId } = useParams(); // URL 파라미터에서 workBookId 추출
@@ -30,6 +31,7 @@ export default function List() {
   const userId = useUserStore((s) => s.userId);
   const isLoggedIn = userId !== null;
   const navigate = useNavigate();
+  const { userName } = useAuth(); // useAuth 훅 사용
 
   // 커스텀 훅 사용
   const {
@@ -201,7 +203,12 @@ export default function List() {
         }))
       );
     } catch (error) {
-      alert('파일 삭제에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: '파일 삭제에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -256,7 +263,12 @@ export default function List() {
   // 시험지 생성 페이지 이동 핸들러
   const handleGenerateClick = () => {
     if (!numericWorkBookId) {
-      alert('문제집을 선택해주세요.');
+      Swal.fire({
+        icon: 'warning',
+        title: '문제집을 선택해주세요.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
       return;
     }
     navigate(`/generate/${numericWorkBookId}`);
@@ -271,7 +283,12 @@ export default function List() {
         await getTestPapers(numericWorkBookId);
       }
     } catch (error) {
-      alert('시험지 삭제에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: '시험지 삭제에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -287,7 +304,12 @@ export default function List() {
       await fetchWorkBooks();
       setMiniModalOpen(false);
     } catch (error) {
-      alert('문제집 삭제에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: '문제집 삭제에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -350,7 +372,12 @@ export default function List() {
       downloadPdf(blob, `${selectedPaper.title}.pdf`);
       setIsPdfModalOpen(false);
     } catch (error) {
-      alert('PDF 변환에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: 'PDF 변환에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -362,21 +389,21 @@ export default function List() {
         after='목록'
         className='text-4xl mb-6'
       ></GradientTitle> */}
-      <div className='flex gap-0'>
-        <div className='w-26 h-26 mt-6 ml-6'>
+      <div className='flex gap-0 py-6'>
+        <div className='w-26 h-26 mt-6 ml-6 animate-dolphin'>
           <img src='/images/dolpin-with-tablet.png' alt='돌고래 사진' />
         </div>
-        <div className='flex flex-col items-start gap-1 justify-center bg-white rounded-2xl shadow p-4 px-8 max-w-[600px] ml-[1%] relative cursor-default'>
+        <div className='flex flex-col h-[100px] items-start justify-center bg-white rounded-2xl shadow px-6 max-w-[600px] ml-[1%] relative cursor-default animate-speech-bubble'>
           <span className='text-2xl font-semibold '>
             안녕하세요!{' '}
             <strong className='bg-gradient-to-r from-[#6D6DFF] to-[#B16DFF] text-transparent bg-clip-text p-1'>
-              User
+              {userName || 'User'}
             </strong>
             님
           </span>
           <span className='text-2xl font-semibold'>
             오늘도{' '}
-            <strong className='bg-gradient-to-r from-[#6D6DFF] to-[#B16DFF] text-transparent bg-clip-text p-1'>
+            <strong className='bg-gradient-to-r from-[#6D6DFF] to-[#B16DFF] text-transparent bg-clip-text '>
               Q-gen
             </strong>{' '}
             에서 효율적인 공부를 시작해볼까요!
@@ -407,7 +434,7 @@ export default function List() {
       {/* 문제집 & 자료 업로드 */}
       <section className='flex gap-8'>
         {/* 문제집 리스트 */}
-        <div className='flex-1 flex flex-col gap-0'>
+        <div className='flex-1 flex flex-col gap-0 '>
           {/* 제목 파트 */}
           <div className='flex justify-between pt-4 pb-3 items-center'>
             <div className='flex items-center gap-2 h-[40px]'>
@@ -564,7 +591,7 @@ export default function List() {
               <aside className='flex flex-2 shrink-0'>
                 <UploadedList
                   files={files}
-                  maxFiles={10}
+                  maxFiles={30}
                   onDelete={handleDelete}
                   onClick={() => setIsUploadModalOpen(true)}
                 />
