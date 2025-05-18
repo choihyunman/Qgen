@@ -23,6 +23,7 @@ import { connectSSE } from '@/utils/sse';
 import { useUserStore } from '@/stores/userStore';
 import { convertToPdf } from '@/apis/testpaper/testpaper';
 import { downloadPdf } from '@/utils/file';
+import Swal from 'sweetalert2';
 
 export default function List() {
   const { workBookId } = useParams(); // URL 파라미터에서 workBookId 추출
@@ -201,7 +202,12 @@ export default function List() {
         }))
       );
     } catch (error) {
-      alert('파일 삭제에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: '파일 삭제에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -256,7 +262,12 @@ export default function List() {
   // 시험지 생성 페이지 이동 핸들러
   const handleGenerateClick = () => {
     if (!numericWorkBookId) {
-      alert('문제집을 선택해주세요.');
+      Swal.fire({
+        icon: 'warning',
+        title: '문제집을 선택해주세요.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
       return;
     }
     navigate(`/generate/${numericWorkBookId}`);
@@ -271,7 +282,12 @@ export default function List() {
         await getTestPapers(numericWorkBookId);
       }
     } catch (error) {
-      alert('시험지 삭제에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: '시험지 삭제에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -287,7 +303,12 @@ export default function List() {
       await fetchWorkBooks();
       setMiniModalOpen(false);
     } catch (error) {
-      alert('문제집 삭제에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: '문제집 삭제에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -350,7 +371,12 @@ export default function List() {
       downloadPdf(blob, `${selectedPaper.title}.pdf`);
       setIsPdfModalOpen(false);
     } catch (error) {
-      alert('PDF 변환에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: 'PDF 변환에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -564,7 +590,7 @@ export default function List() {
               <aside className='flex flex-2 shrink-0'>
                 <UploadedList
                   files={files}
-                  maxFiles={10}
+                  maxFiles={30}
                   onDelete={handleDelete}
                   onClick={() => setIsUploadModalOpen(true)}
                 />

@@ -162,9 +162,8 @@ function Test({
               문제 {currentNumber}/{totalNumber}
             </p>
             <div className='flex items-center gap-1 px-2 py-1'>
-              <p className='text-sm'>틀린횟수</p>
               <div className='bg-rose-400 text-white text-sm rounded-lg px-2 py-1'>
-                {incorrectCount}회
+                오답 {incorrectCount}회
               </div>
             </div>
             <Button
