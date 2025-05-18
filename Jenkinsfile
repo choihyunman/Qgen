@@ -64,7 +64,12 @@ pipeline {
                     sh """
                         mkdir -p backend/src/main/resources
                         cp \$APP_YML backend/src/main/resources/application.yml
+
                         cp \$ENV_FILE backend/.env
+                        cp \$ENV_FILE frontend/.env
+                        cp \$ENV_FILE ai/.env
+
+                        cp \$ENV_FILE .env
                     """
                 }
             }
