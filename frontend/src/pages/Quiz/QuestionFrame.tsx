@@ -218,22 +218,24 @@ function QuestionFrame({
   // 정답 표시 렌더링 (shortAns만)
   const renderAnswer = () => {
     const convertedType = convertQuestionType(questionType || '');
-    if (
-      !isSubmitted ||
-      convertedType !== 'shortAns' ||
-      isCorrect === undefined ||
-      isCorrect === null
-    )
-      return null;
+    const shouldShow =
+      convertedType === 'shortAns' &&
+      isCorrect !== undefined &&
+      isCorrect !== null &&
+      answerIndex &&
+      explanation;
     let bg = 'bg-[#009d77]/10 border-[#009d77]/20 text-[#009d77]';
     let border = 'border';
     let text = '정답';
     if (isCorrect === false) {
       bg = 'bg-[#ff4339]/10 border-[#ff4339]/20 text-[#ff4339]';
-      text = '오답';
+      text = '정답';
     }
     return (
-      <div className={`mt-2 ${bg} ${border} rounded-xl p-4 text-sm`}>
+      <div
+        className={`mt-2 ${bg} ${border} rounded-xl p-4 text-sm transition-all duration-200`}
+        style={{ display: shouldShow ? undefined : 'none' }}
+      >
         {text}: <span className='font-bold'>{answerIndex}</span>
       </div>
     );
