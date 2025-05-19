@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import logo from '@/assets/images/logo.png';
 import googleLogo from '@/assets/images/Google.png';
 
 const Login = () => {
@@ -23,7 +24,7 @@ const Login = () => {
         </p>
         {/* 구글 로그인 버튼 */}
         <button
-          className='flex items-center justify-center w-full gap-3 py-3 px-4 rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-base focus:outline-none focus:ring-2 focus:ring-[#754AFF] cursor-pointer'
+          className='flex items-center justify-center w-full gap-3 py-3.5 px-4 rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-base focus:outline-none cursor-pointer mt-4'
           onClick={() => {
             window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`;
           }}
@@ -31,16 +32,6 @@ const Login = () => {
           <img src={googleLogo} alt='Google' className='w-6 h-6' />
           <span>구글 계정으로 로그인</span>
         </button>
-        {/* 부가 안내 */}
-        <div className='w-full text-center mt-2'>
-          <span className='text-sm text-gray-400'>아직 회원이 아니신가요?</span>
-          <button
-            className='ml-2 text-[#754AFF] text-sm font-semibold hover:underline cursor-pointer'
-            onClick={() => navigate('/signup')}
-          >
-            회원가입
-          </button>
-        </div>
       </div>
     </div>
   );

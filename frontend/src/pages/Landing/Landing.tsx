@@ -4,6 +4,7 @@ import FeatureSection from '@/components/Landing/FeatureSection';
 import QuizPreviewSection from '@/components/Landing/QuizPreviewSection';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import ScrollToTopButton from '@/components/Scroll/ScrollToTopButton';
 
 export default function Landing() {
   useEffect(() => {
@@ -16,11 +17,12 @@ export default function Landing() {
         <HeroSection />
       </div>
       <div data-aos='fade-up' data-aos-delay='100' className='mb-12'>
-        <FeatureSection />
-      </div>
-      <div data-aos='fade-up' data-aos-delay='200'>
         <QuizPreviewSection />
       </div>
+      <div data-aos='fade-up' data-aos-delay='200'>
+        <FeatureSection />
+      </div>
+      <ScrollToTopButton />
     </div>
   );
 }

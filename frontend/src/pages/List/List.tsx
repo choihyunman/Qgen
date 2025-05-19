@@ -22,6 +22,7 @@ import { connectSSE } from '@/utils/sse';
 import { useUserStore } from '@/stores/userStore';
 import { convertToPdf } from '@/apis/testpaper/testpaper';
 import { downloadPdf } from '@/utils/file';
+import Swal from 'sweetalert2';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function List() {
@@ -202,7 +203,12 @@ export default function List() {
         }))
       );
     } catch (error) {
-      alert('파일 삭제에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: '파일 삭제에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -257,7 +263,12 @@ export default function List() {
   // 시험지 생성 페이지 이동 핸들러
   const handleGenerateClick = () => {
     if (!numericWorkBookId) {
-      alert('문제집을 선택해주세요.');
+      Swal.fire({
+        icon: 'warning',
+        title: '문제집을 선택해주세요.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
       return;
     }
     navigate(`/generate/${numericWorkBookId}`);
@@ -272,7 +283,12 @@ export default function List() {
         await getTestPapers(numericWorkBookId);
       }
     } catch (error) {
-      alert('시험지 삭제에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: '시험지 삭제에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -288,7 +304,12 @@ export default function List() {
       await fetchWorkBooks();
       setMiniModalOpen(false);
     } catch (error) {
-      alert('문제집 삭제에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: '문제집 삭제에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -351,7 +372,12 @@ export default function List() {
       downloadPdf(blob, `${selectedPaper.title}.pdf`);
       setIsPdfModalOpen(false);
     } catch (error) {
-      alert('PDF 변환에 실패했습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: 'PDF 변환에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -488,6 +514,12 @@ export default function List() {
                     variant='outlined'
                     className=''
                     onClick={() => handleHistoryClick(numericWorkBookId)}
+                    disabled={testPapers.length === 0}
+                    title={
+                      testPapers.length === 0
+                        ? '생성된 시험지가 없을 때는 문제 노트를 사용할 수 없습니다.'
+                        : ''
+                    }
                   >
                     문제 노트
                   </Button>
@@ -504,68 +536,66 @@ export default function List() {
           </div>
 
           <div className='flex gap-5'>
-            <div className='flex-4'>
-              {/* 로딩/에러 처리 */}
-              {isLoading && <div>로딩 중...</div>}
-              {error && <div className='text-red-500'>{error.message}</div>}
-              {/* 조건부 렌더링 */}
-              {!isLoading &&
-                !error &&
-                (numericWorkBookId ? (
-                  papersLoading ? (
-                    <div>시험지 목록 불러오는 중...</div>
-                  ) : papersError ? (
-                    <div className='text-red-500'>{papersError.message}</div>
-                  ) : (
-                    <TestPaperList
-                      workBookId={numericWorkBookId || 0}
-                      papers={testPapers.map((paper) => {
-                        const isCreating = creatingTestPaperIds.includes(
-                          paper.testPaperId
-                        );
-                        console.log(
-                          '시험지ID:',
-                          paper.testPaperId,
-                          'isCreating:',
-                          isCreating,
-                          '현재 생성중:',
-                          creatingTestPaperIds
-                        );
-                        return {
-                          ...paper,
-                          isCreating,
-                        };
-                      })}
-                      onAddClick={() =>
-                        navigate(`/generate/${numericWorkBookId}`)
-                      }
-                      onPdfClick={handlePdfClick}
-                      onSolveClick={handleQuizStart}
-                      onHistoryClick={handleHistoryClick}
-                      onDelete={handleDeleteTestPaper}
-                    />
-                  )
-                ) : (
-                  <WorkBookList
-                    workbooks={workbooks}
-                    onWorkBookClick={(id) => handleWorkBookClick(Number(id))}
-                    onAddClick={handleOpenAddModal}
-                    onWorkBookDelete={handleWorkBookDelete}
-                    onWorkBookEdit={(id) => {
-                      const target = Array.isArray(workbooks)
-                        ? workbooks.find((wb) => String(wb.workBookId) === id)
-                        : undefined;
-                      handleOpenEditModal(id, target?.title ?? '');
-                    }}
-                  />
-                ))}
+            <div className='flex-4 relative'>
+              {/* 기존 리스트는 항상 렌더링 */}
+              {numericWorkBookId ? (
+                <TestPaperList
+                  workBookId={numericWorkBookId || 0}
+                  papers={testPapers.map((paper) => {
+                    const isCreating = creatingTestPaperIds.includes(
+                      paper.testPaperId
+                    );
+                    return {
+                      ...paper,
+                      isCreating,
+                    };
+                  })}
+                  onAddClick={() => navigate(`/generate/${numericWorkBookId}`)}
+                  onPdfClick={handlePdfClick}
+                  onSolveClick={handleQuizStart}
+                  onHistoryClick={handleHistoryClick}
+                  onDelete={handleDeleteTestPaper}
+                />
+              ) : (
+                <WorkBookList
+                  workbooks={workbooks}
+                  onWorkBookClick={(id) => handleWorkBookClick(Number(id))}
+                  onAddClick={handleOpenAddModal}
+                  onWorkBookDelete={handleWorkBookDelete}
+                  onWorkBookEdit={(id) => {
+                    const target = Array.isArray(workbooks)
+                      ? workbooks.find((wb) => String(wb.workBookId) === id)
+                      : undefined;
+                    handleOpenEditModal(id, target?.title ?? '');
+                  }}
+                />
+              )}
+
+              {/* 로딩/에러 오버레이 */}
+              {(isLoading || papersLoading || error || papersError) && (
+                <div className='absolute inset-0 bg-white/60 flex flex-col items-center justify-center z-10'>
+                  {(isLoading || papersLoading) && (
+                    <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mb-4'></div>
+                  )}
+                  {error && (
+                    <div className='text-red-500 text-lg mb-2'>
+                      {error.message}
+                    </div>
+                  )}
+                  {papersError && (
+                    <div className='text-red-500 text-lg'>
+                      {papersError.message}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             {/* 자료 업로드 - selectedWorkbook이 있을 때만 표시 */}
             {numericWorkBookId && (
               <aside className='flex flex-2 shrink-0'>
                 <UploadedList
                   files={files}
-                  maxFiles={10}
+                  maxFiles={30}
                   onDelete={handleDelete}
                   onClick={() => setIsUploadModalOpen(true)}
                 />
