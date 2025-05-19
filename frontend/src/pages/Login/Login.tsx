@@ -8,10 +8,16 @@ const Login = () => {
     <div className='h-full flex flex-col justify-center items-center mt-24 mb-24'>
       <div className='w-full max-w-sm mx-auto rounded-3xl shadow-sm bg-white p-8 flex flex-col items-center gap-6'>
         {/* 로고/타이틀 */}
-        <img src={googleLogo} alt='Google Logo' className='w-12 h-12 mb-2' />
-        <h1 className='text-2xl font-bold text-gray-900 mb-0.5 text-center'>
-          로그인
-        </h1>
+        <div className='flex flex-col items-center gap-4'>
+          <img
+            src='/images/logo-lg.png'
+            alt='Q-gen'
+            className='h-[54px] mb-6  '
+          />
+          <h1 className='text-2xl font-bold text-gray-800 mb-0.5 text-center sr-only'>
+            로그인
+          </h1>
+        </div>
         <p className='text-gray-500 text-center mb-4 text-base'>
           구글 계정으로 간편하게 로그인하세요.
         </p>
