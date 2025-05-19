@@ -33,7 +33,8 @@ function App() {
   let mainPageType: 'default' | 'fixed' = 'default';
   if (
     location.pathname.startsWith('/quiz') ||
-    location.pathname.startsWith('/note')
+    location.pathname.startsWith('/note') ||
+    location.pathname.startsWith('/login')
   ) {
     mainPageType = 'fixed';
   }
