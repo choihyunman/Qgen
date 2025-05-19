@@ -51,10 +51,17 @@ function TestPaperList({
     return types.join(', ');
   };
 
-  // 날짜만 추출하는 함수 (YYYY-MM-DD)
-  const getDateOnly = (dateStr: string) => {
+  // 날짜와 시간을 추출하는 함수 (YYYY-MM-DD HH:mm)
+  const getDateTime = (dateStr: string) => {
     if (!dateStr) return '';
-    return dateStr.slice(0, 10);
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
   return (
@@ -99,7 +106,8 @@ function TestPaperList({
               </div>
               <div className='text-[12px] text-gray-400 flex justify-between align-end mb-4'>
                 <div>
-                  생성일 {getDateOnly(paper.createAt)} · 문제수 {paper.quantity}
+                  생성된 시간 {getDateTime(paper.createAt)} · 문제수{' '}
+                  {paper.quantity}
                   <br />
                   문제유형: {getTypeLabels(paper)}
                 </div>
