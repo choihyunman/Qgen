@@ -63,9 +63,13 @@ public class TestPaperService {
         List<String> s3Urls = new ArrayList<>();
         for(Long documentId : generateTestPaperRequestDto.getDocumentIds()) {
             Document document = documentRepository.findById(documentId).orElseThrow(() -> {
-                throw new NoSuchElementException("해당 자료를 찾을 수 없습니다. " + documentId);
+                throw new NoSuchElementException("해당 자료를 찾을 수 없습니다. : " + documentId);
             });
             s3Urls.add(document.getDocumentURL());
+        }
+
+        if(s3Urls.isEmpty()) {
+            throw new IllegalArgumentException("자료가 준비되지 않았습니다. : " + testPaper.getTitle());
         }
 
         List<Test> tests = Collections.synchronizedList(new ArrayList<>());
