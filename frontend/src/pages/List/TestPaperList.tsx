@@ -58,14 +58,14 @@ function TestPaperList({
   };
 
   return (
-    <div className='bg-white h-full rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100 min-h-[40vh] overflow-y-auto'>
+    <div className='bg-white flex gap-8 min-h-[calc(100dvh-340px)] rounded-2xl p-4 flex flex-col gap-2 shadow border border-gray-100 min-h-[40vh] overflow-y-auto'>
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
         {papers.map((paper) => (
           <div
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
               if (paper.isCreating) return;
-              onHistoryClick?.(paper.testPaperId);
+              onSolveClick?.(paper.testPaperId);
             }}
             key={paper.testPaperId}
             className={`relative cursor-pointer bg-white rounded-2xl px-6 py-5 flex flex-col gap-0 shadow border border-gray-100 transition-all duration-200 ${paper.isCreating ? 'pointer-events-none opacity-50' : ''}`}
@@ -87,7 +87,7 @@ function TestPaperList({
                     className='px-0 py-1 text-xs bg-none border-none text-gray-400'
                     disabled={paper.isCreating}
                   >
-                    <span className='text-gray-600'>문제 노트</span>
+                    <span className='text-gray-600'>문제 풀기</span>
                     <IconBox
                       className='opacity-[0.5]'
                       name='chevronDown'
@@ -146,13 +146,13 @@ function TestPaperList({
                     onClick={(e: MouseEvent) => {
                       e.stopPropagation();
                       if (paper.isCreating) return;
-                      onSolveClick?.(paper.testPaperId);
+                      onHistoryClick?.(paper.testPaperId);
                     }}
                     variant='filled'
                     className='px-3 py-1 text-xs'
                     disabled={paper.isCreating}
                   >
-                    문제 풀기
+                    문제 노트
                   </Button>
                 </div>
               </div>

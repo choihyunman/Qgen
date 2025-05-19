@@ -147,18 +147,28 @@ export default function List() {
   };
 
   // 파일 추가 함수
-  const handleFileUpload = (file: File) => {
-    if (!numericWorkBookId) return; // workBookId가 없으면 early return
-    setFiles((prev) => [
-      ...prev,
-      {
-        id: `${Date.now()}`, // 고유 id 생성
-        title: file.name,
-        type: file.type || 'FILE',
-      },
-    ]);
-    uploadDocument(file, numericWorkBookId);
-    setIsUploadModalOpen(false);
+  const handleFileUpload = async (file: File) => {
+    if (!numericWorkBookId) return;
+    try {
+      await uploadDocument(file, numericWorkBookId);
+      // 업로드 후 서버에서 최신 파일 목록을 받아와서 상태 갱신
+      const docs = await getDocuments(numericWorkBookId);
+      setFiles(
+        docs.map((doc) => ({
+          id: String(doc.documentId),
+          title: doc.documentName,
+          type: doc.documentType,
+        }))
+      );
+      setIsUploadModalOpen(false);
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: '파일 업로드에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    }
   };
 
   // 링크 추가 함수 (DocumentInfo 기반)
@@ -391,8 +401,8 @@ export default function List() {
         <div className='w-26 h-26 mt-6 ml-6 animate-dolphin'>
           <img src='/images/dolpin-with-tablet.png' alt='돌고래 사진' />
         </div>
-        <div className='flex flex-col h-[100px] items-start justify-center bg-white rounded-2xl shadow px-6 max-w-[600px] ml-[1%] relative cursor-default animate-speech-bubble'>
-          <span className='text-2xl font-semibold '>
+        <div className='flex flex-col h-[100px] items-start justify-center bg-white rounded-2xl shadow px-6 min-w-[540px] ml-[1%] relative cursor-default animate-speech-bubble'>
+          <span className='text-2xl font-semibold'>
             안녕하세요!{' '}
             <strong className='bg-gradient-to-r from-[#6D6DFF] to-[#B16DFF] text-transparent bg-clip-text p-1'>
               {userName || 'User'}
@@ -432,7 +442,7 @@ export default function List() {
       {/* 문제집 & 자료 업로드 */}
       <section className='flex gap-8'>
         {/* 문제집 리스트 */}
-        <div className='flex-1 flex flex-col gap-0 '>
+        <div className='flex-1 flex flex-col gap-0 h-full'>
           {/* 제목 파트 */}
           <div className='flex justify-between pt-4 pb-3 items-center'>
             <div className='flex items-center gap-2 h-[40px]'>
@@ -590,12 +600,13 @@ export default function List() {
             </div>
             {/* 자료 업로드 - selectedWorkbook이 있을 때만 표시 */}
             {numericWorkBookId && (
-              <aside className='flex flex-2 shrink-0'>
+              <aside className='flex flex-2 shrink-0 h-full'>
                 <UploadedList
                   files={files}
                   maxFiles={30}
                   onDelete={handleDelete}
                   onClick={() => setIsUploadModalOpen(true)}
+                  className='h-full'
                 />
                 <UploadModal
                   isOpen={isUploadModalOpen}
