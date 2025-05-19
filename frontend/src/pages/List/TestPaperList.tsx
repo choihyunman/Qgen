@@ -81,7 +81,7 @@ function TestPaperList({
                     onClick={(e: MouseEvent) => {
                       e.stopPropagation();
                       if (paper.isCreating) return;
-                      onHistoryClick?.(paper.testPaperId);
+                      onSolveClick?.(paper.testPaperId);
                     }}
                     variant='filled'
                     className='px-0 py-1 text-xs bg-none border-none text-gray-400'
