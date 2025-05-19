@@ -25,6 +25,7 @@ const Generate = () => {
   ]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [selectedDocumentIds, setSelectedDocumentIds] = useState<number[]>([]);
+  const [lastUploadedId, setLastUploadedId] = useState<string | null>(null);
 
   const totalProblems = useMemo(() => {
     return testTypes.reduce((sum, type) => sum + type.count, 0);
@@ -96,6 +97,8 @@ const Generate = () => {
       setUploadedFiles((files) => {
         if (files.length === 0) return files;
         const lastFile = files[files.length - 1];
+        setLastUploadedId(lastFile.id);
+        setTimeout(() => setLastUploadedId(null), 1000);
         setSelectedDocumentIds((prev) =>
           prev.includes(Number(lastFile.id))
             ? prev
@@ -115,14 +118,18 @@ const Generate = () => {
   };
 
   const handleLinkSubmit = (result: DocumentInfo) => {
-    setUploadedFiles((prev) => [
-      ...prev,
-      {
-        id: result.documentId.toString(),
-        title: result.documentName,
-        type: result.documentType,
-      },
-    ]);
+    setUploadedFiles((prev) => {
+      setLastUploadedId(result.documentId.toString());
+      setTimeout(() => setLastUploadedId(null), 1000);
+      return [
+        ...prev,
+        {
+          id: result.documentId.toString(),
+          title: result.documentName,
+          type: result.documentType,
+        },
+      ];
+    });
     setSelectedDocumentIds((prev) =>
       prev.includes(Number(result.documentId))
         ? prev
@@ -131,14 +138,18 @@ const Generate = () => {
   };
 
   const handleTextSubmit = (result: DocumentInfo) => {
-    setUploadedFiles((prev) => [
-      ...prev,
-      {
-        id: result.documentId.toString(),
-        title: result.documentName,
-        type: result.documentType,
-      },
-    ]);
+    setUploadedFiles((prev) => {
+      setLastUploadedId(result.documentId.toString());
+      setTimeout(() => setLastUploadedId(null), 1000);
+      return [
+        ...prev,
+        {
+          id: result.documentId.toString(),
+          title: result.documentName,
+          type: result.documentType,
+        },
+      ];
+    });
     setSelectedDocumentIds((prev) =>
       prev.includes(Number(result.documentId))
         ? prev
@@ -227,65 +238,16 @@ const Generate = () => {
   return (
     <div>
       <div className='flex flex-col items-start justify-start min-h-screen w-full mx-auto gap-4'>
-        {/* Title Section + Button */}
+        {/* Title Section */}
         <div className='flex justify-between items-center w-full'>
           <GradientTitle highlight='시험지' after='생성하기' />
-          <div className='flex gap-3'>
-            <div style={{ position: 'relative', display: 'inline-block' }}>
-              <Button
-                onClick={handleGenerate}
-                variant='filled'
-                className={`px-6 py-3 text-lg font-semibold relative overflow-hidden
-                ${totalProblems !== 0 && selectedDocumentIds.length !== 0 && !isLoading ? 'btn-gradient-move text-white' : ''}
-              `}
-                disabled={
-                  totalProblems === 0 ||
-                  selectedDocumentIds.length === 0 ||
-                  isLoading
-                }
-              >
-                {isLoading ? '생성 중...' : '시험지 생성하기'}
-              </Button>
-              {(totalProblems === 0 || selectedDocumentIds.length === 0) &&
-                !isLoading && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      cursor: 'not-allowed',
-                      zIndex: 10,
-                    }}
-                    onClick={() => {
-                      if (selectedDocumentIds.length === 0) {
-                        Swal.fire({
-                          icon: 'warning',
-                          title: '자료를 업로드하여 선택해주세요.',
-                          timer: 2000,
-                          showConfirmButton: false,
-                        });
-                      } else if (totalProblems === 0) {
-                        Swal.fire({
-                          icon: 'warning',
-                          title: '문제 유형을 선택해주세요.',
-                          timer: 2000,
-                          showConfirmButton: false,
-                        });
-                      }
-                    }}
-                  />
-                )}
-            </div>
-            <Button
-              variant='outlined'
-              className='px-6 py-2 text-lg font-semibold relative overflow-hidden'
-              onClick={() => navigate(`/list/${numericWorkBookId}`)}
-            >
-              취소
-            </Button>
-          </div>
+          <Button
+            variant='outlined'
+            className='px-10 py-2 text-lg font-semibold relative overflow-hidden'
+            onClick={() => navigate(`/list/${numericWorkBookId}`)}
+          >
+            취소
+          </Button>
         </div>
 
         {/* Test Name Input Section */}
@@ -324,6 +286,7 @@ const Generate = () => {
               showAddButton={false}
               selectedIds={selectedDocumentIds.map(String)}
               onSelect={handleDocumentSelect}
+              lastUploadedId={lastUploadedId}
             />
             <ProblemTypeSelector
               testTypes={testTypes}
@@ -332,6 +295,57 @@ const Generate = () => {
               onCountChange={handleCountChange}
               className='md:col-span-1'
             />
+          </div>
+        </div>
+
+        {/* 버튼을 여기로 이동 */}
+        <div className='flex w-full justify-center mt-8'>
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <Button
+              onClick={handleGenerate}
+              variant='filled'
+              className={`w-[40dvw] py-4 text-xl rounded-2xl font-semibold relative overflow-hidden
+                ${totalProblems !== 0 && selectedDocumentIds.length !== 0 && !isLoading ? 'btn-gradient-move text-white' : ''}
+              `}
+              disabled={
+                totalProblems === 0 ||
+                selectedDocumentIds.length === 0 ||
+                isLoading
+              }
+            >
+              {isLoading ? '생성 중...' : '시험지 생성하기'}
+            </Button>
+            {(totalProblems === 0 || selectedDocumentIds.length === 0) &&
+              !isLoading && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    cursor: 'not-allowed',
+                    zIndex: 10,
+                  }}
+                  onClick={() => {
+                    if (selectedDocumentIds.length === 0) {
+                      Swal.fire({
+                        icon: 'warning',
+                        title: '자료를 업로드하여 선택해주세요.',
+                        timer: 2000,
+                        showConfirmButton: false,
+                      });
+                    } else if (totalProblems === 0) {
+                      Swal.fire({
+                        icon: 'warning',
+                        title: '문제 유형을 선택해주세요.',
+                        timer: 2000,
+                        showConfirmButton: false,
+                      });
+                    }
+                  }}
+                />
+              )}
           </div>
         </div>
       </div>

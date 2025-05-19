@@ -93,6 +93,8 @@ export default function List() {
     (s) => s.creatingTestPaperIds
   );
 
+  const [lastUploadedId, setLastUploadedId] = useState<string | null>(null);
+
   const [showGuideModal, setShowGuideModal] = useState(true);
 
   // 로그인 체크
@@ -158,43 +160,64 @@ export default function List() {
   };
 
   // 파일 추가 함수
-  const handleFileUpload = (file: File) => {
-    if (!numericWorkBookId) return; // workBookId가 없으면 early return
-    setFiles((prev) => [
-      ...prev,
-      {
-        id: `${Date.now()}`, // 고유 id 생성
-        title: file.name,
-        type: file.type || 'FILE',
-      },
-    ]);
-    uploadDocument(file, numericWorkBookId);
-    setIsUploadModalOpen(false);
+  const handleFileUpload = async (file: File) => {
+    if (!numericWorkBookId) return;
+    try {
+      await uploadDocument(file, numericWorkBookId);
+      const docs = await getDocuments(numericWorkBookId);
+      setFiles(
+        docs.map((doc) => ({
+          id: String(doc.documentId),
+          title: doc.documentName,
+          type: doc.documentType,
+        }))
+      );
+      if (docs.length > 0) {
+        setLastUploadedId(String(docs[docs.length - 1].documentId));
+        setTimeout(() => setLastUploadedId(null), 1000);
+      }
+      setIsUploadModalOpen(false);
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: '파일 업로드에 실패했습니다.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    }
   };
 
   // 링크 추가 함수 (DocumentInfo 기반)
   const handleLinkSubmit = (result: DocumentInfo) => {
-    setFiles((prev) => [
-      ...prev,
-      {
-        id: result.documentId.toString(),
-        title: result.documentName,
-        type: result.documentType,
-      },
-    ]);
+    setFiles((prev) => {
+      setLastUploadedId(result.documentId.toString());
+      setTimeout(() => setLastUploadedId(null), 1000);
+      return [
+        ...prev,
+        {
+          id: result.documentId.toString(),
+          title: result.documentName,
+          type: result.documentType,
+        },
+      ];
+    });
     setIsUploadModalOpen(false);
   };
 
   // 텍스트 추가 함수 (DocumentInfo 기반)
   const handleTextSubmit = (result: DocumentInfo) => {
-    setFiles((prev) => [
-      ...prev,
-      {
-        id: result.documentId.toString(),
-        title: result.documentName,
-        type: result.documentType,
-      },
-    ]);
+    setFiles((prev) => {
+      setLastUploadedId(result.documentId.toString());
+      setTimeout(() => setLastUploadedId(null), 1000);
+      return [
+        ...prev,
+        {
+          id: result.documentId.toString(),
+          title: result.documentName,
+          type: result.documentType,
+        },
+      ];
+    });
     setIsUploadModalOpen(false);
   };
 
@@ -229,7 +252,6 @@ export default function List() {
       setFiles([]); // 초기화
       getTestPapers(numericWorkBookId);
       getDocuments(numericWorkBookId).then((docs) => {
-        console.log('조회된 시험지 :: ', docs);
         setFiles(
           docs.map((doc) => ({
             id: String(doc.documentId),
@@ -267,7 +289,6 @@ export default function List() {
     timer?: { min: number; sec: number }
   ) => {
     // TODO: 선택된 모드와 타이머로 퀴즈 페이지로 이동
-    console.log('Quiz mode:', mode, 'Timer:', timer);
     setIsQuizStartModalOpen(false);
   };
 
@@ -445,7 +466,7 @@ export default function List() {
       {/* 문제집 & 자료 업로드 */}
       <section className='flex gap-8'>
         {/* 문제집 리스트 */}
-        <div className='flex-1 flex flex-col gap-0 '>
+        <div className='flex-1 flex flex-col gap-0 h-full'>
           {/* 제목 파트 */}
           <div className='flex justify-between pt-4 pb-3 items-center'>
             <div className='flex items-center gap-2 h-[40px]'>
@@ -603,12 +624,14 @@ export default function List() {
             </div>
             {/* 자료 업로드 - selectedWorkbook이 있을 때만 표시 */}
             {numericWorkBookId && (
-              <aside className='flex flex-2 shrink-0'>
+              <aside className='flex flex-2 shrink-0 h-full'>
                 <UploadedList
                   files={files}
                   maxFiles={30}
                   onDelete={handleDelete}
                   onClick={() => setIsUploadModalOpen(true)}
+                  className='h-full'
+                  lastUploadedId={lastUploadedId}
                 />
                 <UploadModal
                   isOpen={isUploadModalOpen}

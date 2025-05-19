@@ -155,9 +155,9 @@ function Test({
   };
 
   return (
-    <div className='w-full h-full min-h-0 bg-white rounded-3xl p-6 shadow-sm'>
-      <div className='flex justify-between items-center mb-2'>
-        {/* 문제 번호와 오답 횟수 */}
+    <div className='w-full h-full min-h-0 bg-white rounded-3xl p-6 shadow-sm flex flex-col'>
+      <div className='flex justify-between mb-2'>
+        {/* 문제 번호 */}
         <div className='flex items-center gap-1'>
           <p className='text-base font-bold mr-1'>
             문제 {currentNumber}/{totalNumber}
@@ -175,7 +175,6 @@ function Test({
             제출이력
           </Button>
         </div>
-        {/* 이전/다음/제출이력 버튼 */}
         <div className='flex items-center gap-2'>
           <Button onClick={onPrev} variant='small' className='my-1 text-xs'>
             이전
