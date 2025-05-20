@@ -84,12 +84,10 @@
 <br>
 
 ### 🖼️아키텍쳐 설계
-### 수정 필요
 ![architecture.png](exec/architecture.png)
 <br>
 
 ### 💾데이터베이스 모델링(ERD)
-### 수정 필요
 ![ERD.png](exec/ERD.png)
 <br>
 
