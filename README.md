@@ -194,7 +194,7 @@ server
 
 # 3. 기능 상세 설명
 
-## ** < Front-End > ** 
+## < Front-End >
 
 - 개발환경: YarnBerry + Vite + React + Tyepscript
 - 디자인 패턴: Atomic Design + FSD Structure
