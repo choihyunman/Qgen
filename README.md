@@ -73,8 +73,6 @@
 ![GitLab](https://img.shields.io/badge/gitlab-FC6D26.svg?style=for-the-badge&logo=gitlab&logoColor=white)
 
 
-
-
 ### Tools <br>
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
 ![Intellij IDEA](https://img.shields.io/badge/Intelij_IDEA-000000?style=for-the-badge&logo=intellijidea&logoColor=white)
@@ -87,24 +85,20 @@
 
 ### 🖼️아키텍쳐 설계
 ### 수정 필요
-![아키텍쳐 설계](/uploads/74610721fc49b01d44153d3f6c6db0a0/image.png)
-
+![architecture.png](exec/architecture.png)
 <br>
 
 ### 💾데이터베이스 모델링(ERD)
 ### 수정 필요
-![ERD](/uploads/967fde4d739fa84721702003d7870c3e/B102_ERD.png)
-
+![ERD.png](exec/ERD.png)
 <br>
 
 ### 🎨화면 정의서(Figma)
-
 [Figma_화면정의서](https://www.figma.com/design/oSophIoTs9EkVTZZxBGch4/Q-gen?node-id=17-2&t=RTytrBLmL8te7ydv-0)
 
 <br>
 
 ### 📝요구사항 정의서
-
 [Notion_요구사항 정의서](https://ubiquitous-theory-103.notion.site/1dc0e945fc098095a082cffb49d8a7b3?pvs=4)
 
 <br>
