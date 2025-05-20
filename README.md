@@ -21,16 +21,17 @@
 언제든지 오른쪽 하단의 가이드 버튼을 통해 도움말을 확인할 수 있습니다.
 #### 5. 학습 몰입도 향상을 위한 디자인
 차분한 컬러와 친근한 캐릭터(돌고래 등)로 직관적인 UI를 구성하여 학습 몰입도 향상
+<br>
 
 ### 👭팀원 정보 및 업무 분담 내역
 | 이름           | 역할 및 구현 기능                                                                                                                                                                                                                       |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 🟧황연주(팀장) | **Frontend**<br>- figma 디자인 <br>  - SockJS와 STOMP 프로토콜 활용한 서비스 내 실시간 채팅 컴포넌트 구현 <br>- 사용자 및 후보자 정보 관리 구현<br>- 선거 유세를 위한 라이브 화면 구현 <br>                                                                                                                                                                                            |
-| 🟩구민석(팀원) | **Backend**<br>- 투표 API 개발<br>- 선거 API 개발<br>- 조회 로직 redis 캐싱<br> - 후보자 초성 검색 구현<br>- JPA 쿼리 최적화                                                                                                                                                                                                           |
-| 🟦이신욱(팀원) | **Backend**<br>- 스트리밍 API 개발<br>- WebSocket으로 스트림 수신<br>- 스트림을 FFmpeg로 RTMP 변환<br> <br>**Infra**<br>- 프로젝트 전체 구조 설정<br>- Docker, Docker-compose로 프로젝트 실행과 배포 환경 구축<br>- Jenkins로 CI/CD 구축<br>- RTMP-HLS 스트리밍 환경 구축 |
-| 🟥최현만(팀원) | **Frontend**<br>- figma 디자인<br>- client 프로젝트 구조 설정<br>- WebSocket과 hls.js를 활용한 라이브 스트리밍 구현<br>- 선거 및 투표 만들기 구현 <br>- 선거 메인 화면 구현 <br>- 유틸 기능 구현 (글자수 처리, 날짜 데이터 처리 등)<br> |
-| 🟨장인영(팀원) | **Frontend**<br>- figma 디자인<br>- 페이지 마크업 및 스타일링<br>- axios, zustand, react-qeury를 활용한 데이터 바인딩 <br> - 투표하기 Session 구현 <br> - Web Socket을 활용한 실시간 투표 정보 제공<br>                                 |
-| 🟪홍정표(팀원) | **Frontend**<br>- figma 디자인 <br>  - SockJS와 STOMP 프로토콜 활용한 서비스 내 실시간 채팅 컴포넌트 구현 <br>- 사용자 및 후보자 정보 관리 구현<br>- 선거 유세를 위한 라이브 화면 구현 <br>   <br>                                                                                                                                                                                                     |
+| 🟩구민석(팀원) | **Frontend**<br>- 투표 API 개발<br>- 선거 API 개발<br>- 조회 로직 redis 캐싱<br> - 후보자 초성 검색 구현<br>- JPA 쿼리 최적화                                                                                                                                                                                                           |
+| 🟦이신욱(팀원) | **Frontend**<br>- 스트리밍 API 개발<br>- WebSocket으로 스트림 수신<br>- 스트림을 FFmpeg로 RTMP 변환<br> <br>**Infra**<br>- 프로젝트 전체 구조 설정<br>- Docker, Docker-compose로 프로젝트 실행과 배포 환경 구축<br>- Jenkins로 CI/CD 구축<br>- RTMP-HLS 스트리밍 환경 구축 |
+| 🟥최현만(팀원) | **INFRA, AI**<br>- figma 디자인<br>- client 프로젝트 구조 설정<br>- WebSocket과 hls.js를 활용한 라이브 스트리밍 구현<br>- 선거 및 투표 만들기 구현 <br>- 선거 메인 화면 구현 <br>- 유틸 기능 구현 (글자수 처리, 날짜 데이터 처리 등)<br> |
+| 🟨장인영(팀원) | **Backend, DATA**<br>- figma 디자인<br>- 페이지 마크업 및 스타일링<br>- axios, zustand, react-qeury를 활용한 데이터 바인딩 <br> - 투표하기 Session 구현 <br> - Web Socket을 활용한 실시간 투표 정보 제공<br>                                 |
+| 🟪홍정표(팀원) | **Backend**<br>- figma 디자인 <br>  - SockJS와 STOMP 프로토콜 활용한 서비스 내 실시간 채팅 컴포넌트 구현 <br>- 사용자 및 후보자 정보 관리 구현<br>- 선거 유세를 위한 라이브 화면 구현 <br>   <br>                                                                                                                                                                                                     |
 
 <br>
 
