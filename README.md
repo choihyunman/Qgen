@@ -32,9 +32,9 @@
 
 # 2. 설계 및 구현
 
-### 🛠 기술 스택
+## 🛠 기술 스택
 
-**Frontend** <br>
+### Frontend <br>
 ![React](https://img.shields.io/badge/react-61DAFB.svg?style=for-the-badge&logo=react&logoColor=white)
 ![React Query](https://img.shields.io/badge/react_query-FF4154.svg?style=for-the-badge&logo=reactquery&logoColor=white)
 ![Yarn Berry](https://img.shields.io/badge/yarn_berry-2C8EBB.svg?style=for-the-badge&logo=yarn&logoColor=white)
@@ -43,7 +43,7 @@
 ![TypeScript](https://img.shields.io/badge/typescript-3178C6.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Zustand](https://img.shields.io/badge/zustand-E26529.svg?style=for-the-badge&logo=zustand&logoColor=white)
 
-**Backend** <br>
+### Backend <br>
 ![Java](https://img.shields.io/badge/java-3670A0?style=for-the-badge&logo=java&logoColor=ffdd54)
 ![Spring](https://img.shields.io/badge/spring_boot-6DB33F.svg?style=for-the-badge&logo=springboot&logoColor=white)
 ![Spring Security](https://img.shields.io/badge/spring_security-6DB33F.svg?style=for-the-badge&logo=springsecurity&logoColor=white)
@@ -55,7 +55,7 @@
 ![Redis](https://img.shields.io/badge/redis-FF4438?style=for-the-badge&logo=redis&logoColor=white)
 ![FFmpeg](https://img.shields.io/badge/ffmpeg-007808?style=for-the-badge&logo=ffmpeg&logoColor=white)
 
-**AI** <br>
+### AI <br>
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FAISS](https://img.shields.io/badge/FAISS-0055AA?style=for-the-badge&logo=meta&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
@@ -65,7 +65,7 @@
 ![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
 
 
-**DevOps** <br>
+### DevOps <br>
 ![NginX](https://img.shields.io/badge/NginX-009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-2496ED.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Jenkins](https://img.shields.io/badge/jenkins-D24939.svg?style=for-the-badge&logo=jenkins&logoColor=white)
@@ -75,7 +75,7 @@
 
 
 
-**Tools** <br>
+### Tools <br>
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
 ![Intellij IDEA](https://img.shields.io/badge/Intelij_IDEA-000000?style=for-the-badge&logo=intellijidea&logoColor=white)
 ![Swagger](https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
@@ -317,23 +317,22 @@ useWorkBook, useTestPaper, useDocuments, useAuth 등
 <br>
 
 # 4. 한줄 소감
-
-**🟧 황연주 **
-
-
-**🟥 구민석 **
+**🟥 구민석**
 
 
-**🟨 이신욱 **
+**🟨 이신욱**
 
 
-**🟩 최현만 **
+**🟩 최현만**
 
 
-**🟦 장인영 **
+**🟦 장인영**
 
 
-**🟪 홍정표 ** 
+**🟪 홍정표** 
+
+
+**🟧 황연주**
 
 
 
