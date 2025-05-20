@@ -194,7 +194,7 @@ server
 
 # 3. 기능 상세 설명
 
-## < Front-End >
+##🚪Front-End >
 
 - 개발환경: YarnBerry + Vite + React + Tyepscript
 - 디자인 패턴: Atomic Design + FSD Structure
@@ -263,7 +263,7 @@ useWorkBook, useTestPaper, useDocuments, useAuth 등
 <br>
 
 ---
-## < Back-End >
+## 👜 Back-End
 - 개발환경: Spring Boot + JPA + Spring Security
 - 데이터: MySQL, Redis
 - RTMP 변환: FFmpeg
@@ -272,12 +272,12 @@ useWorkBook, useTestPaper, useDocuments, useAuth 등
 <br>
 
 ---
-## < AI >
+## 🤖 AI
 - 개발환경: 
 - 데이터:
 
-## ✅ 문제집/시험지/자료 관리
-### 1️⃣ 문제집 목록 및 관리
+## ✅ 기능 제목 
+### 1️⃣ 부기능 제목
 WorkBookList 컴포넌트 구현
 WorkBook 타입을 활용한 문제집 데이터 관리
 최신순/제목순 정렬 기능 (커스텀 드롭다운 컴포넌트 활용)
@@ -285,15 +285,15 @@ WorkBook 타입을 활용한 문제집 데이터 관리
 각 문제집 클릭 시 상세 페이지로 이동
 
 ---
-## < Infra >
+## 🏰 Infra
 - 웹서버: NginX
 - 스트리밍: Nginx-rtmp
 - 실행환경: Docker, Docker-compose
 - CI/CD: Jenkins
 - 배포: AWS EC2
 
-## ✅ 문제집/시험지/자료 관리
-### 1️⃣ 문제집 목록 및 관리
+## ✅ 기능 제목 
+### 1️⃣ 부기능 제목
 WorkBookList 컴포넌트 구현
 WorkBook 타입을 활용한 문제집 데이터 관리
 최신순/제목순 정렬 기능 (커스텀 드롭다운 컴포넌트 활용)
@@ -326,7 +326,6 @@ WorkBook 타입을 활용한 문제집 데이터 관리
 # 4. 한줄 소감
 **🟥 구민석**
 
-
 **🟨 이신욱**
 
 
@@ -339,7 +338,7 @@ WorkBook 타입을 활용한 문제집 데이터 관리
 **🟪 홍정표** 
 
 
-**🟧 황연주**
+**🟧 황연주** : 처음해보는 기술 도전과 기획, 그런 만큼 쉽지 않은 과정이었지만 4321이라서 할 수 있었고 그래서 더 의미가 큰 것 같아요. 다들 감사합니다. 
 
 
 
