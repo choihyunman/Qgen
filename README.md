@@ -263,7 +263,7 @@ useWorkBook, useTestPaper, useDocuments, useAuth 등
 <br>
 
 ---
-## **< Back-End > **
+## < Back-End >
 - 개발환경: Spring Boot + JPA + Spring Security
 - 데이터: MySQL, Redis
 - RTMP 변환: FFmpeg
@@ -272,7 +272,7 @@ useWorkBook, useTestPaper, useDocuments, useAuth 등
 <br>
 
 ---
-## ** < AI > **
+## < AI >
 - 개발환경: 
 - 데이터:
 
@@ -285,7 +285,7 @@ WorkBook 타입을 활용한 문제집 데이터 관리
 각 문제집 클릭 시 상세 페이지로 이동
 
 ---
-##  ** < Infra >**
+## < Infra >
 - 웹서버: NginX
 - 스트리밍: Nginx-rtmp
 - 실행환경: Docker, Docker-compose
