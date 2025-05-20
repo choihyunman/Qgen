@@ -284,6 +284,13 @@ useWorkBook, useTestPaper, useDocuments, useAuth 등
 - 개발환경: 
 - 데이터:
 
+## ✅ 문제집/시험지/자료 관리
+### 1️⃣ 문제집 목록 및 관리
+WorkBookList 컴포넌트 구현
+WorkBook 타입을 활용한 문제집 데이터 관리
+최신순/제목순 정렬 기능 (커스텀 드롭다운 컴포넌트 활용)
+문제집 추가, 수정, 삭제 기능 (Swal 모달로 UX 통일)
+각 문제집 클릭 시 상세 페이지로 이동
 
 ---
 ##  ** < Infra >**
@@ -292,6 +299,14 @@ useWorkBook, useTestPaper, useDocuments, useAuth 등
 - 실행환경: Docker, Docker-compose
 - CI/CD: Jenkins
 - 배포: AWS EC2
+
+## ✅ 문제집/시험지/자료 관리
+### 1️⃣ 문제집 목록 및 관리
+WorkBookList 컴포넌트 구현
+WorkBook 타입을 활용한 문제집 데이터 관리
+최신순/제목순 정렬 기능 (커스텀 드롭다운 컴포넌트 활용)
+문제집 추가, 수정, 삭제 기능 (Swal 모달로 UX 통일)
+각 문제집 클릭 시 상세 페이지로 이동
 
 ## ✅ 배포 환경 구축 
 ### 1️⃣ 웹서버
