@@ -30,7 +30,9 @@ import com.s12p31b204.backend.util.ResponseData;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/document")
@@ -50,6 +52,7 @@ public class DocumentController {
     ) {
         try {
             if(authorizationService.checkWorkBookAuthorization(user.getUserId(), workBookId)) {
+                log.info("document upload...");
                 String url = s3Service.upload(file, "documents");
 
                 Long documentId = documentService.createDocument(file, workBookId, url);
@@ -71,6 +74,7 @@ public class DocumentController {
             @AuthenticationPrincipal CustomOAuth2User user,
             HttpServletRequest request) {
         if(authorizationService.checkWorkBookAuthorization(user.getUserId(), workBookId)) {
+            log.info("getting documents...");
             List<DocumentDto> documents = documentService.getDocumentsByWorkBookId(workBookId);
             return ApiResponse.success(documents, "파일 전체 조회 성공", HttpStatus.OK, request.getRequestURI());
         }
@@ -88,6 +92,7 @@ public class DocumentController {
     ) {
         try {
             if(authorizationService.checkDocumentAuthorization(user.getUserId(), documentId)) {
+                log.info("delete document...");
                 documentService.deleteDocumentWithS3File(documentId);
                 return ResponseEntity.noContent().build();
             } else {
@@ -105,6 +110,7 @@ public class DocumentController {
             @AuthenticationPrincipal CustomOAuth2User user,
             HttpServletRequest request
     ) {
+        log.info("getting document detail...");
         DocumentDto document = documentService.getDocument(documentId);
         return ApiResponse.success(document, "파일 상세 조회 성공", HttpStatus.OK, request.getRequestURI());
     }
