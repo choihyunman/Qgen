@@ -42,10 +42,27 @@ text_splitter = RecursiveCharacterTextSplitter(
     separators=["\n\n", "\n", " "]
 )
 
-# 텍스트 정제 (--- 구분자 보존)
 def clean_text(text: str) -> str:
-    # 이모지나 제어문자 제거, 허용 문자만 남기되 ❶-❿ 등은 제거
-    text = re.sub(r"[❶-❿Ⓐ-Ⓩ①-⑳㉠-㉿]", "", text)  # ← 이 범위 제거
+    # ❶~❿ (1~10) 변환
+    circled_1_to_10 = {
+        '❶': '1', '❷': '2', '❸': '3', '❹': '4', '❺': '5',
+        '❻': '6', '❼': '7', '❽': '8', '❾': '9', '❿': '10'
+    }
+
+    # Ⓐ~Ⓩ (A~Z) 변환
+    for i in range(26):
+        text = text.replace(chr(0x24B6 + i), chr(65 + i))  # Ⓐ: 0x24B6 → A: 65
+
+    # ①~⑳ (1~20) 변환
+    circled_number_map = {
+        chr(0x2460 + i): str(i + 1) for i in range(20)  # ①: 0x2460
+    }
+
+    # 모든 매핑 적용
+    for symbol, value in {**circled_1_to_10, **circled_number_map}.items():
+        text = text.replace(symbol, value)
+
+    # 기타 문자 제거 (필요 시 조정)
     text = re.sub(r"[^\w\s\n\-~!@#$%^&*()_+`=\[\]{};:'\",.<>/?\\|]", "", text)
     return re.sub(r"[ \t]+", " ", text).strip()
 
