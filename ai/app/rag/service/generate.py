@@ -27,7 +27,7 @@ def _split_chunks(chunks: list[str], n: int) -> list[list[str]]:
 def _build_user_message(context: str, q_type: str) -> str:
     base_msg = "반드시 JSON 문자열로만 응답해야 돼. JSON 외의 주석, 설명, 자연어 문장은 절대 포함하지 마라."
     if q_type == "choice":
-        return f"{base_msg} 아래 컨텍스트는 '--- 문제 구분 ---' 으로 나뉘며 각 구간은 독립 문제야:\n\n{context}"
+        return f"{base_msg} 아래 컨텍스트는 '--- 문제 구분 ---' 으로 나뉘며 각 구간은 독립 문제야:\n\n{context} 해당 내용을 바탕으로 유사하지만 새로운 문제를 만들어줘"
     elif q_type == "oxshort":
         return f"{base_msg} 다음 내용을 근거로 문제를 만들어줘:\n\n{context}"
     else:
