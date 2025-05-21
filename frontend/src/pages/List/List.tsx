@@ -97,6 +97,7 @@ export default function List() {
   const [lastUploadedId, setLastUploadedId] = useState<string | null>(null);
 
   const [showGuideModal, setShowGuideModal] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
   const sortOptions = [
     { value: 'date', label: '최신순' },
@@ -405,16 +406,6 @@ export default function List() {
     setIsTitleModalOpen(false);
   };
 
-  // SSE 연결
-  useEffect(() => {
-    if (isLoggedIn && userId) {
-      const eventSource = connectSSE(userId);
-      return () => {
-        eventSource?.close();
-      };
-    }
-  }, [isLoggedIn, userId]);
-
   // PDF 다운로드 핸들러 추가
   const handlePdfDownload = async (option: '문제만' | '정답/해설포함') => {
     if (!selectedPaper) return;
@@ -679,6 +670,7 @@ export default function List() {
                   onClick={() => setIsUploadModalOpen(true)}
                   className='h-full'
                   lastUploadedId={lastUploadedId}
+                  uploading={uploading}
                 />
                 <UploadModal
                   isOpen={isUploadModalOpen}
@@ -687,6 +679,7 @@ export default function List() {
                   onLinkSubmit={handleLinkSubmit}
                   onTextSubmit={handleTextSubmit}
                   workBookId={numericWorkBookId || 0}
+                  setUploading={setUploading}
                 />
               </aside>
             )}

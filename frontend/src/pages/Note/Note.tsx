@@ -121,7 +121,7 @@ const Note = () => {
   const totalTests = testIdList.length;
 
   return (
-    <div className='flex gap-4 h-full'>
+    <div className='flex gap-4 h-full overflow-auto min-h-0'>
       {/* TestList (1/5) */}
       <div style={{ flex: 1 }} className='flex flex-col gap-4 h-full min-h-0'>
         <div className='bg-white rounded-3xl py-6 shadow-sm h-full min-h-0 flex flex-col'>
@@ -315,7 +315,7 @@ const Note = () => {
         )}
       </div>
 
-      {/* Note (1/5) */}
+      {/* Memo (1/5) */}
       <div style={{ flex: 1.2 }} className='flex flex-col h-full min-h-0'>
         {currentTestDetail ? (
           <Memo
