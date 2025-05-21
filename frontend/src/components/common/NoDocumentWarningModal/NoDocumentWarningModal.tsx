@@ -46,15 +46,15 @@ export default function NoDocumentWarningModal({
           </h2>
         </div>
         <div className='text-center mb-8'>
-          <p className='text-gray-600 mb-4'>
-            원활한 문제 생성을 위해서는 자료 업로드가 필수에요.
+          <p className='text-gray-600 mb-2'>
+            문제 생성을 위해서는 자료 업로드가 필수에요🥲
           </p>
-          <p className='text-gray-600 mb-4'>
-            "데이터베이스 정규화"같은 간단한 키워드만으로도
-            <br />
-            기본 문제가 생성되요!
+          <p className='text-gray-600 mb-2'>
+            사용자 입력 텍스트에 <strong>"데이터베이스 정규화"</strong>와 같은
+            <br></br>
+            간단한 키워드만으로도 문제를 생성할 수 있어요!
           </p>
-          <p className='text-gray-600'>
+          <p className='text-gray-600 font-bold text-md text-purple-500'>
             가벼운 텍스트 데이터라도 입력해보는 건 어떨까요?
           </p>
         </div>
