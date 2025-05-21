@@ -226,6 +226,7 @@ function QuizPage() {
           }
           isCorrect={resultArr[current]?.correct}
           explanationBox={currentQuestion?.explanation}
+          explanationType={currentQuestion?.explanationType}
         />
       </div>
       {/* ExamSidebar (1/5) */}
