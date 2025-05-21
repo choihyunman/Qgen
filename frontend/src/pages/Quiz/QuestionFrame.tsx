@@ -18,7 +18,6 @@ interface QuestionFrameProps {
   onNext: () => void;
   questionType?: 'choiceAns' | 'shortAns' | 'oxAns';
   isCorrect?: boolean;
-  explanationType?: 'text' | 'code';
 }
 
 function QuestionFrame({
@@ -36,7 +35,6 @@ function QuestionFrame({
   onNext,
   questionType = 'choiceAns',
   isCorrect,
-  explanationType = 'text',
 }: QuestionFrameProps) {
   const explanationRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
@@ -272,22 +270,16 @@ function QuestionFrame({
           {/* 문제 내용 */}
           <div className='mb-4'>
             <h2 className='text-lg font-bold'>{question}</h2>
-            {explanationBox &&
-              explanationBox.length > 0 &&
-              (explanationType === 'code' ? (
-                <pre className='border border-gray-200 p-4 rounded-lg bg-white mt-4 mb-0 overflow-x-auto'>
-                  <code>{explanationBox.join('\n')}</code>
-                </pre>
-              ) : (
-                <div className='border border-gray-200 p-4 rounded-lg bg-white mt-4 mb-0'>
-                  {explanationBox.map((exp, idx) => (
-                    <div key={idx} className='flex items-center'>
-                      <span className='mr-2 text-gray-700'>•</span>
-                      {exp}
-                    </div>
-                  ))}
-                </div>
-              ))}
+            {explanationBox && explanationBox.length > 0 && (
+              <div className='border border-gray-200 p-4 rounded-lg bg-white mt-4 mb-0'>
+                {explanationBox.map((exp, idx) => (
+                  <div key={idx} className='flex items-center'>
+                    <span className='mr-2 text-gray-700'>•</span>
+                    {exp}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           {/* 문제 유형에 따른 렌더링 */}
           {renderQuestion()}
@@ -299,25 +291,15 @@ function QuestionFrame({
             const convertedType = convertQuestionType(questionType || '');
             const hasExplanationBox =
               explanationBox && explanationBox.length > 0;
-            const maxHClass = hasExplanationBox ? 'max-h-64' : 'max-h-52';
-
-            if (!isSubmitted) return null;
-
-            return (
-              <SimpleBar
-                className={`mt-2 mb-0 bg-[#CAC7FC]/20 rounded-3xl ${maxHClass} flex flex-col p-6 w-full overflow-auto`}
-                style={{ opacity: 1, boxSizing: 'border-box' }}
-              >
-                <div className='font-semibold mb-2 text-gray-700'>해설</div>
-                {explanationType === 'code' ? (
-                  <pre className='bg-gray-800 text-white p-4 rounded-lg overflow-x-auto'>
-                    <code>{explanation}</code>
-                  </pre>
-                ) : (
+            if (isSubmitted) {
+              return (
+                <div className='mt-2 p-6 bg-[#CAC7FC]/20 rounded-3xl flex flex-col w-full'>
+                  <div className='font-semibold mb-2 text-gray-700'>해설</div>
                   <div className='text-gray-700'>{explanation}</div>
-                )}
-              </SimpleBar>
-            );
+                </div>
+              );
+            }
+            return null;
           })()}
         </div>
       </SimpleBar>
