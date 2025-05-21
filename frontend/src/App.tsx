@@ -11,23 +11,33 @@ import { twMerge } from 'tailwind-merge';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import PCRecommendModal from './components/common/PCRecommendModal/PCRecommendModal';
+import StickyGuideButton from './components/common/StickyGuideButton/StickyGuideButton';
+import GuideModal from './components/common/GuideModal/GuideModal';
 import { connectSSE, disconnectSSE } from '@/utils/sse';
 
 function App() {
   const userId = useAuth().userId;
   const isConnected = useRef(false);
+  const [showGuideModal, setShowGuideModal] = useState(false);
   const location = useLocation();
 
   // 페이지 타입 계산을 메모이제이션
   const { isArcPage, mainPageType } = useMemo(() => {
     const isArcPage =
       location.pathname.startsWith('/quiz') ||
-      location.pathname.startsWith('/note');
+      location.pathname.startsWith('/note') ||
+      location.pathname.startsWith('/login');
     return {
       isArcPage,
       mainPageType: isArcPage ? 'fixed' : ('default' as const),
     };
   }, [location.pathname]);
+
+  const showGuideButtonPaths = ['/generate', '/list', '/note'];
+  // 현재 경로가 배열에 포함되는지 체크
+  const shouldShowGuideButton = showGuideButtonPaths.some((path) =>
+    location.pathname.startsWith(path)
+  );
 
   // SSE 연결 관리
   useEffect(() => {
@@ -99,6 +109,14 @@ function App() {
         isOpen={showPCRecommend}
         onClose={() => setShowPCRecommend(false)}
       />
+      <GuideModal
+        mode='basic'
+        isOpen={showGuideModal}
+        onClose={() => setShowGuideModal(false)}
+      />
+      {shouldShowGuideButton && (
+        <StickyGuideButton onClick={() => setShowGuideModal(true)} />
+      )}
     </div>
   );
 }
