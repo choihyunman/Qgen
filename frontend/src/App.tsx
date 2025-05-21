@@ -13,11 +13,18 @@ import { useEffect, useState } from 'react';
 import PCRecommendModal from './components/common/PCRecommendModal/PCRecommendModal';
 import StickyGuideButton from './components/common/StickyGuideButton/StickyGuideButton';
 import GuideModal from './components/common/GuideModal/GuideModal';
+import { useModalStore } from '@/stores/modalStore';
 
 function App() {
   useAuth(); // 앱 전체에서 한 번만 인증 동기화
   const [showPCRecommend, setShowPCRecommend] = useState(false);
+
+  // 초기값을 null로 설정하여 첫 렌더링 여부를 체크
   const [showGuideModal, setShowGuideModal] = useState(false);
+  // const [guideModalReady, setGuideModalReady] = useState<boolean | null>(null);
+
+  const { showBasicGuideModal, setShowBasicGuideModal } = useModalStore();
+
   const arcPages = ['/quiz', '/note'];
   const location = useLocation();
   const isArcPage = arcPages.some((path) => location.pathname.startsWith(path));
@@ -42,10 +49,15 @@ function App() {
   const BackgroundComponent = isArcPage ? ArcBackground : BlurBackground;
 
   useEffect(() => {
+    const alreadyChecked = localStorage.getItem('hidePCRecommend');
+    if (alreadyChecked === 'true') {
+      setShowPCRecommend(false);
+      return;
+    }
+
     // 화면 너비 체크 함수
     const checkScreenWidth = () => {
       const isSmallScreen = window.innerWidth <= 1024;
-      // URL에 pc=1 파라미터가 있으면 모달을 표시하지 않음
       const isPCVersion =
         new URLSearchParams(window.location.search).get('pc') === '1';
       setShowPCRecommend(isSmallScreen && !isPCVersion);
@@ -63,6 +75,25 @@ function App() {
     };
   }, []);
 
+  // 최초접속 안내 모달(localStorage로 제어)
+  // 최초접속 안내 모달(localStorage로 제어) - 초기 렌더링 시 한 번만 실행
+  useEffect(() => {
+    const showGuideModalCheck = localStorage.getItem('showGuideModal');
+    // 'true'인 경우에만 모달을 표시 (명시적으로 'false'로 설정되지 않은 경우 처음 방문 사용자에게는 표시)
+    setShowGuideModal(showGuideModalCheck !== 'false');
+  }, []); // 빈 의존성 배열로 마운트 시 한 번만 실행
+
+  // PC 권장 모달 닫기
+  const handleClosePCRecommend = () => {
+    localStorage.setItem('hidePCRecommend', 'true');
+    setShowPCRecommend(false);
+  };
+
+  // StickyGuideButton 클릭 시 토글
+  const handleToggleBasicGuideModal = () => {
+    setShowBasicGuideModal(!showBasicGuideModal);
+  };
+
   return (
     <div className='flex flex-col w-full'>
       <ScrollToTop />
@@ -77,7 +108,7 @@ function App() {
 
           <main
             className={twMerge(
-              'flex-1 py-4 min-h-0',
+              'flex-1 py-8 px-3 min-h-0',
               mainPageType === 'fixed' ? 'h-full' : ''
             )}
           >
@@ -98,15 +129,23 @@ function App() {
       />
       <PCRecommendModal
         isOpen={showPCRecommend}
-        onClose={() => setShowPCRecommend(false)}
+        onClose={handleClosePCRecommend}
       />
+      {/* 최초접속 안내 모달 - null 체크 추가 */}
+      <GuideModal
+        isOpen={showGuideModal}
+        onClose={() => {
+          setShowGuideModal(false);
+        }}
+      />
+      {/* StickyGuideButton 클릭 시 토글되는 모달 */}
       <GuideModal
         mode='basic'
-        isOpen={showGuideModal}
-        onClose={() => setShowGuideModal(false)}
+        isOpen={showBasicGuideModal}
+        onClose={() => setShowBasicGuideModal(false)}
       />
       {shouldShowGuideButton && (
-        <StickyGuideButton onClick={() => setShowGuideModal(true)} />
+        <StickyGuideButton onClick={handleToggleBasicGuideModal} />
       )}
     </div>
   );
