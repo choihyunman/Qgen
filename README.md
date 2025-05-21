@@ -280,8 +280,8 @@ useWorkBook, useTestPaper, useDocuments, useAuth 등
 
 ---
 ## 🤖 AI
-- 개발환경: 
-- 데이터:
+- 개발환경: FastAPI
+- 벡터DB: Faiss
 
 ## ✅ 기능 제목 
 ### 1️⃣ 부기능 제목
@@ -294,7 +294,6 @@ WorkBook 타입을 활용한 문제집 데이터 관리
 ---
 ## 🏰 Infra
 - 웹서버: NginX
-- 스트리밍: Nginx-rtmp
 - 실행환경: Docker, Docker-compose
 - CI/CD: Jenkins
 - 배포: AWS EC2
@@ -311,15 +310,12 @@ WorkBook 타입을 활용한 문제집 데이터 관리
 ### 1️⃣ 웹서버
 - **NGINX**
   - `HTTPS`를 적용하고 여 사이트의 보안 향상.
-  - `Reverse Proxy`을 통해 브라우저에서 오는 모든 HTTPS와 WSS요청을 server와 nginx-rtmp 컨테이너로 프록시.
-
-- **NGINX-RTMP**
-  - Spring Boot로부터 전송받은 RTMP를 HLS로 변환.
+  - Blue-Green 무중단 배포로 서비스 연속성 구현
 
 ### 2️⃣ 배포 환경 구축과 CI/CD
 - **Docker, Docker-compose**
   - `docker`를 이용하여 실행환경을 컨테이너화.
-  - 배포에 사용되는 컨테이너 6개를 `docker-compose`로 묶어서 배포.
+  - 배포에 사용되는 컨테이너를 `docker-compose`로 묶어서 배포.
 
 - **Jenkins**
   - Docker에서 Jenkins image를 pull 받아서 실행
@@ -327,6 +323,9 @@ WorkBook 타입을 활용한 문제집 데이터 관리
 
 - **AWS EC2**
   - 제공받은 AWS EC2 사용
+
+- **Runpod GPU**
+  - Runpod에서 GPU 서버를 받아서 임베딩, 리랭커 등에 활용 
 
 <br>
 
