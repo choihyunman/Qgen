@@ -61,6 +61,9 @@ public class EmitterService {
             if(eventName.equals("testpaper created")) {
                 log.info("send " + eventName + ", Data : " + eventData);
             }
+            else {
+                log.info("send " + eventName);
+            }
     }
 
     @PostConstruct
