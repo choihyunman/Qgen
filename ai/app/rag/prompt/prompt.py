@@ -21,7 +21,7 @@ def load_choice_prompt(choice: int) -> str:
     - 포괄적인 question(ex. “다음 설명에 해당하는 것은?”)일 경우에만 explanation 배열로 포함
   - explanation_type: 설명의 형식을 명시한다.
     - 기본값은 "text"이며, 설명이 코드로 구성된 경우 "code"로 설정한다.
-    - explanation이 없으면 null이다. null일 경우 생략 가능하다.
+    - explanation이 없으면 null이다.
     - 예시: "explanation_type": "code"
   - option: 보기 4개 (문자열 배열, 보기 간 중복 없이 의미 구분이 명확해야 함)
   - answer: 정답 번호
@@ -79,7 +79,7 @@ def load_choice_prompt(choice: int) -> str:
             "type": "TYPE_CHOICE",
             "question": "다음 자료를 선택 정렬을 이용하여 오름차순으로 정렬할 경우, PASS 1의 결과는?",
             "explanation_type": "text",
-            "explanation": "8, 7, 6, 5, 9",
+            "explanation": ["8, 7, 6, 5, 9"],
             "option": [
                 "8, 7, 6, 5, 9",
                 "5, 8, 7, 6, 9",
