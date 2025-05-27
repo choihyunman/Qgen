@@ -163,8 +163,24 @@ server
 ```
 
 **AI**
-```
-여기에 업로드 해주세요 
+```test
+ai/
+└── app/
+    ├── health_check
+    │   └── health_check.py
+    ├── problem_generator_py
+    │   ├── chatgpt.py
+    │   └── prompt.py
+    ├── rag/
+    │   ├── model/
+    │   │   └── s3_request.py
+    │   ├── prompt/
+    │   │   └── prompt.py
+    │   ├── service/
+    │   │   ├── embedding.py
+    │   │   ├── extract.py
+    │   │   ├── generate.py
+    │   │   └── search.py
 ```
 
 <br>
