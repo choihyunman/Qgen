@@ -86,7 +86,7 @@
 <br>
 
 ### 🖼️아키텍쳐 설계
-![architecture.png](exec/architecture.png)
+![architecture_qgen.png](exec/architecture_qgen.png)
 <br>
 
 ### 💾데이터베이스 모델링(ERD)
