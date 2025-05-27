@@ -1,5 +1,5 @@
 # 1. 프로젝트 개요
-![qgen-logo.png](./qgen-logo.png)
+![qgen-logo.png](exec/qgen-logo.png)
 ### 📋 서비스 개요
 - RAG 기반 문제 생성 서비스
 - RAG를 활용하여 사용자가 입력한 데이터를 기반으로 유사도 검색을 하여 정밀한 문제를 생성해주는 서비스 입니다. 
