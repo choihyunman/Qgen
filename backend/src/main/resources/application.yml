@@ -5,11 +5,6 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 100MB
-
   # MySQL
   datasource:
     driver-class-name: ${MYSQL_DRIVER}
@@ -21,13 +16,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     defer-datasource-initialization: true
-#  sql:
-#    init:
-#      data-locations: classpath*:db/data.sql
-#      mode: always
-#      platform: all
 
   security:
     oauth2:
@@ -46,9 +36,6 @@ spring:
   jwt:
     secret: ${JWT_SECRET_KEY}
 
-  thymeleaf:
-    cache: false
-
 management:
   endpoints:
     web:
@@ -61,10 +48,10 @@ management:
 cloud:
   aws:
     credentials:
-      access-key: ${AWS_ACCESS_KEY_ID}
-      secret-key: ${AWS_SECRET_ACCESS_KEY}
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
     region:
-      static: ${AWS_DEFAULT_REGION}
+      static: ${AWS_REGION}
     s3:
       bucket: ${S3_BUCKET_NAME}
 

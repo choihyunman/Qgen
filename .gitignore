@@ -46,12 +46,6 @@ jenkins_home/
 
 **/application.properties
 
-**/bin
-
-**/*.faiss
-**/info.json
-**/questions.json
-
 #그 외
 Miniconda3-latest-Linux-x86_64.sh
 *.faiss
@@ -61,4 +55,3 @@ ipe-we-sub1.txt
 questions.txt
 info.json
 questions.json
-
