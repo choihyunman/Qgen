@@ -43,14 +43,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId(); // 사용자를 식별할 아이디값
 
         User existUser = userRepository.findByUsername(username);
+        Long userId;
         if(existUser == null) {
             User user = new User(oAuth2Response.getEmail(), username, oAuth2Response.getName());
             userRepository.save(user);
+            userId = user.getUserId();
         } else {
             existUser.update(oAuth2Response.getEmail(), oAuth2Response.getName());
             username = existUser.getUsername();
+            userId = existUser.getUserId();
         }
-        UserDto userDto = new UserDto(username, oAuth2Response.getName());
+        UserDto userDto = new UserDto(userId, username, oAuth2Response.getName());
 
         return new CustomOAuth2User(userDto);
     }

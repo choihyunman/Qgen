@@ -13,8 +13,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JWTUtil jwtUtil;
@@ -22,8 +24,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
+        Long userId = customUserDetails.getUserId();
         String username = customUserDetails.getUsername();
 
 //        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -31,10 +40,22 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //        GrantedAuthority auth = iterator.next();
 //        String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, 60 * 60 * 60L);
+        String token = jwtUtil.createJwt(username, userId,3 * 60 * 60 * 1000L);
 
         response.addCookie(createCookie("Authorization", token));
-        response.sendRedirect("http://localhost:5173/");
+
+        String redirectUrl;
+
+        String serverName = request.getServerName();
+
+        if ("localhost".equals(serverName)) {
+            redirectUrl = "http://localhost:5173/"; // 로그인 성공 시 리다이렉션(로컬)
+        } else {
+            redirectUrl = "https://" + serverName + "/"; // 로그인 성공 시 리다이렉션(서버)
+        }
+
+        response.sendRedirect(redirectUrl);
+        log.info("Authentication Success");
     }
 
     private Cookie createCookie(String key, String value) {

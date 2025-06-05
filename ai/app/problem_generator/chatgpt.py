@@ -5,70 +5,91 @@ from environs import Env
 from app.problem_generator.prompt import load_prompt
 import json
 import logging
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
-router = APIRouter()  # <-- 바뀐 부분
+router = APIRouter()
 env = Env()
 env.read_env()
 
-# 로깅 설정
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# 요청 받을 때 사용할 모델
+executor = ThreadPoolExecutor()
+
 class Request(BaseModel):
-    quantity: int
+    choiceAns: int
+    oxAns: int
+    shortAns: int
+
+MAX_RETRY = 3  # 최대 재시도 횟수
+
+# GPT 호출 로직을 함수로 분리
+def call_openai(client: OpenAI, prompt: str, total: int):
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": f"위의 지시사항을 철저히 따르세요. 문제 수: {total}개"}
+        ],
+        temperature=1
+    )
+    return response.choices[0].message.content
 
 @router.post("/chatgpt/{testPaperId}/", status_code=status.HTTP_200_OK)
 async def chatgpt_api(testPaperId: int, request: Request):
     client = OpenAI(api_key=env.str("OPENAI_API_KEY"))
+    total = request.choiceAns + request.oxAns + request.shortAns
+    prompt = load_prompt(request.choiceAns, request.oxAns, request.shortAns)
 
-    try:
-        logger.info(f"요청: testPaperId={testPaperId}, quantity={request.quantity}")
-
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": load_prompt(request.quantity)},
-                {"role": "user", "content": f"반드시 {request.quantity}개의 문제를 만들어주세요."}
-            ],
-            temperature=1
-        )
-
-        # 응답에서 직접 content에 접근
-        response_content = response.choices[0].message.content
-
-        # 응답이 JSON으로 올 것이라고 기대하고 파싱
+    for attempt in range(1, MAX_RETRY + 1):
         try:
-            parsed_content = json.loads(response_content)
-        except json.JSONDecodeError:
-            raise HTTPException(status_code=500, detail="응답이 JSON 형식이 아닙니다.")
+            logger.info(f"[시도 {attempt}] 요청: testPaperId={testPaperId}, 총문제={total}")
 
-        problems = None
-        if isinstance(parsed_content, dict):
-            if "questions" in parsed_content:
-                problems = parsed_content["questions"]
-            else:
-                problems = [parsed_content]  # 하나짜리 문제 dict이면 리스트로 감싼다
-        elif isinstance(parsed_content, list):
-            problems = parsed_content
-        else:
-            raise HTTPException(status_code=500, detail="응답이 리스트나 dict 형태가 아닙니다.")
-
-        if len(problems) != request.quantity:
-            raise HTTPException(
-                status_code=500,
-                detail=f"요청 문제 수({request.quantity})와 응답 문제 수({len(problems)})가 다릅니다."
+            # 동기 함수 비동기 실행
+            content = await asyncio.get_event_loop().run_in_executor(
+                executor,
+                call_openai,
+                client,
+                prompt,
+                total
             )
 
-        logger.info(f"성공: 문제 {len(problems)}개 생성 완료")
-        return {
-            "success": True,
-            "data": problems
-        }
+            try:
+                parsed = json.loads(content)
+            except json.JSONDecodeError:
+                raise ValueError("응답이 JSON 형식이 아님")
 
-    except Exception as e:
-        logger.error(f"서버 에러: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal Server Error: {str(e)}"
-        )
+            if not isinstance(parsed, list):
+                raise ValueError("응답이 리스트 형식이 아님")
+
+            if len(parsed) != total:
+                raise ValueError(f"요청 문제 수({total})와 응답 문제 수({len(parsed)})가 다름")
+
+            type_counts = {
+                "TYPE_CHOICE": 0,
+                "TYPE_OX": 0,
+                "TYPE_SHORT": 0
+            }
+
+            for item in parsed:
+                if not isinstance(item, dict) or "type" not in item:
+                    raise ValueError("각 문제는 'type' 필드를 포함한 dict 형식이어야 합니다.")
+                type_counts[item["type"]] = type_counts.get(item["type"], 0) + 1
+
+            if type_counts["TYPE_CHOICE"] != request.choiceAns:
+                raise ValueError(f"선다형 문제 수 불일치: 요청={request.choiceAns}, 응답={type_counts['TYPE_CHOICE']}")
+            if type_counts["TYPE_OX"] != request.oxAns:
+                raise ValueError(f"OX 문제 수 불일치: 요청={request.oxAns}, 응답={type_counts['TYPE_OX']}")
+            if type_counts["TYPE_SHORT"] != request.shortAns:
+                raise ValueError(f"주관식 문제 수 불일치: 요청={request.shortAns}, 응답={type_counts['TYPE_SHORT']}")
+
+            logger.info(f"[시도 {attempt}] 성공: 문제 {total}개 생성 완료")
+            return {"success": True, "data": parsed}
+
+        except Exception as e:
+            logger.warning(f"[시도 {attempt}] 실패: {str(e)}")
+            if attempt == MAX_RETRY:
+                logger.error(f"최대 재시도({MAX_RETRY}) 도달. 에러 반환.")
+                raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+            continue  # 다음 시도

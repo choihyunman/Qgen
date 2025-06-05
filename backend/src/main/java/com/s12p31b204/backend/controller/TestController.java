@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.s12p31b204.backend.dto.FindTestResponseDto;
 import com.s12p31b204.backend.dto.SolvingTestRequestDto;
 import com.s12p31b204.backend.dto.SolvingTestResponseDto;
+import com.s12p31b204.backend.oauth2.CustomOAuth2User;
+import com.s12p31b204.backend.service.AuthorizationService;
 import com.s12p31b204.backend.service.TestService;
 import com.s12p31b204.backend.util.ApiResponse;
 import com.s12p31b204.backend.util.ResponseData;
@@ -30,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TestController {
 
     private final TestService testService;
+    private final AuthorizationService authorizationService;
 
     /**
      * 문제 전체 조회 -> 응답 : 순서가 섞인 문제Id 리스트
@@ -52,11 +56,17 @@ public class TestController {
      */
     @GetMapping("/list/{testPaperId}")
     public ResponseEntity<ResponseData<List<Long>>> getAllTests
-            (@PathVariable Long testPaperId, HttpServletRequest request) {
+            (@PathVariable Long testPaperId,
+            @AuthenticationPrincipal CustomOAuth2User user,
+             HttpServletRequest request) {
         try {
-            log.info("getting testIds...");
-            List<Long> testIds = testService.findTestAll(testPaperId);
-            return ApiResponse.success(testIds, "전체 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
+            if (authorizationService.checkTestPaperAuthorization(user.getUserId(), testPaperId)) {
+                log.info("getting testIds...");
+                List<Long> testIds = testService.findIdTestAll(testPaperId);
+                return ApiResponse.success(testIds, "전체 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
+            } else {
+                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+            }
         } catch (NoSuchElementException e) {
             return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
@@ -87,11 +97,17 @@ public class TestController {
      */
     @GetMapping("/{testId}")
     public ResponseEntity<ResponseData<FindTestResponseDto>> getTest
-            (@PathVariable Long testId, HttpServletRequest request) {
+            (@PathVariable Long testId,
+             @AuthenticationPrincipal CustomOAuth2User user,
+             HttpServletRequest request) {
         try {
-            log.info("getting test...");
-            FindTestResponseDto response = testService.findTestOne(testId);
-            return ApiResponse.success(response, "단일 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
+            if(authorizationService.checkTestAuthorization(user.getUserId(), testId)) {
+                log.info("getting test...");
+                FindTestResponseDto response = testService.findTestOne(testId);
+                return ApiResponse.success(response, "단일 문제 조회 성공", HttpStatus.OK, request.getRequestURI());
+            } else {
+                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+            }
         } catch (NoSuchElementException e) {
             return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {
@@ -130,11 +146,17 @@ public class TestController {
      */
     @PostMapping
     public ResponseEntity<ResponseData<SolvingTestResponseDto>> solvingTest
-            (@RequestBody SolvingTestRequestDto solvingTestRequestDto, HttpServletRequest request) {
+            (@RequestBody SolvingTestRequestDto solvingTestRequestDto,
+             @AuthenticationPrincipal CustomOAuth2User user,
+             HttpServletRequest request) {
         try {
-            log.info("solving test...");
-            SolvingTestResponseDto response = testService.solvingTest(solvingTestRequestDto);
-            return ApiResponse.success(response, "답안 제출 성공", HttpStatus.OK, request.getRequestURI());
+            if(authorizationService.checkTestAuthorization(user.getUserId(), solvingTestRequestDto.getTestId())) {
+                log.info("solving test...");
+                SolvingTestResponseDto response = testService.solvingTest(solvingTestRequestDto);
+                return ApiResponse.success(response, "답안 제출 성공", HttpStatus.OK, request.getRequestURI());
+            } else {
+                return ApiResponse.failure("권한이 없습니다.", HttpStatus.FORBIDDEN, request.getRequestURI());
+            }
         } catch (NoSuchElementException e) {
             return ApiResponse.failure(e.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         } catch (Exception e) {

@@ -1,5 +1,7 @@
 package com.s12p31b204.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,5 +12,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CreateTestRequestDto {
-    private int quantity;
+    private int choiceAns;
+
+    private int oxAns;
+
+    private int shortAns;
 }
