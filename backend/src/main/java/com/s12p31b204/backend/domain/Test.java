@@ -47,11 +47,6 @@ public class Test {
     @Column(nullable = false, length = 1000)
     private String question;
 
-    @Column(length = 1000)
-    private String explanations;
-
-    private String explanationType;
-
     private String option1;
     private String option2;
     private String option3;
@@ -59,9 +54,6 @@ public class Test {
 
     @Column(nullable = false)
     private String answer;
-
-    @Column(length = 1000)
-    private String aliases;
 
     @Column(nullable = false, length = 1000)
     private String comment;
@@ -76,14 +68,12 @@ public class Test {
     private LocalDateTime createAt;
 
     // 객관식인 경우
-    public Test(TestPaper testPaper, Type type, String question, String explanations, String explanationType,
+    public Test(TestPaper testPaper, Type type, String question,
                 String option1, String option2, String option3, String option4,
                 String answer, String comment) {
         this.testPaper = testPaper;
         this.type = type;
         this.question = question;
-        this.explanations = explanations;
-        this.explanationType = explanationType;
         this.option1 = option1;
         this.option2 = option2;
         this.option3 = option3;
@@ -94,27 +84,20 @@ public class Test {
 
     // 주관식, OX인 경우
     public Test(TestPaper testPaper, Type type, String question,
-                String aliases, String answer, String comment) {
+                String answer, String comment) {
         this.testPaper = testPaper;
         this.type = type;
         this.question = question;
-        this.aliases = aliases;
         this.answer = answer;
         this.comment = comment;
     }
 
-    public void updateMemo(String memo) {
-        this.memo = memo;
-    }
-
-    public void removeMemo() {
-        this.memo = null;
-    }
 
     public enum Type {
         TYPE_CHOICE("객관식"),
         TYPE_SHORT("주관식"),
-        TYPE_OX("OX 문제");
+        TYPE_OX("OX 문제"),
+        TYPE_WORD("단어암기형");
 
         private final String displayName;
 
