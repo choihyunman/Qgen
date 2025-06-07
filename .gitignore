@@ -55,6 +55,9 @@ jenkins_home/
 # Logs
 *.log
 
+#yml
+**/application.yml
+
 
 **/bin
 
@@ -72,4 +75,9 @@ questions.txt
 info.json
 questions.json
 
+#expo
+.expo/
 
+#python
+ai/__pycache__/
+ai/*.py[cod]
