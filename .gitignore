@@ -1,3 +1,6 @@
+# VSCode
+.vscode/
+.history/
 # Python 캐시 무시
 __pycache__/
 *.pyc
@@ -38,13 +41,20 @@ node_modules/
 .env
 **/.env
 
+# Properties
+**/application.properties
+
+# Node
+node_modules/
+
+# jenkins
+jenkins_home
 # Jenkins
 jenkins_home/
 
 # Logs
 *.log
 
-**/application.properties
 
 **/bin
 
@@ -61,4 +71,5 @@ ipe-we-sub1.txt
 questions.txt
 info.json
 questions.json
+
 
