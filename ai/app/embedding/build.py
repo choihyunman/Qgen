@@ -80,7 +80,7 @@ def build_index(indexId: str = "questions"):
 
     cleaned = clean_text(raw_text)
 
-    # ✅ '---' 기준으로 청크 분리
+    # '---' 기준으로 청크 분리
     chunks = [chunk.strip() for chunk in cleaned.split('---') if chunk.strip()]
 
     if not chunks:
