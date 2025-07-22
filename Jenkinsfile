@@ -26,7 +26,7 @@ def notifyMattermost(success = true) {
 }
 
 def rollbackToOld() {
-    echo "🛑 롤백 시작 (Old Color: ${params.OLD_COLOR})"
+    echo " 롤백 시작 (Old Color: ${params.OLD_COLOR})"
     sh """
         export FRONTEND_UPSTREAM=frontend_${params.OLD_COLOR}
         export BACKEND_UPSTREAM=backend_${params.OLD_COLOR}
@@ -44,7 +44,7 @@ pipeline {
     parameters {
         string(name: 'COMMIT_AUTHOR', defaultValue: '', description: '커밋 작성자')
         string(name: 'COMMIT_MESSAGE', defaultValue: '', description: '커밋 메시지')
-        string(name: 'BRANCH_NAME', defaultValue: '', description: '브랜치 이름') // ✅ 추가
+        string(name: 'BRANCH_NAME', defaultValue: '', description: '브랜치 이름')
         string(name: 'DEPLOY_COLOR', defaultValue: 'green', description: '배포할 색상')
         string(name: 'OLD_COLOR', defaultValue: 'blue', description: '현재 운영 중인 색상')
     }
@@ -56,7 +56,7 @@ pipeline {
     stages {
         stage('Inject Secrets') {
             steps {
-                echo "🔐 설정 파일 주입 중..."
+                echo "설정 파일 주입 중..."
                 withCredentials([
                     file(credentialsId: 'env-file', variable: 'ENV_FILE'),
                     file(credentialsId: 'app-yml', variable: 'APP_YML')
@@ -86,7 +86,7 @@ pipeline {
 
         stage('Deploy NEW Containers') {
             steps {
-                echo "🚀 새로운 ${params.DEPLOY_COLOR} 컨테이너 띄우는 중..."
+                echo "새로운 ${params.DEPLOY_COLOR} 컨테이너 띄우는 중..."
                 sh """
                     docker compose --project-name=${params.DEPLOY_COLOR} -f docker-compose.${params.DEPLOY_COLOR}.yml up -d --build
                 """
@@ -96,7 +96,7 @@ pipeline {
         stage('Health Check NEW Containers') {
             steps {
                 sleep(time: 5, unit: 'SECONDS')
-                echo "🩺 새로 띄운 컨테이너 헬스체크 중..."
+                echo " 새로 띄운 컨테이너 헬스체크 중..."
                 script {
                     def services = ["frontend_${params.DEPLOY_COLOR}", "backend_${params.DEPLOY_COLOR}", "ai_${params.DEPLOY_COLOR}"]
                     for (svc in services) {
@@ -106,11 +106,11 @@ pipeline {
                                 STATUS=\$(docker inspect --format='{{.State.Health.Status}}' ${svc} | tr -d '\\n')
                                 echo "Current STATUS: \$STATUS"
                                 if [ "\$STATUS" != "healthy" ]; then
-                                    echo "❌ Still not healthy (\$STATUS). Waiting 5s..."
+                                    echo "Still not healthy (\$STATUS). Waiting 5s..."
                                     sleep 5
                                     exit 1
                                 fi
-                                echo "✅ ${svc} is healthy!"
+                                echo "${svc} is healthy!"
                             """
                         }
                     }
@@ -120,7 +120,7 @@ pipeline {
 
         stage('Update Nginx Configuration') {
             steps {
-                echo "📦 NGINX 설정 파일 생성 중..."
+                echo " NGINX 설정 파일 생성 중..."
                 sh """
                     export FRONTEND_UPSTREAM=frontend_${params.DEPLOY_COLOR}
                     export BACKEND_UPSTREAM=backend_${params.DEPLOY_COLOR}
@@ -133,7 +133,7 @@ pipeline {
 
         stage('Reload Nginx') {
             steps {
-                echo "🚀 NGINX 설정 반영 (reload) 중..."
+                echo "NGINX 설정 반영 (reload) 중..."
                 script {
                     try {
                         sh """
@@ -141,9 +141,9 @@ pipeline {
                             docker exec nginx nginx -s reload
                         """
                     } catch (Exception e) {
-                        echo "❌ Nginx reload 실패. 롤백 시작..."
+                        echo " Nginx reload 실패. 롤백 시작..."
                         rollbackToOld()
-                        error("❌ 롤백 후 실패 처리")
+                        error(" 롤백 후 실패 처리")
                     }
                 }
             }
