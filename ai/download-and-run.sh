@@ -10,6 +10,6 @@ aws s3 cp s3://$S3_BUCKET_NAME/faiss/questions.json /app/data/indexes/questions.
 aws s3 cp s3://$S3_BUCKET_NAME/faiss/info.faiss /app/data/indexes/info.faiss
 aws s3 cp s3://$S3_BUCKET_NAME/faiss/info.json /app/data/indexes/info.json
 
-echo "✅ 다운로드 완료. 서버 시작"
+echo "다운로드 완료. 서버 시작"
 
 exec uvicorn app.server:app --host 0.0.0.0 --port 8000
