@@ -27,4 +27,6 @@ RUN chmod +x /app/download-and-run.sh
 EXPOSE 8000
 
 # 애플리케이션 실행 (S3에서 파일 받고 서버 시작)
+
 CMD ["/bin/bash", "-c", "/app/download-and-run.sh"]
+

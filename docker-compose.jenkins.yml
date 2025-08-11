@@ -1,0 +1,22 @@
+services:
+  jenkins:
+    build:
+      context: ./jenkins-custom
+    user: root
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./jenkins_home:/var/jenkins_home:rw
+      - /usr/bin/docker:/usr/bin/docker         
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - app_network
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Seoul
+      JENKINS_OPTS: "--httpPort=8080 --prefix=/jenkins"
+
+networks:
+  app_network:
+    external: true

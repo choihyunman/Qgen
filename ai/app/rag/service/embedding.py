@@ -15,7 +15,7 @@ async def get_embedding_from_gpu(texts: list[str]) -> list[list[float]]:
     if not base_url:
         raise RuntimeError("GPU_SERVER_URL 환경 변수가 설정되어 있지 않습니다.")
 
-    # ✅ 중첩 리스트 방지 및 중복 제거
+    #  중첩 리스트 방지 및 중복 제거
     texts = [t for t in texts if isinstance(t, str)]
     texts = list(dict.fromkeys(texts))
     print(f"🧼 중복 제거 후 텍스트 개수: {len(texts)}")
@@ -43,5 +43,5 @@ async def get_embedding_from_gpu(texts: list[str]) -> list[list[float]]:
             return data["embeddings"]
 
     except Exception as e:
-        print(f"❌ GPU 임베딩 서버 호출 오류: {e}")
+        print(f"GPU 임베딩 서버 호출 오류: {e}")
         raise HTTPException(status_code=500, detail="GPU 임베딩 실패")

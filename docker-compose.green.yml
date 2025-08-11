@@ -1,0 +1,79 @@
+services:
+  frontend:
+    image: frontend:green
+    container_name: frontend_green
+    ports:
+      - "5175:5173"
+    # volumes:
+    #   - ./frontend:/frontend
+    #   - /frontend/node_modules
+    env_file:
+      - .env
+    networks:
+      - app_network
+    restart: always
+    environment:
+      - TZ=Asia/Seoul
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 30s
+      timeout: 10s
+      retries: 6
+    
+
+  backend:
+    image: backend:green
+    container_name: backend_green
+    ports:
+      - "8082:8080"
+    environment:
+      TZ: Asia/Seoul
+      JAVA_SECURITY_PROPERTIES: |
+        jdk.internal.reflect.permitAll=true
+        jdk.reflect.allowNativeAccess=true
+    env_file:
+      - .env
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      - app_network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ai:
+    image: ai:green
+    container_name: ai_green
+    ports:
+      - "8002:8000"
+    # volumes:
+    #   - ./ai:/ai
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/ai
+      - TZ=Asia/Seoul
+    networks:
+      - app_network
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/ai/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+networks:
+  app_network:
+    external: true

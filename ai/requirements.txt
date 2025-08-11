@@ -23,7 +23,9 @@ python-docx
 boto3
 python-dotenv
 
-# Reranker / Transformers ** GPU 서버 없어서 CPU로 테스트해야할 경우 사용 
+
+#  Reranker (transformers + torch + 최적화 도구)
+
 transformers==4.40.1
 torch==2.3.0
 torchvision==0.18.0
@@ -31,3 +33,6 @@ torchaudio==2.3.0
 safetensors>=0.4.0
 scipy>=1.10.0
 accelerate>=0.28.0
+
+#  PyTorch CUDA 12.1 wheel 인덱스 (반드시 포함)
+--index-url https://download.pytorch.org/whl/cu121
