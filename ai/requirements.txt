@@ -1,41 +1,33 @@
 
-fastapi
-uvicorn
-pydantic
-openai
-environs
-
-faiss-cpu
-numpy
-
-httpx
-requests
-python-dotenv
-tqdm
-
-pdfplumber
-python-docx
-
+# Core Web
 fastapi==0.110.0
 uvicorn==0.29.0
 pydantic==2.6.4
+environs
+openai
+
+# ML/NLP
 sentence-transformers==2.5.1
-faiss-gpu==1.7.4
+faiss-cpu==1.7.4
 numpy==1.26.4
 langchain==0.1.16
 requests==2.32.3
+httpx
+tqdm
+
+# PDF/Doc parsing
+pdfplumber
+python-docx
+
+# AWS SDK
 boto3
 python-dotenv
 
-# ✅ Reranker (transformers + torch + 최적화 도구)
+# Reranker / Transformers ** GPU 서버 없어서 CPU로 테스트해야할 경우 사용 
 transformers==4.40.1
-torch==2.3.0+cu121
-torchvision==0.18.0+cu121
+torch==2.3.0
+torchvision==0.18.0
 torchaudio==2.3.0
 safetensors>=0.4.0
 scipy>=1.10.0
 accelerate>=0.28.0
-
-# ✅ PyTorch CUDA 12.1 wheel 인덱스 (반드시 포함)
---index-url https://download.pytorch.org/whl/cu121
-
