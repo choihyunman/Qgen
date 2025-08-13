@@ -118,7 +118,7 @@ async def call_batch_reranker(pairs: list[tuple[str, str]], top_n: int) -> list[
             "top_n": top_n,
             "dedup": False
         }
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with httpx.AsyncClient(timeout=180.0) as client:
             res = await client.post(reranker_url, json=payload)
             res.raise_for_status()
             return [r["candidate"] for r in res.json()["reranked"]]
