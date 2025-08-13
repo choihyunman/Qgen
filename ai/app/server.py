@@ -14,10 +14,15 @@ logging.basicConfig(
 
 app = FastAPI()
 
-app.include_router(health_router, prefix="/api/ai")
-app.include_router(chatgpt_router, prefix="/api/ai")
-app.include_router(rag_router, prefix="/api/ai")
-app.include_router(embedding_router, prefix="/api/ai")
-app.include_router(build_router, prefix="/api/ai")
-app.include_router(reranker_router, prefix="/api/ai")
+routers = [
+    health_router,
+    chatgpt_router,
+    rag_router,
+    embedding_router,
+    build_router,
+    reranker_router
+]
 
+# 공통 prefix 적용
+for router in routers:
+    app.include_router(router, prefix="/api/ai")
