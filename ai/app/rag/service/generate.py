@@ -34,7 +34,7 @@ def _build_user_message(context: str, q_type: str) -> str:
         raise ValueError(f"알 수 없는 문제 유형: {q_type}")
 
 def _call_openai(prompt: str, context: str, q_type: str) -> str:
-    logger.info(f"\n🧠 [GPT 요청 - {q_type.upper()}]\n{context[:500]}")
+    logger.info(f"\n [GPT 요청 - {q_type.upper()}]\n{context[:500]}")
     user_message = _build_user_message(context, q_type)
     response = client.chat.completions.create(
         model="gpt-4o",
@@ -45,7 +45,7 @@ def _call_openai(prompt: str, context: str, q_type: str) -> str:
         temperature=1
     )
     raw = response.choices[0].message.content
-    logger.info(f"\n📦 [GPT 응답 - {q_type.upper()}]\n{raw[:500]}")
+    logger.info(f"\n [GPT 응답 - {q_type.upper()}]\n{raw[:500]}")
     return raw
 
 async def _call_gpt_with_retry(prompt: str, context: str, q_type: str) -> list[dict]:
@@ -67,11 +67,11 @@ async def _call_gpt_with_retry(prompt: str, context: str, q_type: str) -> list[d
 
         except Exception as e:
             logger.warning(
-                f"🔁 [GPT 재시도 {attempt}/{MAX_RETRY} - {q_type}] 실패: {e}"
+                f" [GPT 재시도 {attempt}/{MAX_RETRY} - {q_type}] 실패: {e}"
             )
             if attempt == MAX_RETRY:
                 logger.error(
-                    f"❌ GPT 재시도 초과 - {q_type}\n"
+                    f" GPT 재시도 초과 - {q_type}\n"
                     f"에러: {e}\n"
                     f"원문 응답:\n{raw[:1000] if raw else '[빈 문자열]'}"
                 )
@@ -80,7 +80,7 @@ async def _call_gpt_with_retry(prompt: str, context: str, q_type: str) -> list[d
 async def generate_problem(choice_chunks: list[str], oxshort_chunks: list[str], choice: int, ox: int, short: int):
     tasks = []
 
-    # ✅ 객관식 문제 분할 처리
+    #  객관식 문제 분할 처리
     if choice > 0:
         batches = _split_batches(choice, MAX_BATCH_SIZE)
         chunk_batches = _split_chunks(choice_chunks, len(batches))
@@ -90,18 +90,18 @@ async def generate_problem(choice_chunks: list[str], oxshort_chunks: list[str], 
 
             prompt = load_choice_prompt(count)
             context = "\n--- 문제 구분 ---\n".join(context_chunk)
-            logger.info(f"🧪 [청크 수: {len(context_chunk)}] 생성될 문제 수: {count}")
+            logger.info(f" [청크 수: {len(context_chunk)}] 생성될 문제 수: {count}")
             tasks.append(_call_gpt_with_retry(prompt, context, "choice"))
 
 
-    # ✅ OX + 주관식 문제 분할 처리
+    #  OX + 주관식 문제 분할 처리
     total_oxshort = ox + short
     if total_oxshort > 0:
         batches = _split_batches(total_oxshort, MAX_BATCH_SIZE)
         chunk_batches = _split_chunks(oxshort_chunks, len(batches))
 
         for count, context_chunk in zip(batches, chunk_batches):
-            # ✅ OX, 주관식 비율 분배
+            # OX, 주관식 비율 분배
             ox_count = min(count, ox)
             short_count = count - ox_count
             ox -= ox_count
@@ -115,6 +115,6 @@ async def generate_problem(choice_chunks: list[str], oxshort_chunks: list[str], 
             context = "\n".join(context_chunk)
             tasks.append(_call_gpt_with_retry(prompt, context, "oxshort"))
 
-    # ✅ GPT 호출 실행
+    #  GPT 호출 실행
     all_results = await asyncio.gather(*tasks)
     return [item for batch in all_results for item in batch]

@@ -57,7 +57,7 @@ def rerank_batch(request: RerankBatchRequest):
         if len(result) == request.top_n:
             break
 
-    # ✅ 최종 결과 로그 출력
+    # 최종 결과 로그 출력
     logger.info(f"📦 리랭커 최종 결과 (top {len(result)}):")
     for rank, item in enumerate(result, start=1):
         logger.info(f"{rank}. 점수: {item.score:.4f} / 청크: {item.candidate[:200]}...")
