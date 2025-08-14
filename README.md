@@ -380,91 +380,102 @@ useWorkBook, useTestPaper, useDocuments, useAuth 등
 ## 👜 Back-End
 - 개발환경: Spring Boot + JPA + Spring Security + Lombok
 - 데이터베이스: MySQL
-- API 통신: WebFlux
 - 로그인: OAuth2 + JWT
-- PDF 변환: ThymeLeaf + OpenHtmlToPdf
 
 ## ✅ 회원 관리
 ### 1️⃣ 구글 로그인
-OAuth2를 이용한 구글 로그인 구현
-SuccessHandler를 커스텀하여 리다이렉션
+- OAuth2를 이용한 구글 로그인 구현
+- SuccessHandler를 커스텀하여 로그인 후 리다이렉션 처리
 
 ### 2️⃣ JWT 토큰 발급 및 인증/인가
-JWT를 도입하여 Access Token 발급
-Filter를 이용한 로그인 검증
-인증 전용 Service로 데이터 읽기 및 쓰기 시 권한 확인
+- JWT를 이용한 Access Token 발급 및 인증 구조 설계
+- Spring Security Filter를 통한 로그인 검증
+- 인증 전용 Service에서 데이터 읽기/쓰기 시 권한 확인
 
 ## ✅ 문제집/시험지/자료/문제노트 관리
 ### 3️⃣ 문제집 생성 및 조회
-WorkBookController/Service/Repository 구현
-문제집 생성, 전체 조회, 상세 조회, 삭제, 제목 수정 기능
+- WorkBookController/Service/Repository 구현
+- 문제집 생성, 전체 조회, 상세 조회, 삭제, 제목 수정 기능 제공
 
 ### 4️⃣ 자료 업로드 및 Parsing/Chunk화
+- PDF, DOCX, TXT 파일 업로드 처리
 
 ### 5️⃣ 시험지 생성 및 조회
+- 문제집에 속한 시험지 생성 및 상세 조회
+- 시험지별 문제 수, 유형, 생성일 등 메타데이터 관리
 
 ### 6️⃣ 문제 조회 및 풀이, 이력 저장
+- 문제 조회 API 제공
+- 문제 풀이 결과(정답 여부, 문제 및 선택지) 저장
+- 학습 이력 관리
 
 ### 7️⃣ 문제 노트 조회 및 메모 저장
+- 오답 문제 모아보기 기능
+- 문제별 메모 작성 및 수정
 
 ### 8️⃣ 시험지 PDF 변환
+- 시험지 PDF 변환 기능 구현
+- 시험지 다운로드 지원
 
 ### 9️⃣ 유저별 SSE 연결 관리
+- Server-Sent Events(SSE)를 통한 실시간 데이터 푸시
+- 유저별 세션 연결 및 이벤트 전송 관리
 
 <br>
 
 ---
 ## 🤖 AI
-- 개발환경: FastAPI
-- 벡터DB: Faiss
+- 개발환경: FastAPI, PyTorch, HuggingFace, FAISS
+- GPU 환경: RunPod GPU 서버 활용
 
-## ✅ 기능 제목 
-### 1️⃣ 부기능 제목
-WorkBookList 컴포넌트 구현
-WorkBook 타입을 활용한 문제집 데이터 관리
-최신순/제목순 정렬 기능 (커스텀 드롭다운 컴포넌트 활용)
-문제집 추가, 수정, 삭제 기능 (Swal 모달로 UX 통일)
-각 문제집 클릭 시 상세 페이지로 이동
+## ✅ RAG 기반 문제 생성 파이프라인
+### 1️⃣ 데이터 전처리 및 정제
+- PDF, DOCX, 웹 크롤링 등 다양한 입력 데이터를 텍스트로 변환
+- 불필요한 공백/특수문자 제거 및 문장 단위 분리
+- 학습 자료를 바탕으로 GPT가 문제를 생성하기 최적화된 형태로 전처리
+
+### 2️⃣ 임베딩(Embedding) 생성 및 벡터 검색
+- SentenceTransformers 기반 문장 임베딩 생성
+- FAISS 벡터DB에 저장하여 빠른 유사도 검색 지원
+- 문서 업로드 후 즉시 인덱싱 처리로 실시간 검색 가능
+
+### 3️⃣ 리랭커(Re-ranker) 모델 적용
+- Cross-Encoder 기반 의미 유사도 평가 모델 적용
+- 유사도 검색 결과를 재정렬하여 유사도 높은 문제 후보 제공
+- MRR, Recall@K 기반 리랭커 성능 측정 및 개선
+
+### 4️⃣ 기출 문제 변형 및 생성
+- 정보처리기사 등 기출 문제를 GPT 프롬프트로 변형
+- RAG 기반으로 자료-문제 연관성을 유지하며 변형 생성
 
 ---
 ## 🏰 Infra
-- 웹서버: NginX
-- 실행환경: Docker, Docker-compose
-- CI/CD: Jenkins
-- 배포: AWS EC2
-- 코드리뷰: SonarQube
+- 웹서버: NginX  
+- 실행환경: Docker, Docker-compose  
+- CI/CD: Jenkins  
+- 배포: AWS EC2 + RunPod GPU  
+- 품질 분석: SonarQube  
 
-## ✅ 기능 제목 
-### 1️⃣ 부기능 제목
-WorkBookList 컴포넌트 구현
-WorkBook 타입을 활용한 문제집 데이터 관리
-최신순/제목순 정렬 기능 (커스텀 드롭다운 컴포넌트 활용)
-문제집 추가, 수정, 삭제 기능 (Swal 모달로 UX 통일)
-각 문제집 클릭 시 상세 페이지로 이동
+## ✅ 무중단 배포 환경 구축
+### 1️⃣ Nginx + Blue-Green 무중단 배포
+- Nginx Reverse Proxy 설정
+- Blue-Green 방식으로 서비스 무중단 배포 구현
+- HTTPS(SSL 인증서) 적용으로 보안 강화
 
-## ✅ 배포 환경 구축 
-### 1️⃣ 웹서버
-- **NGINX**
-  - `HTTPS`를 적용하고 여 사이트의 보안 향상.
-  - Blue-Green 무중단 배포로 서비스 연속성 구현
+### 2️⃣ Jenkins 기반 CI/CD 파이프라인
+- GitLab Webhook으로 Jenkins 자동 빌드 트리거
+- Docker 이미지 빌드 및 AWS EC2 배포 자동화
+- 환경별(.env) 변수 분리 및 보안 키 관리 적용
 
-### 2️⃣ 배포 환경 구축과 CI/CD
-- **Docker, Docker-compose**
-  - `docker`를 이용하여 실행환경을 컨테이너화.
-  - 배포에 사용되는 컨테이너를 `docker-compose`로 묶어서 배포.
+### 3️⃣ GPU 서버 연동
+- RunPod GPU 서버에 AI 모델(FastAPI) 배포
+- GPU 서버와 백엔드(Spring Boot) 간 API 통신 구조 설계
+- Embedding, Reranker, LLM 호출 시 GPU 자원 활용
 
-- **Jenkins**
-  - Docker에서 Jenkins image를 pull 받아서 실행
-  - 파이프라인 스크립트를 작성하여 배포
-
-- **AWS EC2**
-  - 제공받은 AWS EC2 사용
-
-- **Runpod GPU**
-  - Runpod에서 GPU 서버를 받아서 임베딩, 리랭커 등에 활용 
-
-- **SonarQube**
-  - 소나큐브 구축으로 리팩터링에 활용
+### 4️⃣ 코드 품질 관리
+- SonarQube를 통한 정적 분석 및 품질 게이트 적용
+- 코드 스멜, 버그, 취약점 리포트 기반 리팩터링
+- 배포 전 자동 품질 검사 파이프라인 구축
 
 <br>
 
